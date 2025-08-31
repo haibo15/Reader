@@ -141,8 +141,22 @@ class FileUpload {
             return;
         }
         
-        // 确认删除
-        if (!confirm('确定要删除这个文件吗？这将同时删除上传的文件和所有相关的音频文件。')) {
+        // 获取当前文件名
+        const fileNameElement = document.getElementById('fileName');
+        const fileName = fileNameElement ? fileNameElement.textContent : '当前文件';
+        
+        // 第一次确认
+        const firstConfirm = confirm(`确定要删除文档"${fileName}"吗？\n\n⚠️ 此操作将删除：\n• 上传的文档文件\n• 所有相关的音频文件\n• 章节数据\n\n此操作不可撤销！`);
+        
+        if (!firstConfirm) {
+            return;
+        }
+        
+        // 第二次确认
+        const secondConfirm = confirm(`⚠️ 最终确认\n\n您即将删除文档"${fileName}"\n\n请再次确认是否继续？\n\n点击"确定"将永久删除所有相关文件。`);
+        
+        if (!secondConfirm) {
+            Utils.showStatus('已取消删除操作', 'info');
             return;
         }
         
@@ -185,10 +199,24 @@ class FileUpload {
             // 清空播放列表
             document.getElementById('playlist').innerHTML = '';
             
-            Utils.showStatus('文件删除成功', 'success');
+            // 显示详细的成功信息
+            const deletedFiles = result.deleted_files || [];
+            const fileCount = deletedFiles.length;
+            
+            let successMessage = `✅ 文档"${fileName}"删除成功！`;
+            if (fileCount > 0) {
+                successMessage += `\n\n已删除 ${fileCount} 个文件：`;
+                deletedFiles.forEach(file => {
+                    successMessage += `\n• ${file}`;
+                });
+            }
+            
+            // 使用更友好的提示方式
+            Utils.showDetailedStatus(successMessage, 'success', 5000);
             
         } catch (error) {
-            Utils.showStatus(`删除失败: ${error.message}`, 'error');
+            console.error('删除文件失败:', error);
+            Utils.showStatus(`删除文件失败: ${error.message}`, 'error');
         }
     }
 }

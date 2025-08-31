@@ -22,6 +22,22 @@ class Utils {
         }, CONFIG.STATUS_MESSAGE_TIMEOUT);
     }
 
+    // 显示详细状态消息（支持多行文本）
+    static showDetailedStatus(message, type = 'info', timeout = 5000) {
+        const statusElement = document.getElementById('statusMessage');
+        
+        // 处理多行文本
+        const formattedMessage = message.replace(/\n/g, '<br>');
+        statusElement.innerHTML = formattedMessage;
+        statusElement.className = `status-message ${type} detailed`;
+        
+        // 自动隐藏
+        setTimeout(() => {
+            statusElement.innerHTML = '';
+            statusElement.className = 'status-message';
+        }, timeout);
+    }
+
     // 显示上传进度
     static showUploadProgress() {
         const progress = document.getElementById('uploadProgress');

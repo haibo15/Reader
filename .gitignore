@@ -33,7 +33,9 @@ yarn-error.log*
 .npm
 .yarn-integrity
 
-# 上传的文件
+# 上传的文件和音频文件
+uploads/
+audio/
 backend/uploads/
 backend/audio/
 

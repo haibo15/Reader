@@ -416,3 +416,63 @@ def check_audio_status(file_id):
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@audio_bp.route('/merge-audio/<file_id>')
+def merge_audio_files(file_id):
+    """合并指定文档的所有音频文件"""
+    try:
+        # 获取已生成的音频文件
+        existing_audio_files = get_existing_audio_files(file_id)
+        
+        if not existing_audio_files:
+            return jsonify({'error': '没有找到音频文件'}), 404
+        
+        # 按章节索引排序
+        existing_audio_files.sort(key=lambda x: x['chapter_index'])
+        
+        # 获取音频文件夹
+        audio_folder = get_audio_folder_for_file(file_id)
+        merged_filename = f"{file_id}_complete.wav"
+        merged_filepath = os.path.join(audio_folder, merged_filename)
+        
+        # 合并音频文件
+        with open(merged_filepath, 'wb') as outfile:
+            for i, audio_file in enumerate(existing_audio_files):
+                with open(audio_file['filepath'], 'rb') as infile:
+                    if i == 0:
+                        # 第一个文件，保留完整的WAV头
+                        outfile.write(infile.read())
+                    else:
+                        # 后续文件，跳过WAV头（44字节）
+                        infile.seek(44)
+                        outfile.write(infile.read())
+        
+        return jsonify({
+            'success': True,
+            'merged_file': merged_filename,
+            'total_chapters': len(existing_audio_files)
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@audio_bp.route('/download-complete/<file_id>')
+def download_complete_audio(file_id):
+    """下载完整的合并音频文件"""
+    try:
+        # 检查是否存在合并文件
+        audio_folder = get_audio_folder_for_file(file_id)
+        merged_filename = f"{file_id}_complete.wav"
+        merged_filepath = os.path.join(audio_folder, merged_filename)
+        
+        if not os.path.exists(merged_filepath):
+            # 如果不存在，先合并
+            merge_response = merge_audio_files(file_id)
+            if merge_response.status_code != 200:
+                return jsonify({'error': '合并音频文件失败'}), 500
+        
+        # 返回合并文件
+        return send_from_directory(audio_folder, merged_filename, as_attachment=True)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

@@ -77,14 +77,32 @@ def delete_file_and_related_audio(file_id: str, upload_folder: str, audio_folder
     except Exception as e:
         errors.append(f"删除上传文件失败: {str(e)}")
     
-    # 删除相关的音频文件
+    # 删除相关的音频文件（支持新的文件夹结构）
     try:
-        for filename in os.listdir(audio_folder):
-            if filename.startswith(file_id):
-                audio_path = os.path.join(audio_folder, filename)
+        # 检查是否存在以文件ID命名的音频子文件夹
+        file_audio_folder = os.path.join(audio_folder, file_id)
+        if os.path.exists(file_audio_folder):
+            # 删除子文件夹中的所有文件
+            for filename in os.listdir(file_audio_folder):
+                audio_path = os.path.join(file_audio_folder, filename)
                 if os.path.exists(audio_path):
                     os.remove(audio_path)
-                    deleted_files.append(f"音频文件: {filename}")
+                    deleted_files.append(f"音频文件: {file_id}/{filename}")
+            
+            # 删除空的子文件夹
+            try:
+                os.rmdir(file_audio_folder)
+                deleted_files.append(f"音频文件夹: {file_id}/")
+            except Exception as e:
+                errors.append(f"删除音频文件夹失败: {str(e)}")
+        else:
+            # 兼容旧的文件结构：直接在audio文件夹中查找
+            for filename in os.listdir(audio_folder):
+                if filename.startswith(file_id):
+                    audio_path = os.path.join(audio_folder, filename)
+                    if os.path.exists(audio_path):
+                        os.remove(audio_path)
+                        deleted_files.append(f"音频文件: {filename}")
     except Exception as e:
         errors.append(f"删除音频文件失败: {str(e)}")
     
