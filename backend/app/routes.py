@@ -41,30 +41,47 @@ tts_service = SimpleTextToSpeechService()
 def upload_file():
     """上传文件接口"""
     try:
+        print(f"收到上传请求，文件数量: {len(request.files)}")
+        
         if 'file' not in request.files:
+            print("错误: 没有文件被上传")
             return jsonify({'error': '没有文件被上传'}), 400
         
         file = request.files['file']
+        print(f"文件名: {file.filename}, 文件大小: {file.content_length if hasattr(file, 'content_length') else '未知'}")
+        
         if file.filename == '':
+            print("错误: 文件名为空")
             return jsonify({'error': '没有选择文件'}), 400
         
         if not allowed_file(file.filename):
+            print(f"错误: 不支持的文件格式: {file.filename}")
             return jsonify({'error': '不支持的文件格式'}), 400
         
         # 生成唯一文件名
         file_id = str(uuid.uuid4())
         original_filename = file.filename
-        filename = secure_filename(file.filename)
-        file_extension = filename.rsplit('.', 1)[1].lower()
+        
+        # 从原始文件名获取扩展名，避免secure_filename处理后丢失
+        if '.' in original_filename:
+            file_extension = original_filename.rsplit('.', 1)[1].lower()
+        else:
+            return jsonify({'error': '文件没有扩展名'}), 400
+            
         new_filename = f"{file_id}.{file_extension}"
         
         # 保存文件
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
         file.save(file_path)
+        print(f"文件已保存到: {file_path}")
         
         # 解析文件内容
+        print(f"开始解析文件，格式: {file_extension}")
         text_content = file_processor.extract_text(file_path, file_extension)
+        print(f"文本内容长度: {len(text_content)} 字符")
+        
         chapters = file_processor.split_chapters(text_content)
+        print(f"解析出 {len(chapters)} 个章节")
         
         return jsonify({
             'file_id': file_id,

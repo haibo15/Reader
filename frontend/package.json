@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "dev:open": "nodemon server.js -- --open",
+    "dev:open": "OPEN_BROWSER=true nodemon server.js",
+    "dev:first": "OPEN_BROWSER=true nodemon server.js",
+    "dev:reset": "node reset-browser.js && npm run dev",
     "build": "webpack --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
