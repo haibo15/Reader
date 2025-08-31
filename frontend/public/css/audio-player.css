@@ -1,0 +1,66 @@
+/* 音频播放器样式 */
+.player-container {
+    background: #f7fafc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.player-container audio {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.player-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.playlist {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.playlist-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.playlist-item:hover {
+    background: #f7fafc;
+}
+
+.playlist-item.playing {
+    background: #e6fffa;
+    border-left: 4px solid #38b2ac;
+}
+
+.playlist-item:last-child {
+    border-bottom: none;
+}
+
+.playlist-title {
+    flex: 1;
+    font-weight: 500;
+}
+
+.playlist-download {
+    padding: 4px 8px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.playlist-download:hover {
+    background: #5a67d8;
+}

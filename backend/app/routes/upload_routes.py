@@ -81,9 +81,8 @@ def upload_file():
                     'total_text_length': len(text_content),
                     'chapters': chapters
                 }, f, ensure_ascii=False, indent=2)
-            print(f"💾 章节数据已保存到: {chapters_file}")
-        except Exception as e:
-            print(f"⚠️ 保存章节数据失败: {str(e)}")
+        except Exception:
+            pass  # 章节数据保存失败不影响主要功能
         
         return jsonify({
             'file_id': file_id,

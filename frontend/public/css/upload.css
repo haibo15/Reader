@@ -1,0 +1,58 @@
+/* 文件上传相关样式 */
+.upload-area {
+    border: 3px dashed #cbd5e0;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    border-color: #667eea;
+    background-color: #f7fafc;
+}
+
+.upload-area.dragover {
+    border-color: #667eea;
+    background-color: #edf2f7;
+}
+
+.upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: #a0aec0;
+}
+
+.file-types {
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+.upload-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.upload-btn:hover {
+    background: #5a67d8;
+}
+
+.info-actions {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+    text-align: center;
+}

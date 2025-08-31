@@ -1,0 +1,37 @@
+/* 状态样式 - 统一管理所有状态相关的样式 */
+.audio-status {
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* 文本提取状态 */
+.status-text-extracted {
+    background: #c6f6d5;
+    color: #22543d;
+}
+
+/* 待处理状态 */
+.status-pending {
+    background: #fed7d7;
+    color: #742a2a;
+}
+
+/* 生成中状态 */
+.status-generating {
+    background: #fef5e7;
+    color: #744210;
+}
+
+/* 已完成状态 */
+.status-completed {
+    background: #c6f6d5;
+    color: #22543d;
+}
+
+/* 失败状态 */
+.status-failed {
+    background: #fed7d7;
+    color: #742a2a;
+}

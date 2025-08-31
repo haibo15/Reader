@@ -1,100 +1,80 @@
-# CSS 模块化结构说明
+# CSS 文件结构说明
 
-## 概述
+## 重构后的文件组织
 
-本项目采用了模块化的CSS架构，将原来的单一大型CSS文件（569行）重构为多个功能明确的小文件，提高了代码的可维护性和可读性。
+本项目采用模块化的CSS架构，将样式按功能模块进行拆分，提高代码的可维护性和可读性。
 
-## 文件结构
+### 核心文件
 
+- **`base.css`** - 基础样式重置和全局样式
+- **`layout.css`** - 布局相关的样式
+- **`components.css`** - 通用组件样式
+- **`utilities.css`** - 工具类样式
+
+### 功能模块文件
+
+- **`pages.css`** - 页面核心样式（主入口文件）
+- **`document-history.css`** - 文档历史记录相关样式
+- **`chapters.css`** - 章节相关样式
+- **`upload.css`** - 文件上传相关样式
+- **`modal.css`** - 模态对话框样式
+- **`audio-player.css`** - 音频播放器样式
+- **`status.css`** - 状态样式（统一管理）
+
+## 文件大小对比
+
+### 重构前
+- `pages.css`: 8.0KB, 480行
+
+### 重构后
+- `pages.css`: ~1.2KB, 40行（主入口）
+- `document-history.css`: ~2.5KB, 80行
+- `chapters.css`: ~2.8KB, 90行
+- `upload.css`: ~1.5KB, 50行
+- `modal.css`: ~1.8KB, 60行
+- `audio-player.css`: ~2.0KB, 65行
+- `status.css`: ~0.8KB, 25行
+
+## 使用方式
+
+### 在HTML中引入
+```html
+<!-- 引入主样式文件 -->
+<link rel="stylesheet" href="css/pages.css">
 ```
-frontend/public/css/
-├── base.css          # 基础样式（全局重置、基础布局）
-├── layout.css        # 布局样式（头部、容器、网格布局）
-├── components.css    # 组件样式（按钮、卡片、表单等）
-├── pages.css         # 页面特定样式（文档历史、上传区域等）
-├── utilities.css     # 工具类样式（状态消息等）
-└── README.md         # 本说明文档
-```
 
-## 各模块说明
+### 在JavaScript中动态加载
+```javascript
+// 按需加载特定模块
+const loadCSS = (filename) => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `css/${filename}.css`;
+    document.head.appendChild(link);
+};
 
-### 1. base.css
-- **功能**: 全局基础样式
-- **包含**: 
-  - 全局重置样式
-  - 基础字体和背景设置
-  - 容器样式
-  - 滚动条样式
-
-### 2. layout.css
-- **功能**: 页面布局相关样式
-- **包含**:
-  - 头部样式
-  - 主要内容区域样式
-  - 网格布局系统
-  - 响应式设计规则
-
-### 3. components.css
-- **功能**: 可复用的UI组件样式
-- **包含**:
-  - 按钮样式（各种类型和状态）
-  - 卡片组件样式
-  - 表单组件样式
-  - 进度条组件
-
-### 4. pages.css
-- **功能**: 特定页面的样式
-- **包含**:
-  - 文档历史记录样式
-  - 文件上传区域样式
-  - 章节列表样式
-  - 音频播放器样式
-
-### 5. utilities.css
-- **功能**: 工具类和辅助样式
-- **包含**:
-  - 状态消息样式（成功、错误、警告、信息）
-
-## 使用方法
-
-主样式文件 `styles.css` 通过 `@import` 语句导入所有模块：
-
-```css
-/* 导入基础样式 */
-@import url('./css/base.css');
-
-/* 导入布局样式 */
-@import url('./css/layout.css');
-
-/* 导入组件样式 */
-@import url('./css/components.css');
-
-/* 导入页面特定样式 */
-@import url('./css/pages.css');
-
-/* 导入工具类样式 */
-@import url('./css/utilities.css');
+// 示例：只加载音频播放器样式
+loadCSS('audio-player');
 ```
 
 ## 重构优势
 
-1. **可维护性**: 每个文件职责单一，便于定位和修改
-2. **可读性**: 代码结构清晰，易于理解
-3. **可扩展性**: 新增功能时只需在对应模块添加样式
-4. **团队协作**: 不同开发者可以并行修改不同模块
-5. **性能优化**: 可以按需加载特定模块
+1. **模块化**: 每个文件专注于特定功能，职责清晰
+2. **可维护性**: 更容易定位和修改特定功能的样式
+3. **可复用性**: 模块可以独立使用，便于在其他项目中复用
+4. **性能优化**: 支持按需加载，减少不必要的CSS加载
+5. **团队协作**: 不同开发者可以并行修改不同模块
 
-## 维护指南
+## 命名规范
 
-- 新增全局样式 → 添加到 `base.css`
-- 新增布局相关 → 添加到 `layout.css`
-- 新增可复用组件 → 添加到 `components.css`
-- 新增页面特定样式 → 添加到 `pages.css`
-- 新增工具类 → 添加到 `utilities.css`
+- 文件名使用kebab-case（短横线分隔）
+- 类名使用kebab-case
+- 状态类使用语义化命名（如：`status-pending`、`status-completed`）
+- 组件类使用功能前缀（如：`modal-`、`player-`、`chapter-`）
 
 ## 注意事项
 
-- 保持模块间的独立性，避免循环依赖
-- 遵循CSS命名规范，保持一致性
-- 定期检查和清理未使用的样式
-- 确保响应式设计在各模块中保持一致
+1. `pages.css`作为主入口文件，通过`@import`导入其他模块
+2. 避免在不同模块中重复定义相同的样式
+3. 状态样式统一在`status.css`中管理
+4. 新增功能模块时，创建对应的CSS文件并在`pages.css`中导入

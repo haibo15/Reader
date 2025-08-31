@@ -33,12 +33,17 @@ class FileDisplay {
         container.innerHTML = '';
         
         chapters.forEach((chapter, index) => {
+            // 限制章节标题长度，超过50个字符时截断并添加省略号
+            const truncatedTitle = chapter.title.length > 50 
+                ? chapter.title.substring(0, 50) + '...' 
+                : chapter.title;
+            
             const chapterItem = document.createElement('div');
             chapterItem.className = 'chapter-item';
             chapterItem.innerHTML = `
                 <div class="chapter-header">
                     <input type="checkbox" class="chapter-checkbox" id="chapter_${index}" checked>
-                    <span class="chapter-title">${chapter.title}</span>
+                    <span class="chapter-title" title="${chapter.title}">${truncatedTitle}</span>
                     <span class="chapter-status status-text-extracted">✅ 文本已提取</span>
                 </div>
                 <div class="chapter-details">
@@ -50,12 +55,87 @@ class FileDisplay {
                         <span class="info-label">音频状态:</span>
                         <span class="audio-status status-pending">待生成</span>
                     </div>
+                    <div class="chapter-actions">
+                        <button class="btn btn-small btn-primary" onclick="FileDisplay.viewChapterContent(${index})">
+                            👁️ 查看内容
+                        </button>
+                    </div>
                 </div>
             `;
             container.appendChild(chapterItem);
         });
         
         document.getElementById('chaptersSection').style.display = 'block';
+    }
+
+    // 查看章节内容
+    static viewChapterContent(chapterIndex) {
+        if (!currentChapters || chapterIndex >= currentChapters.length) {
+            Utils.showStatus('章节数据不存在', 'error');
+            return;
+        }
+        
+        const chapter = currentChapters[chapterIndex];
+        
+        // 创建模态对话框
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📖 ${chapter.title}</h3>
+                    <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="chapter-content">
+                        <div class="content-stats">
+                            <span class="stat-item">📊 文本长度: ${chapter.content.length} 字符</span>
+                            <span class="stat-item">📝 章节索引: ${chapterIndex + 1}</span>
+                        </div>
+                        <div class="content-text">
+                            ${chapter.content.replace(/\n/g, '<br>')}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">关闭</button>
+                    <button class="btn btn-primary" onclick="FileDisplay.copyChapterContent(${chapterIndex})">复制内容</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // 点击遮罩层关闭模态框
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+    }
+    
+    // 复制章节内容
+    static copyChapterContent(chapterIndex) {
+        if (!currentChapters || chapterIndex >= currentChapters.length) {
+            Utils.showStatus('章节数据不存在', 'error');
+            return;
+        }
+        
+        const chapter = currentChapters[chapterIndex];
+        const textToCopy = `${chapter.title}\n\n${chapter.content}`;
+        
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            Utils.showStatus('章节内容已复制到剪贴板', 'success');
+        }).catch(() => {
+            // 如果剪贴板API不可用，使用传统方法
+            const textArea = document.createElement('textarea');
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            Utils.showStatus('章节内容已复制到剪贴板', 'success');
+        });
     }
 
     // 更新章节状态

@@ -23,6 +23,7 @@ def get_document_history():
         documents = []
         from app import app
         upload_folder = app.config['UPLOAD_FOLDER']
+        audio_folder = app.config['AUDIO_FOLDER']
         
         if os.path.exists(upload_folder):
             for filename in os.listdir(upload_folder):
@@ -37,24 +38,47 @@ def get_document_history():
                     except:
                         original_filename = "未知文件"
                     
+                    # 查找原始文件以获取文件大小和上传时间
+                    original_file_path = None
+                    for file in os.listdir(upload_folder):
+                        if file.startswith(file_id) and '.' in file and not file.endswith('.meta') and not file.endswith('_chapters.json'):
+                            original_file_path = os.path.join(upload_folder, file)
+                            break
+                    
+                    file_size = 0
+                    upload_time = 0
+                    if original_file_path and os.path.exists(original_file_path):
+                        file_size = os.path.getsize(original_file_path)
+                        upload_time = os.path.getmtime(original_file_path)
+                    
                     # 检查是否有章节数据
                     chapters_file = os.path.join(upload_folder, f"{file_id}_chapters.json")
-                    chapters_info = None
+                    chapter_count = 0
                     if os.path.exists(chapters_file):
                         try:
                             with open(chapters_file, 'r', encoding='utf-8') as f:
                                 chapters_data = json.load(f)
-                                chapters_info = {
-                                    'total_chapters': len(chapters_data['chapters']),
-                                    'total_text_length': chapters_data['total_text_length']
-                                }
+                                chapter_count = len(chapters_data['chapters'])
                         except:
                             pass
                     
+                    # 检查音频文件数量
+                    audio_count = 0
+                    has_audio = False
+                    if os.path.exists(audio_folder):
+                        for audio_file in os.listdir(audio_folder):
+                            if audio_file.startswith(file_id) and audio_file.endswith('.wav'):
+                                audio_count += 1
+                                has_audio = True
+                    
                     documents.append({
                         'file_id': file_id,
-                        'filename': original_filename,
-                        'chapters_info': chapters_info
+                        'original_name': original_filename,
+                        'upload_time': upload_time,
+                        'file_size': file_size,
+                        'chapter_count': chapter_count,
+                        'audio_count': audio_count,
+                        'has_audio': has_audio
                     })
         
         return jsonify({'documents': documents})
