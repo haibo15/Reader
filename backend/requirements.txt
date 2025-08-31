@@ -19,3 +19,6 @@ pydub==0.25.1
 # 阿里云Qwen-TTS API (官方要求 >= 1.23.1)
 # 参考：https://help.aliyun.com/zh/model-studio/qwen-tts#4d86103b5246q
 dashscope>=1.23.1
+
+# 开发工具
+watchdog>=6.0.0
