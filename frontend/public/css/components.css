@@ -99,6 +99,85 @@
     color: #4a5568;
 }
 
+/* 音频状态显示样式 */
+.audio-status-info {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f7fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.status-summary {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.status-summary span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+.status-summary span:before {
+    content: attr(data-label);
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #2d3748;
+}
+
+.status-summary .total-chapters:before {
+    content: "总章节";
+}
+
+.status-summary .generated-count:before {
+    content: "已生成";
+}
+
+.status-summary .progress:before {
+    content: "进度";
+}
+
+/* 音频播放按钮样式 */
+.audio-play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: #48bb78;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.audio-play-btn:hover {
+    background: #38a169;
+    transform: scale(1.05);
+}
+
+.audio-play-btn i {
+    font-size: 0.7rem;
+}
+
+/* 章节音频状态单元格样式 */
+.chapter-audio-status {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+}
+
+.chapter-audio-status .status-badge {
+    margin-bottom: 4px;
+}
+
 /* 进度条样式 */
 .progress-container {
     margin-top: 20px;

@@ -8,7 +8,7 @@
 import os
 import requests
 import dashscope
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Callable, Optional
 from dotenv import load_dotenv
 
 class SimpleTextToSpeechService:
@@ -93,41 +93,84 @@ class SimpleTextToSpeechService:
         except Exception as e:
             raise Exception(f"下载音频文件失败: {str(e)}")
     
-    def generate_and_save_audio(self, text: str, filepath: str, settings: Dict[str, Any] = None) -> str:
-        """生成并保存音频文件"""
+    def generate_and_save_audio(self, text: str, filepath: str, settings: Dict[str, Any] = None, 
+                               progress_callback: Optional[Callable[[int, str], None]] = None) -> str:
+        """生成并保存音频文件（带进度回调）"""
         # 检查文本长度，如果超过限制则分割
         max_text_length = 500  # QWEN-TTS建议的文本长度限制
         
         if len(text) <= max_text_length:
             # 文本长度在限制内，直接生成
+            if progress_callback:
+                progress_callback(10, "正在生成音频...")
+            
             audio_url = self.generate_audio_url(text, settings)
-            return self.download_audio(audio_url, filepath)
+            
+            if progress_callback:
+                progress_callback(50, "正在下载音频文件...")
+            
+            result = self.download_audio(audio_url, filepath)
+            
+            if progress_callback:
+                progress_callback(100, "音频生成完成！")
+            
+            return result
         else:
             # 文本过长，需要分割处理
-            return self._generate_long_text_audio(text, filepath, settings, max_text_length)
+            return self._generate_long_text_audio(text, filepath, settings, max_text_length, progress_callback)
     
-    def _generate_long_text_audio(self, text: str, filepath: str, settings: Dict[str, Any] = None, max_length: int = 500) -> str:
-        """处理长文本的音频生成"""
+    def _generate_long_text_audio(self, text: str, filepath: str, settings: Dict[str, Any] = None, 
+                                 max_length: int = 500, progress_callback: Optional[Callable[[int, str], None]] = None) -> str:
+        """处理长文本的音频生成（带进度回调）"""
         try:
+            if progress_callback:
+                progress_callback(5, "正在分割长文本...")
+            
             # 分割文本
             text_chunks = self._split_text(text, max_length)
             
             if len(text_chunks) == 1:
                 # 只有一段，直接生成
+                if progress_callback:
+                    progress_callback(10, "正在生成音频...")
+                
                 audio_url = self.generate_audio_url(text_chunks[0], settings)
-                return self.download_audio(audio_url, filepath)
+                
+                if progress_callback:
+                    progress_callback(50, "正在下载音频文件...")
+                
+                result = self.download_audio(audio_url, filepath)
+                
+                if progress_callback:
+                    progress_callback(100, "音频生成完成！")
+                
+                return result
             
             # 多段文本，分别生成后合并
             audio_files = []
+            total_chunks = len(text_chunks)
+            
             for i, chunk in enumerate(text_chunks):
+                # 计算当前进度
+                chunk_progress = 10 + (i / total_chunks) * 70  # 10%-80%
+                
+                if progress_callback:
+                    progress_callback(int(chunk_progress), f"正在生成第 {i+1}/{total_chunks} 段音频...")
+                
                 # 为每段生成临时音频文件
                 temp_filename = f"{filepath}_part_{i+1}.wav"
                 audio_url = self.generate_audio_url(chunk, settings)
                 temp_file = self.download_audio(audio_url, temp_filename)
                 audio_files.append(temp_file)
             
+            if progress_callback:
+                progress_callback(85, "正在合并音频文件...")
+            
             # 合并音频文件
             merged_file = self._merge_audio_files(audio_files, filepath)
+            
+            if progress_callback:
+                progress_callback(95, "正在清理临时文件...")
             
             # 清理临时文件
             for temp_file in audio_files:
@@ -135,6 +178,9 @@ class SimpleTextToSpeechService:
                     os.remove(temp_file)
                 except:
                     pass
+            
+            if progress_callback:
+                progress_callback(100, "音频生成完成！")
             
             return merged_file
             

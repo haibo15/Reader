@@ -64,6 +64,11 @@ class FileDisplay {
         
         container.innerHTML = tableHTML;
         document.getElementById('chaptersSection').style.display = 'block';
+        
+        // 显示章节后，检查音频状态
+        setTimeout(() => {
+            AudioGenerator.checkAudioStatus();
+        }, 500);
     }
 
     // 切换全选/取消全选
