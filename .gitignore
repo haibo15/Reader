@@ -36,6 +36,7 @@ yarn-error.log*
 # 上传的文件和音频文件
 uploads/
 audio/
+!audio/previews/
 backend/uploads/
 backend/audio/
 
