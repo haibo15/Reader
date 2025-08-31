@@ -56,10 +56,10 @@ npm install
 
 ```bash
 cd backend
-python test_tts.py
+python test_requirements.py
 ```
 
-这个测试脚本会验证你的API密钥是否正确配置。
+这个测试脚本会验证你的依赖版本和API配置是否正确。
 
 ### 6. 启动服务
 

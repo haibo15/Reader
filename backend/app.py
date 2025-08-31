@@ -8,7 +8,7 @@ import json
 
 # 导入自定义模块
 from app.services.file_processor import FileProcessor
-from app.services.text_to_speech import TextToSpeechService
+from app.services.text_to_speech_simple import SimpleTextToSpeechService
 from app.utils.file_utils import ensure_directories
 
 # 加载环境变量
@@ -33,7 +33,7 @@ ensure_directories([app.config['UPLOAD_FOLDER'], app.config['AUDIO_FOLDER']])
 
 # 初始化服务
 file_processor = FileProcessor()
-tts_service = TextToSpeechService()
+tts_service = SimpleTextToSpeechService()
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
@@ -102,15 +102,19 @@ def generate_audio():
             # 生成全部章节
             audio_files = []
             for i, chapter in enumerate(chapters):
-                audio_file = tts_service.generate_audio(
+                audio_filename = f"{file_id}_chapter_{i+1}.wav"
+                audio_filepath = os.path.join(app.config['AUDIO_FOLDER'], audio_filename)
+                
+                # 使用简化的TTS服务
+                tts_service.generate_and_save_audio(
                     chapter['content'], 
-                    f"{file_id}_chapter_{i+1}",
+                    audio_filepath,
                     voice_settings
                 )
                 audio_files.append({
                     'chapter_index': i,
                     'chapter_title': chapter['title'],
-                    'audio_file': audio_file
+                    'audio_file': audio_filename
                 })
         else:
             # 生成单个章节
@@ -118,15 +122,19 @@ def generate_audio():
                 return jsonify({'error': '章节索引超出范围'}), 400
             
             chapter = chapters[chapter_index]
-            audio_file = tts_service.generate_audio(
+            audio_filename = f"{file_id}_chapter_{chapter_index+1}.wav"
+            audio_filepath = os.path.join(app.config['AUDIO_FOLDER'], audio_filename)
+            
+            # 使用简化的TTS服务
+            tts_service.generate_and_save_audio(
                 chapter['content'],
-                f"{file_id}_chapter_{chapter_index+1}",
+                audio_filepath,
                 voice_settings
             )
             audio_files = [{
                 'chapter_index': chapter_index,
                 'chapter_title': chapter['title'],
-                'audio_file': audio_file
+                'audio_file': audio_filename
             }]
         
         return jsonify({
