@@ -30,7 +30,19 @@ class AudioGenerator {
         try {
             const voiceSettings = VoiceSettings.getVoiceSettings();
             
-            Utils.showStatus('正在生成音频，请稍候...', 'info');
+            // 显示进度信息
+            if (chapterIndex === -1) {
+                Utils.showStatus('正在生成全部章节音频，请稍候...', 'info');
+                Utils.showProgressBar();
+                
+                // 更新所有章节状态为正在生成
+                currentChapters.forEach((_, index) => {
+                    FileDisplay.updateSingleChapterStatus(index, 'generating');
+                });
+            } else {
+                Utils.showStatus(`正在生成第 ${chapterIndex + 1} 章节音频...`, 'info');
+                FileDisplay.updateSingleChapterStatus(chapterIndex, 'generating');
+            }
             
             const response = await fetch(`${CONFIG.API_BASE_URL}/generate-audio`, {
                 method: 'POST',
@@ -63,7 +75,8 @@ class AudioGenerator {
             // 显示播放器
             AudioPlayer.displayAudioPlayer();
             
-            Utils.showStatus('音频生成成功！', 'success');
+            Utils.hideProgressBar();
+            Utils.showStatus(`音频生成成功！共生成 ${result.audio_files.length} 个音频文件`, 'success');
             
         } catch (error) {
             Utils.showStatus(`音频生成失败: ${error.message}`, 'error');

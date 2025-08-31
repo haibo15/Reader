@@ -47,6 +47,31 @@ class Utils {
         progress.querySelector('.progress-fill').style.width = '0%';
     }
 
+    // 显示进度条
+    static showProgressBar() {
+        const progress = document.getElementById('audioProgress');
+        progress.style.display = 'block';
+        
+        // 模拟进度
+        const fill = progress.querySelector('.progress-fill');
+        let width = 0;
+        const interval = setInterval(() => {
+            if (width >= 90) {
+                clearInterval(interval);
+            } else {
+                width += 5;
+                fill.style.width = width + '%';
+            }
+        }, 200);
+    }
+
+    // 隐藏进度条
+    static hideProgressBar() {
+        const progress = document.getElementById('audioProgress');
+        progress.style.display = 'none';
+        progress.querySelector('.progress-fill').style.width = '0%';
+    }
+
     // 重置文件输入框
     static resetFileInput() {
         const fileInput = document.getElementById('fileInput');

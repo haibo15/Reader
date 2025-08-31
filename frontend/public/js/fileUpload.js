@@ -98,12 +98,18 @@ class FileUpload {
             FileDisplay.displayFileInfo(result);
             FileDisplay.displayChapters(result.chapters);
             
+            // 显示文本转换状态
+            if (result.text_extraction_success) {
+                Utils.showStatus(result.message, 'success');
+            } else {
+                Utils.showStatus('文件上传成功，但文本转换可能有问题', 'warning');
+            }
+            
             // 显示后续选项
             document.getElementById('voiceSettings').style.display = 'block';
             document.getElementById('audioControls').style.display = 'block';
             
             Utils.hideUploadProgress();
-            Utils.showStatus('文件上传成功！', 'success');
             
             // 上传成功后再重置文件输入框
             setTimeout(() => {

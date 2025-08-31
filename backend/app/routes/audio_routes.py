@@ -126,9 +126,12 @@ def generate_audio():
             # 生成全部章节
             print(f"🎵 开始生成全部章节音频...")
             audio_files = []
+            total_chapters = len(chapters)
+            
             for i, chapter in enumerate(chapters):
                 try:
-                    print(f"🔄 正在生成第 {i+1}/{len(chapters)} 章节音频...")
+                    progress = (i / total_chapters) * 100
+                    print(f"🔄 正在生成第 {i+1}/{total_chapters} 章节音频... (进度: {progress:.1f}%)")
                     audio_filename = f"{file_id}_chapter_{i+1}.wav"
                     audio_filepath = os.path.join(audio_folder, audio_filename)
                     

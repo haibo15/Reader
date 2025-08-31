@@ -89,7 +89,10 @@ def upload_file():
             'file_id': file_id,
             'filename': original_filename,
             'chapters': chapters,
-            'total_chapters': len(chapters)
+            'total_chapters': len(chapters),
+            'text_extraction_success': True,
+            'total_text_length': len(text_content),
+            'message': f'文档上传成功！成功提取 {len(text_content)} 字符文本，分为 {len(chapters)} 个章节。'
         })
     
     except Exception as e:
