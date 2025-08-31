@@ -6,5 +6,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# 导入路由（在app创建之后导入）
-from app import routes
+# 注册路由蓝图
+from app.routes import register_blueprints
+register_blueprints(app)
