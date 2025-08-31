@@ -108,3 +108,127 @@
     border-radius: 8px;
     border: 1px solid #e2e8f0;
 }
+
+/* 表格式章节列表样式 */
+.chapters-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.chapters-table thead {
+    background: #f7fafc;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.chapters-table th {
+    padding: 12px 8px;
+    text-align: left;
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.chapters-table th:first-child {
+    padding-left: 16px;
+}
+
+.chapters-table th:last-child {
+    padding-right: 16px;
+}
+
+.chapters-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.2s ease;
+}
+
+.chapters-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.chapters-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.chapters-table td {
+    padding: 12px 8px;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+.chapters-table td:first-child {
+    padding-left: 16px;
+}
+
+.chapters-table td:last-child {
+    padding-right: 16px;
+}
+
+.chapters-table .chapter-index {
+    font-weight: 600;
+    color: #667eea;
+    text-align: center;
+}
+
+.chapters-table .chapter-title {
+    font-weight: 500;
+    color: #2d3748;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chapters-table .chapter-length {
+    text-align: center;
+    font-weight: 500;
+    color: #718096;
+}
+
+/* 状态徽章样式 */
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-align: center;
+    min-width: 80px;
+}
+
+/* 全选复选框样式 */
+.chapters-table th input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.chapters-table td input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .chapters-table {
+        font-size: 0.8rem;
+    }
+    
+    .chapters-table th,
+    .chapters-table td {
+        padding: 8px 4px;
+    }
+    
+    .chapters-table .chapter-title {
+        max-width: 80px;
+    }
+    
+    .status-badge {
+        min-width: 60px;
+        font-size: 0.75rem;
+    }
+}

@@ -7,7 +7,6 @@ def ensure_directories(directories: List[str]) -> None:
     for directory in directories:
         if not os.path.exists(directory):
             os.makedirs(directory)
-            print(f"创建目录: {directory}")
 
 def clean_old_files(directory: str, max_age_hours: int = 24) -> None:
     """清理指定目录中的旧文件"""
@@ -25,9 +24,8 @@ def clean_old_files(directory: str, max_age_hours: int = 24) -> None:
             if file_age > max_age_seconds:
                 try:
                     os.remove(file_path)
-                    print(f"删除旧文件: {filename}")
                 except Exception as e:
-                    print(f"删除文件失败 {filename}: {str(e)}")
+                    pass
 
 def get_file_size_mb(file_path: str) -> float:
     """获取文件大小（MB）"""
@@ -76,7 +74,6 @@ def delete_file_and_related_audio(file_id: str, upload_folder: str, audio_folder
                 if os.path.exists(file_path):
                     os.remove(file_path)
                     deleted_files.append(f"上传文件: {filename}")
-                    print(f"删除文件: {file_path}")
     except Exception as e:
         errors.append(f"删除上传文件失败: {str(e)}")
     
@@ -88,7 +85,6 @@ def delete_file_and_related_audio(file_id: str, upload_folder: str, audio_folder
                 if os.path.exists(audio_path):
                     os.remove(audio_path)
                     deleted_files.append(f"音频文件: {filename}")
-                    print(f"删除音频文件: {audio_path}")
     except Exception as e:
         errors.append(f"删除音频文件失败: {str(e)}")
     

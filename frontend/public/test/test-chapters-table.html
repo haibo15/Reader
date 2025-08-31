@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>章节列表表格测试</title>
+    <link rel="stylesheet" href="css/pages.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f7fafc;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .test-title {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">📖 章节列表表格测试</h1>
+        
+        <section class="chapters-section">
+            <h2>📖 章节列表</h2>
+            <div class="chapters-container" id="chaptersContainer">
+                <!-- 章节列表将在这里动态生成 -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 模拟章节数据
+        const testChapters = [
+            {
+                title: "前言",
+                content: "这是前言的内容，介绍本书的背景和目的..."
+            },
+            {
+                title: "1、牛市不言顶,追涨优于寻找滞涨股票,更不要试图回调后买入。突破估值阈值后,后续的上涨由截距的",
+                content: "这是第一章的内容，讨论牛市的特点和投资策略..."
+            },
+            {
+                title: "2、技术分析与基本面分析",
+                content: "本章将深入探讨技术分析和基本面分析的区别和联系..."
+            },
+            {
+                title: "3、风险管理",
+                content: "风险管理是投资成功的关键因素..."
+            },
+            {
+                title: "4、投资组合构建",
+                content: "如何构建一个平衡的投资组合..."
+            }
+        ];
+
+        // 显示章节列表
+        function displayChapters(chapters) {
+            const container = document.getElementById('chaptersContainer');
+            
+            // 创建表格结构
+            const tableHTML = `
+                <table class="chapters-table">
+                    <thead>
+                        <tr>
+                            <th width="50">
+                                <input type="checkbox" id="selectAllChapters" checked onchange="toggleAllChapters(this)">
+                            </th>
+                            <th width="60">序号</th>
+                            <th>章节标题</th>
+                            <th width="120">文本长度</th>
+                            <th width="120">音频状态</th>
+                            <th width="100">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${chapters.map((chapter, index) => {
+                            // 限制章节标题长度为10个字符
+                            const truncatedTitle = chapter.title.length > 10 
+                                ? chapter.title.substring(0, 10) + '...' 
+                                : chapter.title;
+                            
+                            return `
+                                <tr class="chapter-row">
+                                    <td>
+                                        <input type="checkbox" class="chapter-checkbox" id="chapter_${index}" checked>
+                                    </td>
+                                    <td class="chapter-index">${index + 1}</td>
+                                    <td class="chapter-title" title="${chapter.title}">${truncatedTitle}</td>
+                                    <td class="chapter-length">${chapter.content.length} 字符</td>
+                                    <td>
+                                        <span class="status-badge status-pending">待生成</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-small btn-primary" onclick="viewChapterContent(${index})">
+                                            查看
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+
+        // 切换全选/取消全选
+        function toggleAllChapters(selectAllCheckbox) {
+            const chapterCheckboxes = document.querySelectorAll('.chapter-checkbox');
+            chapterCheckboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        }
+
+        // 查看章节内容
+        function viewChapterContent(chapterIndex) {
+            const chapter = testChapters[chapterIndex];
+            
+            // 创建模态对话框
+            const modalHTML = `
+                <div class="modal-overlay" onclick="this.remove()">
+                    <div class="modal-content" onclick="event.stopPropagation()">
+                        <div class="modal-header">
+                            <h3>章节内容 - ${chapter.title}</h3>
+                            <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="chapter-content">
+                                <div class="content-stats">
+                                    <span class="stat-item">章节序号: ${chapterIndex + 1}</span>
+                                    <span class="stat-item">文本长度: ${chapter.content.length} 字符</span>
+                                    <span class="stat-item">字数: ${chapter.content.replace(/\s/g, '').length} 字</span>
+                                </div>
+                                <div class="content-text">${chapter.content}</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        // 获取选中的章节索引
+        function getSelectedChapters() {
+            const checkboxes = document.querySelectorAll('.chapter-checkbox:checked');
+            return Array.from(checkboxes).map(checkbox => {
+                const id = checkbox.id;
+                return parseInt(id.split('_')[1]);
+            });
+        }
+
+        // 页面加载完成后显示章节列表
+        document.addEventListener('DOMContentLoaded', function() {
+            displayChapters(testChapters);
+        });
+    </script>
+</body>
+</html>

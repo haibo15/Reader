@@ -7,13 +7,7 @@ class AudioGenerator {
 
     // 生成选中章节音频
     static async generateSelectedAudio() {
-        const selectedChapters = [];
-        const checkboxes = document.querySelectorAll('.chapter-checkbox:checked');
-        
-        checkboxes.forEach(checkbox => {
-            const index = parseInt(checkbox.id.split('_')[1]);
-            selectedChapters.push(index);
-        });
+        const selectedChapters = FileDisplay.getSelectedChapters();
         
         if (selectedChapters.length === 0) {
             Utils.showStatus('请选择要生成的章节', 'warning');
@@ -28,26 +22,28 @@ class AudioGenerator {
     // 生成音频
     static async generateAudio(chapterIndex) {
         try {
-            const voiceSettings = VoiceSettings.getVoiceSettings();
-            
-            // 显示进度信息
-            if (chapterIndex === -1) {
-                Utils.showStatus('正在生成全部章节音频，请稍候...', 'info');
-                Utils.showProgressBar();
-                
-                // 更新所有章节状态为正在生成
-                currentChapters.forEach((_, index) => {
-                    FileDisplay.updateSingleChapterStatus(index, 'generating');
-                });
-            } else {
-                Utils.showStatus(`正在生成第 ${chapterIndex + 1} 章节音频...`, 'info');
-                FileDisplay.updateSingleChapterStatus(chapterIndex, 'generating');
+            if (!currentFileId) {
+                Utils.showStatus('请先上传文件', 'error');
+                return;
             }
+
+            // 显示进度条
+            const progressContainer = document.getElementById('audioProgress');
+            const progressFill = progressContainer.querySelector('.progress-fill');
+            const progressText = progressContainer.querySelector('.progress-text');
             
+            progressContainer.style.display = 'block';
+            progressFill.style.width = '0%';
+            progressText.textContent = '正在生成音频...';
+
+            // 获取语音设置
+            const voiceSettings = VoiceSettings.getVoiceSettings();
+
+            // 发送请求到后端
             const response = await fetch(`${CONFIG.API_BASE_URL}/generate-audio`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     file_id: currentFileId,
@@ -55,32 +51,75 @@ class AudioGenerator {
                     voice_settings: voiceSettings
                 })
             });
-            
+
             if (!response.ok) {
-                throw new Error(`生成失败: ${response.status}`);
+                const errorData = await response.json();
+                throw new Error(errorData.error || '音频生成失败');
             }
-            
+
             const result = await response.json();
             
-            if (result.error) {
-                throw new Error(result.error);
-            }
-            
-            // 更新音频文件列表
-            audioFiles = result.audio_files;
-            
+            // 更新进度条
+            progressFill.style.width = '100%';
+            progressText.textContent = '音频生成完成！';
+
             // 更新章节状态
-            FileDisplay.updateChapterStatus(result.audio_files);
-            
-            // 显示播放器
-            AudioPlayer.displayAudioPlayer();
-            
-            Utils.hideProgressBar();
-            Utils.showStatus(`音频生成成功！共生成 ${result.audio_files.length} 个音频文件`, 'success');
-            
+            if (result.audio_files && result.audio_files.length > 0) {
+                AudioGenerator.updateChapterStatus(result.audio_files);
+            }
+
+            Utils.showStatus('音频生成成功', 'success');
+
+            // 隐藏进度条
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+            }, 2000);
+
         } catch (error) {
+            console.error('音频生成失败:', error);
             Utils.showStatus(`音频生成失败: ${error.message}`, 'error');
-            console.error('Audio generation error:', error);
+            
+            // 隐藏进度条
+            document.getElementById('audioProgress').style.display = 'none';
         }
+    }
+
+    // 更新章节状态
+    static updateChapterStatus(audioFiles) {
+        audioFiles.forEach(audioFile => {
+            const chapterRow = document.querySelector(`#chapter_${audioFile.chapter_index}`).closest('.chapter-row');
+            if (chapterRow) {
+                const audioStatusCell = chapterRow.querySelector('td:nth-child(6)');
+                if (audioStatusCell) {
+                    audioStatusCell.innerHTML = '<span class="status-badge status-completed">已生成</span>';
+                }
+            }
+        });
+    }
+
+    // 更新单个章节的音频生成状态
+    static updateSingleChapterStatus(chapterIndex, status) {
+        const chapterRow = document.querySelector(`#chapter_${chapterIndex}`).closest('.chapter-row');
+        if (!chapterRow) return;
+
+        const audioStatusCell = chapterRow.querySelector('td:nth-child(6)');
+        if (!audioStatusCell) return;
+
+        let statusHTML = '';
+        switch(status) {
+            case 'generating':
+                statusHTML = '<span class="status-badge status-generating">生成中</span>';
+                break;
+            case 'completed':
+                statusHTML = '<span class="status-badge status-completed">已生成</span>';
+                break;
+            case 'failed':
+                statusHTML = '<span class="status-badge status-failed">失败</span>';
+                break;
+            default:
+                statusHTML = '<span class="status-badge status-pending">待生成</span>';
+        }
+        
+        audioStatusCell.innerHTML = statusHTML;
     }
 }

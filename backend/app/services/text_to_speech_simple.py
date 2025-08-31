@@ -195,5 +195,4 @@ class SimpleTextToSpeechService:
             audio_url = self.generate_audio_url(test_text)
             return True
         except Exception as e:
-            print(f"连接测试失败: {str(e)}")
             return False

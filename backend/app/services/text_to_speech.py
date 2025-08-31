@@ -115,8 +115,6 @@ class TextToSpeechService:
             # 生成音频片段
             audio_segments = []
             for i, chunk in enumerate(text_chunks):
-                print(f"正在生成第 {i+1}/{len(text_chunks)} 段音频...")
-                
                 audio_data = self._call_tts_api(chunk, default_settings)
                 if audio_data:
                     audio_segments.append(audio_data)

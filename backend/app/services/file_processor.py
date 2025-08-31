@@ -38,80 +38,49 @@ class FileProcessor:
     
     def _extract_txt(self, file_path: str) -> str:
         """提取TXT文件内容"""
-        print(f"🔍 开始提取TXT文件: {file_path}")
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 text = f.read()
-                print(f"✅ TXT文件提取成功，长度: {len(text)} 字符")
                 return text
         except UnicodeDecodeError:
-            print("🔄 UTF-8编码失败，尝试其他编码...")
             # 尝试其他编码
             encodings = ['gbk', 'gb2312', 'latin-1']
             for encoding in encodings:
                 try:
                     with open(file_path, 'r', encoding=encoding) as f:
                         text = f.read()
-                        print(f"✅ TXT文件提取成功 (编码: {encoding})，长度: {len(text)} 字符")
                         return text
                 except UnicodeDecodeError:
-                    print(f"⚠️ 编码 {encoding} 失败")
                     continue
-            print("❌ 所有编码尝试失败")
             raise Exception("无法识别文件编码")
     
     def _extract_pdf(self, file_path: str) -> str:
         """提取PDF文件内容"""
         text = ""
-        print(f"🔍 开始提取PDF文件: {file_path}")
         
         try:
             # 首先尝试使用pdfplumber（更好的文本提取）
-            print("🔄 尝试使用pdfplumber提取文本...")
             with pdfplumber.open(file_path) as pdf:
-                print(f"📄 PDF页数: {len(pdf.pages)}")
                 for i, page in enumerate(pdf.pages):
                     page_text = page.extract_text()
                     if page_text:
                         text += page_text + "\n"
-                        print(f"✅ 第 {i+1} 页提取成功，长度: {len(page_text)} 字符")
-                    else:
-                        print(f"⚠️ 第 {i+1} 页提取为空")
             
             # 如果pdfplumber没有提取到内容，使用PyPDF2
             if not text.strip():
-                print("🔄 pdfplumber提取失败，尝试使用PyPDF2...")
                 with open(file_path, 'rb') as file:
                     pdf_reader = PyPDF2.PdfReader(file)
-                    print(f"📄 PyPDF2检测到页数: {len(pdf_reader.pages)}")
                     for i, page in enumerate(pdf_reader.pages):
                         page_text = page.extract_text()
                         if page_text:
                             text += page_text + "\n"
-                            print(f"✅ 第 {i+1} 页提取成功，长度: {len(page_text)} 字符")
-                        else:
-                            print(f"⚠️ 第 {i+1} 页提取为空")
-            
-            print(f"📊 最终提取的文本总长度: {len(text)} 字符")
-            
-            if not text.strip():
-                print("❌ 警告：PDF文本提取结果为空！")
-                print("可能的原因：")
-                print("1. PDF是扫描版，没有文本层")
-                print("2. PDF是图片格式")
-                print("3. PDF文件损坏")
-                print("4. PDF有密码保护")
-            else:
-                print("✅ PDF文本提取成功")
             
             return text
         except Exception as e:
-            print(f"❌ PDF解析失败: {str(e)}")
             raise Exception(f"PDF解析失败: {str(e)}")
     
     def _extract_epub(self, file_path: str) -> str:
         """提取EPUB文件内容"""
-        print(f"🔍 开始提取EPUB文件: {file_path}")
         try:
             book = epub.read_epub(file_path)
             text = ""
@@ -123,15 +92,12 @@ class FileProcessor:
                     content = re.sub(r'<[^>]+>', '', content)
                     text += content + "\n"
             
-            print(f"✅ EPUB文件提取成功，长度: {len(text)} 字符")
             return text
         except Exception as e:
-            print(f"❌ EPUB解析失败: {str(e)}")
             raise Exception(f"EPUB解析失败: {str(e)}")
     
     def _extract_docx(self, file_path: str) -> str:
         """提取DOCX文件内容"""
-        print(f"🔍 开始提取DOCX文件: {file_path}")
         try:
             doc = Document(file_path)
             text = ""
@@ -139,10 +105,8 @@ class FileProcessor:
             for paragraph in doc.paragraphs:
                 text += paragraph.text + "\n"
             
-            print(f"✅ DOCX文件提取成功，长度: {len(text)} 字符")
             return text
         except Exception as e:
-            print(f"❌ DOCX解析失败: {str(e)}")
             raise Exception(f"DOCX解析失败: {str(e)}")
     
     def split_chapters(self, text: str) -> List[Dict[str, Any]]:
