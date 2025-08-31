@@ -248,7 +248,7 @@ def get_document_history():
         
         # 扫描上传文件夹中的所有文件
         for filename in os.listdir(app.config['UPLOAD_FOLDER']):
-            if os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], filename)):
+            if os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], filename)) and not filename.endswith('.meta'):
                 # 从文件名中提取信息
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file_stats = os.stat(file_path)

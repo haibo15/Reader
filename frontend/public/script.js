@@ -46,11 +46,9 @@ class App {
     // 语音设置相关
         const speedRange = document.getElementById('speedRange');
         const volumeRange = document.getElementById('volumeRange');
-        const voiceSelect = document.getElementById('voiceSelect');
         
         if (speedRange) speedRange.addEventListener('input', VoiceSettings.updateSpeedValue);
         if (volumeRange) volumeRange.addEventListener('input', VoiceSettings.updateVolumeValue);
-        if (voiceSelect) voiceSelect.addEventListener('change', VoiceSettings.updateVoiceSettings);
     
     // 音频播放器相关
     const audioElement = document.getElementById('audioElement');
@@ -90,6 +88,10 @@ function deleteCurrentFile() {
 
 function testCurrentVoice() {
     VoiceSettings.testCurrentVoice();
+}
+
+function testVoice(voiceName) {
+    VoiceSettings.testVoice(voiceName);
 }
 
 function showDocumentHistory() {

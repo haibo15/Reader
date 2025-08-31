@@ -67,6 +67,30 @@ section h2 {
         grid-template-columns: 1fr;
     }
     
+    .voice-options {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .voice-option {
+        padding: 10px;
+        gap: 8px;
+    }
+    
+    .voice-option label {
+        font-size: 0.9rem;
+    }
+    
+    .voice-option .btn-test {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+        min-width: 50px;
+    }
+    
+    .range-container input[type="range"] {
+        max-width: 150px;
+    }
+    
     .control-buttons {
         flex-direction: column;
     }

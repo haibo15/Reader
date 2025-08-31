@@ -2,8 +2,9 @@
 class VoiceSettings {
     // 获取语音设置
     static getVoiceSettings() {
+        const selectedVoice = document.querySelector('input[name="voiceSelect"]:checked');
         return {
-            voice: document.getElementById('voiceSelect').value,
+            voice: selectedVoice ? selectedVoice.value : 'Ethan',
             speed: parseFloat(document.getElementById('speedRange').value),
             volume: parseInt(document.getElementById('volumeRange').value)
         };
@@ -27,59 +28,43 @@ class VoiceSettings {
         document.getElementById('volumeValue').textContent = volume;
     }
 
-    // 测试当前选中的语音
-    static async testCurrentVoice() {
+    // 测试指定语音
+    static async testVoice(voiceName) {
         try {
-            const voiceSettings = VoiceSettings.getVoiceSettings();
-            const testButton = document.querySelector('.btn-test');
+            const testButton = event.target;
             const originalText = testButton.textContent;
             
             // 显示加载状态
-            testButton.textContent = '🔄 生成中...';
+            testButton.textContent = '🔊 播放中...';
             testButton.disabled = true;
             
-            Utils.showStatus('正在生成测试音频...', 'info');
+            Utils.showStatus(`正在播放 ${voiceName} 的预览音频...`, 'info');
             
-            const response = await fetch(`${CONFIG.API_BASE_URL}/test-voice`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    voice: voiceSettings.voice,
-                    voice_settings: voiceSettings
-                })
-            });
+            // 使用本地预览音频文件
+            const audioUrl = `./audio/previews/${voiceName.toLowerCase()}_preview.wav`;
             
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`测试失败: ${response.status} - ${errorText}`);
-            }
+            // 播放预览音频
+            VoiceSettings.playTestAudio(audioUrl, testButton, originalText);
             
-            const result = await response.json();
-            
-            if (result.error) {
-                throw new Error(result.error);
-            }
-            
-            // 播放测试音频
-            const audioUrl = `${CONFIG.API_BASE_URL}/download/${result.audio_file}`;
-            VoiceSettings.playTestAudio(audioUrl);
-            
-            Utils.showStatus('测试音频生成成功！', 'success');
+            Utils.showStatus(`${voiceName} 预览音频播放成功！`, 'success');
             
         } catch (error) {
-            Utils.showStatus(`测试失败: ${error.message}`, 'error');
-        } finally {
+            Utils.showStatus(`播放失败: ${error.message}`, 'error');
             // 恢复按钮状态
-            const testButton = document.querySelector('.btn-test');
-            testButton.textContent = originalText;
+            const testButton = event.target;
+            testButton.textContent = '🔊 试听';
             testButton.disabled = false;
         }
     }
 
+    // 测试当前选中的语音（保持向后兼容）
+    static async testCurrentVoice() {
+        const voiceSettings = VoiceSettings.getVoiceSettings();
+        await VoiceSettings.testVoice(voiceSettings.voice);
+    }
+
     // 播放测试音频
-    static playTestAudio(audioUrl) {
+    static playTestAudio(audioUrl, testButton, originalText) {
         // 停止当前播放的音频
         const audioElement = document.getElementById('audioElement');
         if (audioElement) {
@@ -93,12 +78,33 @@ class VoiceSettings {
         
         // 播放测试音频
         testAudio.play().catch(error => {
-            Utils.showStatus(`播放失败: ${error.message}`, 'error');
+            console.error('音频播放失败:', error);
+            Utils.showStatus(`播放失败: 无法加载预览音频文件`, 'error');
+            // 恢复按钮状态
+            if (testButton) {
+                testButton.textContent = originalText;
+                testButton.disabled = false;
+            }
         });
         
         // 播放完成后清理
         testAudio.onended = () => {
             testAudio.remove();
+            // 恢复按钮状态
+            if (testButton) {
+                testButton.textContent = originalText;
+                testButton.disabled = false;
+            }
+        };
+        
+        // 添加错误处理
+        testAudio.onerror = () => {
+            Utils.showStatus(`播放失败: 预览音频文件不存在`, 'error');
+            // 恢复按钮状态
+            if (testButton) {
+                testButton.textContent = originalText;
+                testButton.disabled = false;
+            }
         };
     }
 }
