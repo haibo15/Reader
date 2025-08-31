@@ -4,16 +4,22 @@
 
 ```
 js/
-├── config.js          # 配置文件和全局变量
-├── utils.js           # 工具函数
-├── fileUpload.js      # 文件上传模块
-├── fileDisplay.js     # 文件显示模块
-├── voiceSettings.js   # 语音设置模块
-├── audioGenerator.js  # 音频生成模块
-├── audioPlayer.js     # 音频播放器模块
-└── README.md          # 说明文档
+├── config.js                    # 配置文件和全局变量
+├── utils.js                     # 工具函数
+├── fileUpload.js                # 文件上传模块
+├── fileDisplay.js               # 文件显示模块
+├── voiceSettings.js             # 语音设置模块
+├── audioGenerator.js            # 音频生成核心模块
+├── audioProgressTracker.js      # 音频进度跟踪模块
+├── audioProgressUI.js           # 音频进度UI模块
+├── audioStatusManager.js        # 音频状态管理模块
+├── audioPlayer.js               # 音频播放器模块
+├── audioDownloader.js           # 音频下载器模块
+├── audioMerger.js               # 音频合并器模块
+├── documentHistory.js           # 文档历史模块
+└── README.md                    # 说明文档
 
-script-new.js          # 主脚本文件（初始化和事件绑定）
+script.js                        # 主脚本文件（初始化和事件绑定）
 ```
 
 ## 模块说明
@@ -39,14 +45,38 @@ script-new.js          # 主脚本文件（初始化和事件绑定）
 - 处理语音参数获取和界面更新
 
 ### 6. audioGenerator.js
-- 音频生成类 `AudioGenerator`
-- 处理音频生成请求和状态管理
+- 音频生成核心类 `AudioGenerator`
+- 处理音频生成请求和协调各个模块
 
-### 7. audioPlayer.js
+### 7. audioProgressTracker.js
+- 音频进度跟踪类 `AudioProgressTracker`
+- 处理进度轮询和状态检查
+
+### 8. audioProgressUI.js
+- 音频进度UI类 `AudioProgressUI`
+- 处理进度条的显示和更新
+
+### 9. audioStatusManager.js
+- 音频状态管理类 `AudioStatusManager`
+- 处理音频状态检查和UI更新
+
+### 10. audioPlayer.js
 - 音频播放器类 `AudioPlayer`
-- 处理音频播放、播放列表、下载等功能
+- 处理音频播放功能
 
-### 8. script-new.js
+### 11. audioDownloader.js
+- 音频下载器类 `AudioDownloader`
+- 处理音频文件下载功能
+
+### 12. audioMerger.js
+- 音频合并器类 `AudioMerger`
+- 处理音频文件合并功能
+
+### 13. documentHistory.js
+- 文档历史类 `DocumentHistory`
+- 处理文档历史记录和切换
+
+### 14. script.js
 - 应用主类 `App`
 - 负责初始化和事件监听器绑定
 - 提供全局函数供HTML调用
@@ -70,8 +100,14 @@ script-new.js          # 主脚本文件（初始化和事件绑定）
 <script src="js/fileDisplay.js"></script>
 <script src="js/voiceSettings.js"></script>
 <script src="js/audioGenerator.js"></script>
+<script src="js/audioProgressTracker.js"></script>
+<script src="js/audioProgressUI.js"></script>
+<script src="js/audioStatusManager.js"></script>
 <script src="js/audioPlayer.js"></script>
-<script src="script-new.js"></script>
+<script src="js/audioDownloader.js"></script>
+<script src="js/audioMerger.js"></script>
+<script src="js/documentHistory.js"></script>
+<script src="script.js"></script>
 ```
 
 ## 注意事项

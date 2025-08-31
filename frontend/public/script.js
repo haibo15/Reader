@@ -53,8 +53,10 @@ class App {
     // 音频播放器相关
     const audioElement = document.getElementById('audioElement');
         if (audioElement) {
-            audioElement.addEventListener('ended', AudioPlayer.nextTrack);
-            audioElement.addEventListener('error', AudioPlayer.handleAudioError);
+            audioElement.addEventListener('error', (error) => {
+                console.error('音频播放错误:', error);
+                Utils.showStatus('音频播放出错', 'error');
+            });
         }
         
         console.log('事件监听器初始化完成');
@@ -70,16 +72,16 @@ function generateSelectedAudio() {
     AudioGenerator.generateSelectedAudio();
 }
 
-function previousTrack() {
-    AudioPlayer.previousTrack();
+function checkAudioStatus() {
+    AudioStatusManager.checkAudioStatus();
 }
 
-function nextTrack() {
-    AudioPlayer.nextTrack();
+function mergeAudioFiles() {
+    AudioMerger.mergeAudioFiles();
 }
 
-function downloadCurrent() {
-    AudioPlayer.downloadCurrent();
+function downloadCompleteAudio() {
+    AudioDownloader.downloadCompleteAudio();
 }
 
 function deleteCurrentFile() {
