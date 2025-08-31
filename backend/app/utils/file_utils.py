@@ -68,7 +68,7 @@ def delete_file_and_related_audio(file_id: str, upload_folder: str, audio_folder
     deleted_files = []
     errors = []
     
-    # 删除上传的文件
+    # 删除上传的文件（包括元数据文件）
     try:
         for filename in os.listdir(upload_folder):
             if filename.startswith(file_id):

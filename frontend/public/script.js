@@ -87,3 +87,19 @@ function downloadCurrent() {
 function deleteCurrentFile() {
     FileUpload.deleteCurrentFile();
 }
+
+function testCurrentVoice() {
+    VoiceSettings.testCurrentVoice();
+}
+
+function showDocumentHistory() {
+    DocumentHistory.showDocumentHistory();
+}
+
+function showUploadSection() {
+    DocumentHistory.showUploadSection();
+}
+
+function refreshDocumentHistory() {
+    DocumentHistory.refreshDocumentHistory();
+}

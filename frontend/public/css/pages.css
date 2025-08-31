@@ -1,0 +1,276 @@
+/* 文档历史记录 */
+.document-history {
+    margin-bottom: 40px;
+}
+
+.history-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.history-item {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.history-item:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    transform: translateY(-2px);
+}
+
+.history-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.history-item-title {
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    word-break: break-word;
+}
+
+.history-item-time {
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.history-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.history-info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+
+.history-info-label {
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.history-info-value {
+    color: #2d3748;
+}
+
+.history-item-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.history-item-actions .btn {
+    flex: 1;
+    min-width: 80px;
+}
+
+.upload-actions {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.empty-history {
+    text-align: center;
+    padding: 40px;
+    color: #718096;
+}
+
+.empty-history p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+/* 文件上传区域 */
+.upload-area {
+    border: 3px dashed #cbd5e0;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    border-color: #667eea;
+    background-color: #f7fafc;
+}
+
+.upload-area.dragover {
+    border-color: #667eea;
+    background-color: #edf2f7;
+}
+
+.upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: #a0aec0;
+}
+
+.file-types {
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+.upload-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.upload-btn:hover {
+    background: #5a67d8;
+}
+
+.info-actions {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+/* 章节列表 */
+.chapters-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.chapter-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    transition: background 0.3s ease;
+}
+
+.chapter-item:hover {
+    background: #f7fafc;
+}
+
+.chapter-item:last-child {
+    border-bottom: none;
+}
+
+.chapter-checkbox {
+    margin-right: 15px;
+}
+
+.chapter-title {
+    flex: 1;
+    font-weight: 500;
+}
+
+.chapter-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-pending {
+    background: #fed7d7;
+    color: #c53030;
+}
+
+.status-generating {
+    background: #fef5e7;
+    color: #d69e2e;
+}
+
+.status-completed {
+    background: #c6f6d5;
+    color: #2f855a;
+}
+
+/* 音频播放器 */
+.player-container {
+    background: #f7fafc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.player-container audio {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.player-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.playlist {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.playlist-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.playlist-item:hover {
+    background: #f7fafc;
+}
+
+.playlist-item.playing {
+    background: #e6fffa;
+    border-left: 4px solid #38b2ac;
+}
+
+.playlist-item:last-child {
+    border-bottom: none;
+}
+
+.playlist-title {
+    flex: 1;
+    font-weight: 500;
+}
+
+.playlist-download {
+    padding: 4px 8px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.playlist-download:hover {
+    background: #5a67d8;
+}
