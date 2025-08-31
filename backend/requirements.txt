@@ -1,0 +1,21 @@
+# Web框架
+Flask==2.3.3
+Flask-CORS==4.0.0
+Werkzeug==2.3.7
+
+# HTTP请求和工具
+requests==2.31.0
+python-dotenv==1.0.0
+
+# 文档处理
+PyPDF2==3.0.1
+pdfplumber==0.10.0
+ebooklib==0.18
+python-docx==0.8.11
+
+# 音频处理
+pydub==0.25.1
+
+# 阿里云Qwen-TTS API (官方要求 >= 1.23.1)
+# 参考：https://help.aliyun.com/zh/model-studio/qwen-tts#4d86103b5246q
+dashscope>=1.23.1

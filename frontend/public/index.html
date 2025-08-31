@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能文本阅读器</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 智能文本阅读器</h1>
+            <p>基于阿里巴巴Qwen大模型的文本转语音系统</p>
+        </header>
+
+        <main>
+            <!-- 文件上传区域 -->
+            <section class="upload-section">
+                <h2>📄 文件上传</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <div class="upload-icon">📁</div>
+                        <p>拖拽文件到此处或点击选择文件</p>
+                        <p class="file-types">支持格式: PDF, TXT, EPUB, DOCX</p>
+                        <input type="file" id="fileInput" accept=".pdf,.txt,.epub,.docx" style="display: none;">
+                        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                            选择文件
+                        </button>
+                    </div>
+                </div>
+                <div id="uploadProgress" class="progress-bar" style="display: none;">
+                    <div class="progress-fill"></div>
+                </div>
+            </section>
+
+            <!-- 文件信息显示 -->
+            <section class="file-info" id="fileInfo" style="display: none;">
+                <h2>📋 文件信息</h2>
+                <div class="info-card">
+                    <div class="info-item">
+                        <span class="label">文件名:</span>
+                        <span id="fileName"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">章节数:</span>
+                        <span id="chapterCount"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">文件ID:</span>
+                        <span id="fileId"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 章节列表 -->
+            <section class="chapters-section" id="chaptersSection" style="display: none;">
+                <h2>📖 章节列表</h2>
+                <div class="chapters-container" id="chaptersContainer">
+                    <!-- 章节列表将在这里动态生成 -->
+                </div>
+            </section>
+
+            <!-- 语音设置 -->
+            <section class="voice-settings" id="voiceSettings" style="display: none;">
+                <h2>🎵 语音设置</h2>
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <label for="voiceSelect">语音:</label>
+                        <select id="voiceSelect">
+                            <option value="Ethan">Ethan（男声）</option>
+                            <option value="Chelsie">Chelsie（女声）</option>
+                            <option value="Cherry">Cherry（女声）</option>
+                            <option value="Serena">Serena（女声）</option>
+                            <option value="Dylan">Dylan（北京话-男声）</option>
+                            <option value="Jada">Jada（吴语-女声）</option>
+                            <option value="Sunny">Sunny（四川话-女声）</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="speedRange">语速:</label>
+                        <input type="range" id="speedRange" min="0.5" max="2.0" step="0.1" value="1.0">
+                        <span id="speedValue">1.0x</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="volumeRange">音量:</label>
+                        <input type="range" id="volumeRange" min="-20" max="20" step="1" value="0">
+                        <span id="volumeValue">0</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 音频生成控制 -->
+            <section class="audio-controls" id="audioControls" style="display: none;">
+                <h2>🎧 音频生成</h2>
+                <div class="control-buttons">
+                    <button class="btn btn-primary" onclick="generateAllAudio()">
+                        生成全部音频
+                    </button>
+                    <button class="btn btn-secondary" onclick="generateSelectedAudio()">
+                        生成选中章节
+                    </button>
+                </div>
+            </section>
+
+            <!-- 音频播放器 -->
+            <section class="audio-player" id="audioPlayer" style="display: none;">
+                <h2>🎵 音频播放</h2>
+                <div class="player-container">
+                    <audio id="audioElement" controls>
+                        您的浏览器不支持音频播放
+                    </audio>
+                    <div class="player-controls">
+                        <button class="btn btn-small" onclick="previousTrack()">⏮️ 上一首</button>
+                        <button class="btn btn-small" onclick="nextTrack()">⏭️ 下一首</button>
+                        <button class="btn btn-small" onclick="downloadCurrent()">💾 下载</button>
+                    </div>
+                </div>
+                <div class="playlist" id="playlist">
+                    <!-- 播放列表将在这里显示 -->
+                </div>
+            </section>
+
+            <!-- 状态信息 -->
+            <section class="status-section">
+                <div id="statusMessage" class="status-message"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
