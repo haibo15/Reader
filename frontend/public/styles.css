@@ -1,19 +1,420 @@
-/* 
- * 主样式文件 - 导入所有模块化CSS文件
- * 重构后的模块化CSS结构
- */
+/* 简洁样式 - 只保留基本文字样式 */
 
-/* 导入基础样式 */
-@import url('./css/base.css');
+/* 全局重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-/* 导入布局样式 */
-@import url('./css/layout.css');
+body {
+    font-family: Arial, sans-serif;
+    background: white;
+    color: black;
+    line-height: 1.6;
+    padding: 20px;
+}
 
-/* 导入组件样式 */
-@import url('./css/components.css');
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
 
-/* 导入页面特定样式 */
-@import url('./css/pages.css');
+/* 标题样式 */
+h1, h2, h3 {
+    margin: 20px 0 10px 0;
+    font-weight: bold;
+}
 
-/* 导入工具类样式 */
-@import url('./css/utilities.css');
+h1 { font-size: 24px; }
+h2 { font-size: 20px; }
+h3 { font-size: 18px; }
+
+/* 段落样式 */
+p {
+    margin: 10px 0;
+}
+
+/* 按钮样式 */
+.btn {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    background: white;
+    color: black;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 5px;
+}
+
+.btn:hover {
+    background: #f0f0f0;
+}
+
+.btn-primary {
+    background: #000;
+    color: white;
+    border-color: #000;
+}
+
+.btn-primary:hover {
+    background: #333;
+}
+
+.btn-secondary {
+    background: #f0f0f0;
+    color: black;
+    border-color: #ccc;
+}
+
+.btn-danger {
+    background: white;
+    color: red;
+    border-color: red;
+}
+
+.btn-small {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+/* 表单元素 */
+input[type="file"], input[type="range"], input[type="radio"] {
+    margin: 5px;
+}
+
+label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+/* 音频播放器 */
+audio {
+    width: 100%;
+    margin: 10px 0;
+}
+
+/* 进度条 */
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    border: 1px solid #ccc;
+    background: white;
+    margin: 10px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #000;
+    width: 0%;
+}
+
+/* 章节列表 */
+.chapter-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 5px 0;
+    background: white;
+}
+
+.chapter-item:hover {
+    background: #f0f0f0;
+}
+
+/* 文件上传区域 */
+.upload-area {
+    border: 2px dashed #ccc;
+    padding: 40px;
+    text-align: center;
+    margin: 20px 0;
+    background: white;
+}
+
+/* 信息卡片 */
+.info-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 10px 0;
+    background: white;
+}
+
+.info-item {
+    margin: 5px 0;
+}
+
+/* 状态消息 */
+.status-message {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    background: white;
+}
+
+/* 隐藏元素 */
+[style*="display: none"] {
+    display: none !important;
+}
+
+/* 布局 */
+section {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #ccc;
+    background: white;
+}
+
+.control-buttons, .audio-actions {
+    margin: 10px 0;
+}
+
+.voice-option {
+    margin: 10px 0;
+    padding: 5px;
+}
+
+.range-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 响应式 */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+    
+    .btn {
+        display: block;
+        width: 100%;
+        margin: 5px 0;
+    }
+}
+
+/* 额外的样式类 */
+.upload-content {
+    text-align: center;
+}
+
+.upload-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.file-types {
+    color: #666;
+    font-size: 14px;
+}
+
+.upload-btn {
+    background: #000;
+    color: white;
+    border-color: #000;
+}
+
+.history-controls, .upload-actions, .info-actions {
+    margin: 10px 0;
+}
+
+.settings-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.voice-selection {
+    grid-column: 1 / -1;
+}
+
+.voice-options {
+    display: grid;
+    gap: 10px;
+}
+
+.progress-container {
+    margin: 15px 0;
+}
+
+.progress-text {
+    text-align: center;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.complete-audio-section {
+    margin: 15px 0;
+}
+
+.player-container {
+    margin: 10px 0;
+}
+
+.complete-audio-actions {
+    margin: 10px 0;
+}
+
+.chapters-audio-section {
+    margin: 15px 0;
+}
+
+.chapters-audio-list {
+    margin: 10px 0;
+}
+
+/* 表格样式 */
+.chapters-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+.chapters-table th,
+.chapters-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.chapters-table th {
+    background: #f0f0f0;
+    font-weight: bold;
+}
+
+.chapter-row:hover {
+    background: #f0f0f0;
+}
+
+.status-badge {
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.status-pending {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.status-completed {
+    background: #000;
+    color: white;
+}
+
+/* 模态框样式 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border: 1px solid #ccc;
+    max-width: 80%;
+    max-height: 80%;
+    overflow: auto;
+}
+
+.modal-header {
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 15px;
+}
+
+.modal-footer {
+    padding: 15px;
+    border-top: 1px solid #ccc;
+    text-align: right;
+}
+
+.chapter-content {
+    margin: 10px 0;
+}
+
+.content-stats {
+    margin-bottom: 10px;
+}
+
+.stat-item {
+    margin-right: 15px;
+    font-size: 14px;
+}
+
+.content-text {
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: #f9f9f9;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* 测试页面样式 */
+.test-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.test-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.voice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.voice-item {
+    border: 1px solid #ccc;
+    padding: 15px;
+    text-align: center;
+}
+
+.voice-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.voice-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.play-button {
+    background: #000;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.play-button:hover {
+    background: #333;
+}
+
+.status {
+    margin-top: 10px;
+    font-size: 14px;
+}

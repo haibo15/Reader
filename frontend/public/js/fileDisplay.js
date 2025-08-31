@@ -67,7 +67,7 @@ class FileDisplay {
         
         // 显示章节后，检查音频状态
         setTimeout(() => {
-            AudioGenerator.checkAudioStatus();
+            AudioStatusManager.checkAudioStatus();
         }, 500);
     }
 

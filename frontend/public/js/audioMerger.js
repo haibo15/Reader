@@ -33,4 +33,37 @@ class AudioMerger {
             Utils.showStatus(`音频合并失败: ${error.message}`, 'error');
         }
     }
+
+    // 自动合并音频并显示播放器
+    static async autoMergeAndShowPlayer() {
+        try {
+            if (!currentFileId) {
+                return;
+            }
+
+            Utils.showStatus('正在自动合并音频文件...', 'info');
+
+            const response = await fetch(`${CONFIG.API_BASE_URL}/merge-audio/${currentFileId}`, {
+                method: 'GET'
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || '音频合并失败');
+            }
+
+            const result = await response.json();
+            
+            if (result.success) {
+                Utils.showStatus(`音频合并成功！共合并 ${result.total_chapters} 个章节`, 'success');
+                
+                // 显示完整音频播放器
+                AudioPlayer.showCompleteAudioPlayer();
+            }
+
+        } catch (error) {
+            console.error('自动合并音频失败:', error);
+            Utils.showStatus(`自动合并失败: ${error.message}`, 'error');
+        }
+    }
 }

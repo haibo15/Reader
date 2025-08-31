@@ -21,6 +21,9 @@ class AudioStatusManager {
     static updateAudioStatusDisplay(statusData) {
         const { audio_status, total_chapters, generated_count } = statusData;
         
+        // 保存音频状态到全局变量，供其他模块使用
+        window.currentAudioStatus = statusData;
+        
         // 更新章节表格中的音频状态
         audio_status.forEach(status => {
             const chapterRow = document.querySelector(`#chapter_${status.chapter_index}`)?.closest('.chapter-row');
@@ -28,15 +31,7 @@ class AudioStatusManager {
                 const audioStatusCell = chapterRow.querySelector('td:nth-child(6)');
                 if (audioStatusCell) {
                     if (status.has_audio) {
-                        audioStatusCell.innerHTML = `
-                            <span class="status-badge status-completed">已生成</span>
-                            <button class="btn btn-small btn-secondary" onclick="AudioPlayer.playAudio('${currentFileId}', '${status.audio_file}')">
-                                <i class="fas fa-play"></i> 播放
-                            </button>
-                            <button class="btn btn-small btn-primary" onclick="AudioDownloader.downloadChapterAudio('${currentFileId}', '${status.audio_file}')">
-                                <i class="fas fa-download"></i> 下载
-                            </button>
-                        `;
+                        audioStatusCell.innerHTML = '<span class="status-badge status-completed">已生成</span>';
                     } else {
                         audioStatusCell.innerHTML = '<span class="status-badge status-pending">未生成</span>';
                     }
@@ -69,25 +64,10 @@ class AudioStatusManager {
                 `;
             }
 
-            // 如果所有章节都已生成，添加合并和下载按钮
+            // 如果所有章节都已生成，自动合并音频并显示播放器
             if (generated_count > 0 && generated_count === total_chapters) {
-                AudioDownloader.addCompleteDownloadButton();
-                
-                // 添加合并按钮
-                let mergeBtn = audioControls.querySelector('.merge-audio-btn');
-                if (!mergeBtn) {
-                    mergeBtn = document.createElement('button');
-                    mergeBtn.className = 'btn btn-success merge-audio-btn';
-                    mergeBtn.innerHTML = '<i class="fas fa-music"></i> 合并音频';
-                    mergeBtn.onclick = () => AudioMerger.mergeAudioFiles();
-                    
-                    const actionsDiv = audioControls.querySelector('.audio-actions');
-                    if (actionsDiv) {
-                        actionsDiv.appendChild(mergeBtn);
-                    } else {
-                        audioControls.appendChild(mergeBtn);
-                    }
-                }
+                // 自动合并音频
+                AudioMerger.autoMergeAndShowPlayer();
             }
         }
     }
@@ -99,12 +79,7 @@ class AudioStatusManager {
             if (chapterRow) {
                 const audioStatusCell = chapterRow.querySelector('td:nth-child(6)');
                 if (audioStatusCell) {
-                    audioStatusCell.innerHTML = `
-                        <span class="status-badge status-completed">已生成</span>
-                        <button class="btn btn-small btn-secondary" onclick="AudioPlayer.playAudio('${currentFileId}', '${audioFile.audio_file}')">
-                            <i class="fas fa-play"></i> 播放
-                        </button>
-                    `;
+                    audioStatusCell.innerHTML = '<span class="status-badge status-completed">已生成</span>';
                 }
             }
         });
@@ -117,12 +92,7 @@ class AudioStatusManager {
             const audioStatusCell = chapterRow.querySelector('td:nth-child(6)');
             if (audioStatusCell) {
                 if (hasAudio && audioFile) {
-                    audioStatusCell.innerHTML = `
-                        <span class="status-badge status-completed">已生成</span>
-                        <button class="btn btn-small btn-secondary" onclick="AudioPlayer.playAudio('${currentFileId}', '${audioFile}')">
-                            <i class="fas fa-play"></i> 播放
-                        </button>
-                    `;
+                    audioStatusCell.innerHTML = '<span class="status-badge status-completed">已生成</span>';
                 } else {
                     audioStatusCell.innerHTML = '<span class="status-badge status-pending">未生成</span>';
                 }

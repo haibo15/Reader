@@ -189,19 +189,29 @@
 
             <!-- 音频播放器 -->
             <section class="audio-player" id="audioPlayer" style="display: none;">
-                <h2>🎵 音频播放</h2>
-                <div class="player-container">
-                    <audio id="audioElement" controls>
-                        您的浏览器不支持音频播放
-                    </audio>
-                    <div class="player-controls">
-                        <button class="btn btn-small" onclick="checkAudioStatus()">🔄 检查状态</button>
-                        <button class="btn btn-small" onclick="mergeAudioFiles()">🎵 合并音频</button>
-                        <button class="btn btn-small" onclick="downloadCompleteAudio()">💾 下载完整</button>
+                <h2>🎵 完整音频播放</h2>
+                
+                <!-- 第一行：完整音频播放器和下载按钮 -->
+                <div class="complete-audio-section">
+                    <div class="player-container">
+                        <audio id="audioElement" controls>
+                            <source id="audioSource" src="" type="audio/wav">
+                            您的浏览器不支持音频播放
+                        </audio>
+                    </div>
+                    <div class="complete-audio-actions">
+                        <button class="btn btn-primary" id="downloadCompleteBtn" onclick="downloadCompleteAudio()">
+                            <i class="fas fa-download"></i> 下载完整音频
+                        </button>
                     </div>
                 </div>
-                <div class="playlist" id="playlist">
-                    <!-- 播放列表将在这里显示 -->
+                
+                <!-- 第二行：章节列表 -->
+                <div class="chapters-audio-section">
+                    <h3>📖 章节音频列表</h3>
+                    <div class="chapters-audio-list" id="chaptersAudioList">
+                        <!-- 章节音频列表将在这里动态生成 -->
+                    </div>
                 </div>
             </section>
 
