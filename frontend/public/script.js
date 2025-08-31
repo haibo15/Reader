@@ -391,3 +391,62 @@ function formatFileSize(bytes) {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
+
+// 删除当前文件
+async function deleteCurrentFile() {
+    if (!currentFileId) {
+        showStatus('没有可删除的文件', 'warning');
+        return;
+    }
+    
+    // 确认删除
+    if (!confirm('确定要删除这个文件吗？这将同时删除上传的文件和所有相关的音频文件。')) {
+        return;
+    }
+    
+    try {
+        showStatus('正在删除文件...', 'info');
+        
+        const response = await fetch(`${API_BASE_URL}/delete-file`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                file_id: currentFileId
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`删除失败: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.error) {
+            throw new Error(result.error);
+        }
+        
+        // 清除当前文件信息
+        currentFileId = null;
+        currentChapters = [];
+        audioFiles = [];
+        currentPlaylistIndex = 0;
+        
+        // 隐藏相关区域
+        document.getElementById('fileInfo').style.display = 'none';
+        document.getElementById('chaptersSection').style.display = 'none';
+        document.getElementById('voiceSettings').style.display = 'none';
+        document.getElementById('audioControls').style.display = 'none';
+        document.getElementById('audioPlayer').style.display = 'none';
+        
+        // 清空播放列表
+        document.getElementById('playlist').innerHTML = '';
+        
+        showStatus('文件删除成功', 'success');
+        
+    } catch (error) {
+        showStatus(`删除失败: ${error.message}`, 'error');
+        console.error('Delete error:', error);
+    }
+}

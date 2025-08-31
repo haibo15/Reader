@@ -11,7 +11,7 @@ import json
 
 from app.services.file_processor import FileProcessor
 from app.services.text_to_speech_simple import SimpleTextToSpeechService
-from app.utils.file_utils import ensure_directories
+from app.utils.file_utils import ensure_directories, delete_file_and_related_audio
 
 # 配置
 from app import app
@@ -53,6 +53,7 @@ def upload_file():
         
         # 生成唯一文件名
         file_id = str(uuid.uuid4())
+        original_filename = file.filename
         filename = secure_filename(file.filename)
         file_extension = filename.rsplit('.', 1)[1].lower()
         new_filename = f"{file_id}.{file_extension}"
@@ -67,7 +68,7 @@ def upload_file():
         
         return jsonify({
             'file_id': file_id,
-            'filename': filename,
+            'filename': original_filename,
             'chapters': chapters,
             'total_chapters': len(chapters)
         })
@@ -156,6 +157,38 @@ def download_audio(filename):
             return send_file(file_path, as_attachment=True)
         else:
             return jsonify({'error': '文件不存在'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/delete-file', methods=['DELETE'])
+def delete_file():
+    """删除上传的文件及其相关音频文件"""
+    try:
+        data = request.json
+        file_id = data.get('file_id')
+        
+        if not file_id:
+            return jsonify({'error': '缺少文件ID'}), 400
+        
+        # 删除文件及其相关音频
+        result = delete_file_and_related_audio(
+            file_id, 
+            app.config['UPLOAD_FOLDER'], 
+            app.config['AUDIO_FOLDER']
+        )
+        
+        if result['success']:
+            return jsonify({
+                'message': '文件删除成功',
+                'deleted_files': result['deleted_files']
+            })
+        else:
+            return jsonify({
+                'error': '删除文件时出现错误',
+                'errors': result['errors'],
+                'deleted_files': result['deleted_files']
+            }), 500
+            
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

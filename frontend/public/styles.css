@@ -151,6 +151,13 @@ section h2 {
     color: #4a5568;
 }
 
+.info-actions {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+    text-align: center;
+}
+
 /* 章节列表 */
 .chapters-container {
     max-height: 400px;
@@ -268,6 +275,16 @@ section h2 {
 
 .btn-secondary:hover {
     background: #4a5568;
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: #e53e3e;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c53030;
     transform: translateY(-2px);
 }
 

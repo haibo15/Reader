@@ -62,3 +62,38 @@ def format_file_size(size_bytes: int) -> str:
         i += 1
     
     return f"{size_bytes:.1f} {size_names[i]}"
+
+def delete_file_and_related_audio(file_id: str, upload_folder: str, audio_folder: str) -> dict:
+    """删除上传的文件及其相关的音频文件"""
+    deleted_files = []
+    errors = []
+    
+    # 删除上传的文件
+    try:
+        for filename in os.listdir(upload_folder):
+            if filename.startswith(file_id):
+                file_path = os.path.join(upload_folder, filename)
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+                    deleted_files.append(f"上传文件: {filename}")
+                    print(f"删除文件: {file_path}")
+    except Exception as e:
+        errors.append(f"删除上传文件失败: {str(e)}")
+    
+    # 删除相关的音频文件
+    try:
+        for filename in os.listdir(audio_folder):
+            if filename.startswith(file_id):
+                audio_path = os.path.join(audio_folder, filename)
+                if os.path.exists(audio_path):
+                    os.remove(audio_path)
+                    deleted_files.append(f"音频文件: {filename}")
+                    print(f"删除音频文件: {audio_path}")
+    except Exception as e:
+        errors.append(f"删除音频文件失败: {str(e)}")
+    
+    return {
+        'deleted_files': deleted_files,
+        'errors': errors,
+        'success': len(errors) == 0
+    }
