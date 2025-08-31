@@ -13,9 +13,6 @@ pdfplumber==0.10.0
 ebooklib==0.18
 python-docx==0.8.11
 
-# 音频处理
-pydub==0.25.1
-
 # 阿里云Qwen-TTS API (官方要求 >= 1.23.1)
 # 参考：https://help.aliyun.com/zh/model-studio/qwen-tts#4d86103b5246q
 dashscope>=1.23.1

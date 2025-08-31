@@ -66,7 +66,9 @@ class SimpleTextToSpeechService:
                 text=text,
                 voice=settings['voice'],
                 format=settings.get('format', 'wav'),
-                sample_rate=settings.get('sample_rate', 16000)
+                sample_rate=settings.get('sample_rate', 16000),
+                speed=settings.get('speed', 1.0),  # 添加语速参数
+                volume=settings.get('volume', 0)    # 添加音量参数
             )
             
             if response.status_code == 200:
