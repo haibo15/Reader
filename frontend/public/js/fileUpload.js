@@ -4,8 +4,11 @@ class FileUpload {
     static handleFileSelect(event) {
         const file = event.target.files[0];
         if (file) {
-            console.log('选择的文件:', file.name, '大小:', file.size, '类型:', file.type);
-            FileUpload.uploadFile(file);
+            // 立即创建文件对象的副本，避免引用问题
+            const fileBlob = new Blob([file], { type: file.type });
+            const fileCopy = new File([fileBlob], file.name, { type: file.type });
+            // 立即上传
+            FileUpload.uploadFile(fileCopy);
         }
     }
 
@@ -26,15 +29,18 @@ class FileUpload {
         
         const files = event.dataTransfer.files;
         if (files.length > 0) {
-            FileUpload.uploadFile(files[0]);
+            const file = files[0];
+            // 创建文件对象的副本，保持一致性
+            const fileBlob = new Blob([file], { type: file.type });
+            const fileCopy = new File([fileBlob], file.name, { type: file.type });
+            // 立即上传
+            FileUpload.uploadFile(fileCopy);
         }
     }
 
     // 文件上传
     static async uploadFile(file) {
         try {
-            console.log('开始上传文件:', file.name, '大小:', file.size, '类型:', file.type);
-            
             // 验证文件
             if (!file) {
                 Utils.showStatus('请选择文件', 'warning');
@@ -61,15 +67,9 @@ class FileUpload {
             const formData = new FormData();
             formData.append('file', file);
             
-            console.log('FormData创建完成，文件大小:', file.size);
-            console.log('FormData中的文件:', formData.get('file'));
-            console.log('FormData中的文件大小:', formData.get('file').size);
-            
             // 添加超时设置
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), CONFIG.UPLOAD_TIMEOUT);
-            
-            console.log('开始发送请求到:', `${CONFIG.API_BASE_URL}/upload`);
             
             const response = await fetch(`${CONFIG.API_BASE_URL}/upload`, {
                 method: 'POST',
@@ -102,17 +102,21 @@ class FileUpload {
             document.getElementById('voiceSettings').style.display = 'block';
             document.getElementById('audioControls').style.display = 'block';
             
-            // 上传成功后重置文件输入框
-            Utils.resetFileInput();
-            
             Utils.hideUploadProgress();
             Utils.showStatus('文件上传成功！', 'success');
+            
+            // 上传成功后再重置文件输入框
+            setTimeout(() => {
+                Utils.resetFileInput();
+            }, 500);
             
         } catch (error) {
             Utils.hideUploadProgress();
             
-            // 上传失败时也重置文件输入框
-            Utils.resetFileInput();
+            // 上传失败时也延迟重置文件输入框
+            setTimeout(() => {
+                Utils.resetFileInput();
+            }, 500);
             
             if (error.name === 'AbortError') {
                 Utils.showStatus('上传超时，请重试', 'error');
@@ -121,8 +125,6 @@ class FileUpload {
             } else {
                 Utils.showStatus(`上传失败: ${error.message}`, 'error');
             }
-            
-            console.error('Upload error:', error);
         }
     }
 
@@ -181,7 +183,6 @@ class FileUpload {
             
         } catch (error) {
             Utils.showStatus(`删除失败: ${error.message}`, 'error');
-            console.error('Delete error:', error);
         }
     }
 }

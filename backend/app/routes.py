@@ -41,21 +41,15 @@ tts_service = SimpleTextToSpeechService()
 def upload_file():
     """上传文件接口"""
     try:
-        print(f"收到上传请求，文件数量: {len(request.files)}")
-        
         if 'file' not in request.files:
-            print("错误: 没有文件被上传")
             return jsonify({'error': '没有文件被上传'}), 400
         
         file = request.files['file']
-        print(f"文件名: {file.filename}, 文件大小: {file.content_length if hasattr(file, 'content_length') else '未知'}")
         
         if file.filename == '':
-            print("错误: 文件名为空")
             return jsonify({'error': '没有选择文件'}), 400
         
         if not allowed_file(file.filename):
-            print(f"错误: 不支持的文件格式: {file.filename}")
             return jsonify({'error': '不支持的文件格式'}), 400
         
         # 生成唯一文件名
@@ -73,15 +67,10 @@ def upload_file():
         # 保存文件
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
         file.save(file_path)
-        print(f"文件已保存到: {file_path}")
         
         # 解析文件内容
-        print(f"开始解析文件，格式: {file_extension}")
         text_content = file_processor.extract_text(file_path, file_extension)
-        print(f"文本内容长度: {len(text_content)} 字符")
-        
         chapters = file_processor.split_chapters(text_content)
-        print(f"解析出 {len(chapters)} 个章节")
         
         return jsonify({
             'file_id': file_id,
