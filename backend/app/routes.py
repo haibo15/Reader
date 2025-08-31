@@ -15,8 +15,13 @@ from app.utils.file_utils import ensure_directories
 
 # 配置
 from app import app
-app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER', './uploads')
-app.config['AUDIO_FOLDER'] = os.getenv('AUDIO_FOLDER', './audio')
+
+# 获取项目根目录（backend的父目录）
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(os.path.dirname(current_dir))
+
+app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER', os.path.join(project_root, 'uploads'))
+app.config['AUDIO_FOLDER'] = os.getenv('AUDIO_FOLDER', os.path.join(project_root, 'audio'))
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB限制
 
 # 允许的文件扩展名
