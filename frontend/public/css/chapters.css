@@ -1,0 +1,234 @@
+/* 章节相关样式 */
+.chapter-item {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.chapter-item:hover {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.chapter-title {
+    flex: 1;
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 1rem;
+}
+
+.chapter-status {
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.chapter-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.chapter-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.info-label {
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.info-value {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.chapter-actions {
+    margin-top: 8px;
+}
+
+/* 章节列表容器 */
+.chapters-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.chapter-checkbox {
+    margin-right: 15px;
+}
+
+/* 章节内容 */
+.chapter-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.content-stats {
+    display: flex;
+    gap: 16px;
+    padding: 12px 16px;
+    background: #f7fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.stat-item {
+    font-size: 0.9rem;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.content-text {
+    line-height: 1.6;
+    color: #2d3748;
+    font-size: 1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 16px;
+    background: #fafafa;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+/* 表格式章节列表样式 */
+.chapters-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.chapters-table thead {
+    background: #f7fafc;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.chapters-table th {
+    padding: 12px 8px;
+    text-align: left;
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.chapters-table th:first-child {
+    padding-left: 16px;
+}
+
+.chapters-table th:last-child {
+    padding-right: 16px;
+}
+
+.chapters-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.2s ease;
+}
+
+.chapters-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.chapters-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.chapters-table td {
+    padding: 12px 8px;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+.chapters-table td:first-child {
+    padding-left: 16px;
+}
+
+.chapters-table td:last-child {
+    padding-right: 16px;
+}
+
+.chapters-table .chapter-index {
+    font-weight: 600;
+    color: #667eea;
+    text-align: center;
+}
+
+.chapters-table .chapter-title {
+    font-weight: 500;
+    color: #2d3748;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chapters-table .chapter-length {
+    text-align: center;
+    font-weight: 500;
+    color: #718096;
+}
+
+/* 状态徽章样式 */
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-align: center;
+    min-width: 80px;
+}
+
+/* 全选复选框样式 */
+.chapters-table th input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.chapters-table td input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .chapters-table {
+        font-size: 0.8rem;
+    }
+    
+    .chapters-table th,
+    .chapters-table td {
+        padding: 8px 4px;
+    }
+    
+    .chapters-table .chapter-title {
+        max-width: 80px;
+    }
+    
+    .status-badge {
+        min-width: 60px;
+        font-size: 0.75rem;
+    }
+}

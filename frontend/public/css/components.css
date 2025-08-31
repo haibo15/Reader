@@ -1,0 +1,332 @@
+/* 按钮样式 */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+}
+
+.btn-test {
+    background: #28a745;
+    color: white;
+    white-space: nowrap;
+}
+
+.btn-test:hover {
+    background: #218838;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* 卡片样式 */
+.info-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 20px;
+    border-left: 3px solid #007bff;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.label {
+    font-weight: 600;
+    color: #333;
+}
+
+/* 表单组件 */
+.setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.setting-item label {
+    font-weight: 600;
+    color: #333;
+}
+
+/* 音频状态显示样式 */
+.audio-status-info {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f7fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.status-summary {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.status-summary span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+.status-summary span:before {
+    content: attr(data-label);
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #2d3748;
+}
+
+.status-summary .total-chapters:before {
+    content: "总章节";
+}
+
+.status-summary .generated-count:before {
+    content: "已生成";
+}
+
+.status-summary .progress:before {
+    content: "进度";
+}
+
+/* 音频播放按钮样式 */
+.audio-play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: #48bb78;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.audio-play-btn:hover {
+    background: #38a169;
+    transform: scale(1.05);
+}
+
+.audio-play-btn i {
+    font-size: 0.7rem;
+}
+
+/* 章节音频状态单元格样式 */
+.chapter-audio-status {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+}
+
+.chapter-audio-status .status-badge {
+    margin-bottom: 4px;
+}
+
+/* 进度条样式 */
+.progress-container {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f7fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 4px;
+}
+
+.progress-text {
+    text-align: center;
+    color: #4a5568;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.setting-item select,
+.setting-item input[type="range"] {
+    padding: 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+/* 语音选择样式 */
+.voice-selection {
+    grid-column: 1 / -1;
+}
+
+.voice-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.voice-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+}
+
+.voice-option:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.voice-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #667eea;
+    cursor: pointer;
+}
+
+.voice-option input[type="radio"]:checked + label {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.voice-option label {
+    flex: 1;
+    margin: 0;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #4a5568;
+}
+
+.voice-option .btn-test {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    min-width: 60px;
+}
+
+/* 范围滑块容器 */
+.range-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.range-container input[type="range"] {
+    flex: 1;
+    max-width: 200px;
+}
+
+.range-container span {
+    min-width: 40px;
+    text-align: center;
+    font-weight: 600;
+    color: #667eea;
+    font-size: 0.9rem;
+}
+
+.voice-select-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.voice-select-container select {
+    flex: 1;
+}
+
+.setting-item input[type="range"] {
+    padding: 0;
+    height: 6px;
+    background: #e2e8f0;
+    outline: none;
+    border: none;
+}
+
+/* 进度条 */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.status-success {
+    background: #c6f6d5;
+    color: #22543d;
+    font-weight: 600;
+}

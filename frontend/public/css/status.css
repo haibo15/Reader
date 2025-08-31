@@ -1,0 +1,73 @@
+/* 状态样式 - 统一管理所有状态相关的样式 */
+.audio-status {
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 3px;
+}
+
+/* 文本提取状态 */
+.status-text-extracted {
+    background: #d4edda;
+    color: #155724;
+}
+
+/* 待处理状态 */
+.status-pending {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* 生成中状态 */
+.status-generating {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* 已完成状态 */
+.status-completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+/* 失败状态 */
+.status-failed {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* 详细状态消息样式 */
+.status-message.detailed {
+    max-width: 600px;
+    white-space: pre-line;
+    line-height: 1.5;
+    padding: 15px 20px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    text-align: left;
+    border: 1px solid;
+}
+
+.status-message.detailed.success {
+    background: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.status-message.detailed.error {
+    background: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+.status-message.detailed.info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border-color: #bee5eb;
+}
+
+.status-message.detailed.warning {
+    background: #fff3cd;
+    color: #856404;
+    border-color: #ffeaa7;
+}
