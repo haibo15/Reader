@@ -6,7 +6,6 @@
 
 import os
 import wave
-import struct
 from typing import Dict, Optional
 
 class AudioMerger:
@@ -47,23 +46,42 @@ class AudioMerger:
                 channels = first_wav.getnchannels()
                 sample_width = first_wav.getsampwidth()
                 frame_rate = first_wav.getframerate()
-                sample_format = first_wav.getcomptype()
+                comp_type = first_wav.getcomptype()
+                comp_name = first_wav.getcompname()
+
+            # 仅支持未压缩 PCM WAV
+            if comp_type != 'NONE':
+                raise Exception(f"仅支持未压缩 PCM WAV（comptype=NONE），检测到 comptype={comp_type}")
             
             # 创建输出文件
             with wave.open(merged_filepath, 'wb') as output_wav:
                 output_wav.setnchannels(channels)
                 output_wav.setsampwidth(sample_width)
                 output_wav.setframerate(frame_rate)
-                output_wav.setcomptype(sample_format[0], sample_format[1])
+                # 与首段音频保持一致（未压缩情况下为 NONE/not compressed）
+                output_wav.setcomptype(comp_type, comp_name)
                 
                 # 依次读取并写入音频数据
                 for audio_file in existing_audio_files:
                     with wave.open(audio_file['filepath'], 'rb') as input_wav:
-                        # 验证音频参数是否一致
-                        if (input_wav.getnchannels() != channels or 
-                            input_wav.getsampwidth() != sample_width or 
-                            input_wav.getframerate() != frame_rate):
-                            print(f"警告: 音频文件 {audio_file['filepath']} 参数不一致，可能影响合并效果")
+                        # 验证音频参数是否一致（严格校验）
+                        in_channels = input_wav.getnchannels()
+                        in_sampwidth = input_wav.getsampwidth()
+                        in_framerate = input_wav.getframerate()
+                        in_comptype = input_wav.getcomptype()
+
+                        if (in_channels != channels or 
+                            in_sampwidth != sample_width or 
+                            in_framerate != frame_rate or 
+                            in_comptype != comp_type):
+                            raise Exception(
+                                (
+                                    f"音频参数不一致: {audio_file['filepath']} "
+                                    f"(channels={in_channels}, sampwidth={in_sampwidth}, framerate={in_framerate}, comptype={in_comptype}) "
+                                    f"vs 预期 (channels={channels}, sampwidth={sample_width}, framerate={frame_rate}, comptype={comp_type}). "
+                                    "请先转码为相同格式后再合并。"
+                                )
+                            )
                         
                         # 读取音频数据并写入输出文件
                         audio_data = input_wav.readframes(input_wav.getnframes())
