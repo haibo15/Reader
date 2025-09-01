@@ -88,6 +88,67 @@ class AudioFileManager:
             print(f"获取音频文件列表失败: {str(e)}")
             return []
     
+    def get_all_audio_versions(self, file_id: str) -> List[Dict]:
+        """获取指定文件所有版本的音频文件列表"""
+        try:
+            audio_folder = self.get_audio_folder_for_file(file_id)
+            audio_files = []
+            
+            if os.path.exists(audio_folder):
+                for filename in os.listdir(audio_folder):
+                    if filename.endswith('.wav') and filename.startswith('chapter_'):
+                        try:
+                            # 支持两种命名：
+                            # 1) 旧格式：chapter_{n}.wav
+                            # 2) 新格式：chapter_{n}__{voice}__{YYYYMMDD_HHMMSS}.wav
+                            base = filename[:-4]
+                            parts = base.split('__')
+                            # parts[0] like 'chapter_1'
+                            chapter_str = parts[0].replace('chapter_', '')
+                            chapter_index = int(chapter_str) - 1
+
+                            # 解析语音角色和时间戳
+                            voice = parts[1] if len(parts) >= 2 else 'Unknown'
+                            timestamp_str = parts[2] if len(parts) >= 3 else None
+                            
+                            # 格式化显示时间
+                            display_time = '未知时间'
+                            if timestamp_str:
+                                try:
+                                    from datetime import datetime
+                                    dt = datetime.strptime(timestamp_str, '%Y%m%d_%H%M%S')
+                                    display_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+                                except:
+                                    display_time = timestamp_str
+                            else:
+                                # 使用文件修改时间
+                                file_path = os.path.join(audio_folder, filename)
+                                import os
+                                from datetime import datetime
+                                mtime = os.path.getmtime(file_path)
+                                dt = datetime.fromtimestamp(mtime)
+                                display_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+
+                            audio_files.append({
+                                'filename': filename,
+                                'chapter_index': chapter_index,
+                                'filepath': os.path.join(audio_folder, filename),
+                                'voice': voice,
+                                'timestamp': timestamp_str,
+                                'display_time': display_time
+                            })
+                        except Exception:
+                            continue
+
+                # 按章节索引和时间戳排序
+                audio_files.sort(key=lambda x: (x['chapter_index'], x['timestamp'] or ''))
+            
+            return audio_files
+        
+        except Exception as e:
+            print(f"获取所有音频版本失败: {str(e)}")
+            return []
+    
     def get_file_path(self, file_id: str) -> Optional[str]:
         """获取文件路径"""
         upload_folder = self.app.config['UPLOAD_FOLDER']

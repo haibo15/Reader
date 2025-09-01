@@ -41,6 +41,12 @@
     font-size: 0.9rem;
 }
 
+.btn-mini {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    min-width: 30px;
+}
+
 .btn-test {
     background: #28a745;
     color: white;

@@ -86,14 +86,32 @@ class AudioService:
         """获取指定文件已生成的音频文件列表"""
         return self.file_manager.get_existing_audio_files(file_id)
     
+    def get_all_audio_versions(self, file_id: str) -> List[Dict]:
+        """获取指定文件所有版本的音频文件列表"""
+        return self.file_manager.get_all_audio_versions(file_id)
+    
     def get_audio_folder_for_file(self, file_id: str) -> str:
         """为指定文件ID获取音频文件夹路径"""
         return self.file_manager.get_audio_folder_for_file(file_id)
     
-    def merge_audio_files(self, file_id: str) -> Dict:
-        """合并指定文档的所有音频文件"""
+    def merge_audio_files(self, file_id: str, selected_chapters: List[int] = None) -> Dict:
+        """合并指定文档的音频文件
+        
+        Args:
+            file_id: 文档ID
+            selected_chapters: 选中的章节索引列表，None表示合并所有章节
+        """
         existing_audio_files = self.file_manager.get_existing_audio_files(file_id)
-        return self.merger.merge_audio_files(file_id, existing_audio_files)
+        
+        # 如果指定了选中章节，则筛选对应的音频文件
+        if selected_chapters is not None:
+            filtered_audio_files = []
+            for audio_file in existing_audio_files:
+                if audio_file['chapter_index'] in selected_chapters:
+                    filtered_audio_files.append(audio_file)
+            existing_audio_files = filtered_audio_files
+        
+        return self.merger.merge_audio_files(file_id, existing_audio_files, selected_chapters)
     
     def get_merged_audio_path(self, file_id: str) -> Optional[str]:
         """获取合并音频文件路径"""

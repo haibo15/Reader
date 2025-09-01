@@ -15,8 +15,14 @@ class AudioMerger:
     def __init__(self, app):
         self.app = app
     
-    def merge_audio_files(self, file_id: str, existing_audio_files: list) -> Dict:
-        """合并指定文档的所有音频文件"""
+    def merge_audio_files(self, file_id: str, existing_audio_files: list, selected_chapters: list = None) -> Dict:
+        """合并指定文档的音频文件
+        
+        Args:
+            file_id: 文档ID
+            existing_audio_files: 现有音频文件列表
+            selected_chapters: 选中的章节索引列表，用于生成文件名
+        """
         try:
             if not existing_audio_files:
                 raise Exception('没有找到音频文件')
@@ -28,7 +34,26 @@ class AudioMerger:
             base_audio_folder = self.app.config['AUDIO_FOLDER']
             audio_folder = os.path.join(base_audio_folder, file_id)
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            merged_filename = f"{file_id}_complete__{timestamp}.wav"
+            
+            # 生成合并文件名，反映章节范围
+            if selected_chapters is not None and len(selected_chapters) > 0:
+                # 对选中章节排序
+                sorted_chapters = sorted(selected_chapters)
+                if len(sorted_chapters) == 1:
+                    chapter_range = f"chapter_{sorted_chapters[0] + 1}"
+                elif self._is_continuous_range(sorted_chapters):
+                    chapter_range = f"chapters_{sorted_chapters[0] + 1}-{sorted_chapters[-1] + 1}"
+                else:
+                    # 非连续章节，显示前几个
+                    if len(sorted_chapters) <= 3:
+                        chapter_nums = [str(ch + 1) for ch in sorted_chapters]
+                        chapter_range = f"chapters_{'_'.join(chapter_nums)}"
+                    else:
+                        chapter_range = f"chapters_{sorted_chapters[0] + 1}_{sorted_chapters[1] + 1}_etc_{len(sorted_chapters)}total"
+            else:
+                chapter_range = "complete"
+            
+            merged_filename = f"{file_id}_{chapter_range}__{timestamp}.wav"
             merged_filepath = os.path.join(audio_folder, merged_filename)
             
             # 使用wave模块合并音频文件
@@ -36,6 +61,16 @@ class AudioMerger:
             
         except Exception as e:
             raise Exception(str(e))
+    
+    def _is_continuous_range(self, sorted_chapters: list) -> bool:
+        """判断章节列表是否为连续范围"""
+        if len(sorted_chapters) <= 1:
+            return True
+        
+        for i in range(1, len(sorted_chapters)):
+            if sorted_chapters[i] != sorted_chapters[i-1] + 1:
+                return False
+        return True
     
     def _merge_with_wave(self, existing_audio_files: list, merged_filepath: str, merged_filename: str) -> Dict:
         """使用wave模块合并WAV文件（Python标准库，无需额外依赖）"""
@@ -107,16 +142,22 @@ class AudioMerger:
             return None
 
         candidates = []
-        prefix = f"{file_id}_complete"
         try:
             for filename in os.listdir(audio_folder):
-                if filename.endswith('.wav') and filename.startswith(prefix):
-                    filepath = os.path.join(audio_folder, filename)
-                    base = filename[:-4]
-                    parts = base.split('__')
-                    timestamp_str = parts[1] if len(parts) >= 2 else None
-                    rank = timestamp_str or f"mtime:{os.path.getmtime(filepath)}"
-                    candidates.append((rank, filepath))
+                if filename.endswith('.wav') and filename.startswith(f"{file_id}_"):
+                    # 检查是否是合并文件（不是单章节文件）
+                    if '_chapter_' in filename and '__' in filename:
+                        continue  # 跳过单章节文件
+                    
+                    # 合并文件格式：file_id_complete__timestamp.wav 或 file_id_chapters_x-y__timestamp.wav
+                    if '_complete__' in filename or '_chapters_' in filename or '_chapter_' in filename:
+                        filepath = os.path.join(audio_folder, filename)
+                        base = filename[:-4]
+                        parts = base.split('__')
+                        # 最后一个部分应该是时间戳
+                        timestamp_str = parts[-1] if len(parts) >= 2 else None
+                        rank = timestamp_str or f"mtime:{os.path.getmtime(filepath)}"
+                        candidates.append((rank, filepath))
         except Exception:
             return None
 

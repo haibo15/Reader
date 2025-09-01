@@ -71,6 +71,40 @@ class AudioDownloader {
                     audioControls.appendChild(downloadBtn);
                 }
             }
+            
+            // 添加合并选中章节按钮
+            this.addMergeSelectedButton();
+        }
+    }
+    
+    // 添加合并选中章节按钮
+    static addMergeSelectedButton() {
+        const audioControls = document.getElementById('audioControls');
+        if (audioControls) {
+            // 检查是否已存在合并按钮
+            let mergeBtn = audioControls.querySelector('.merge-selected-btn');
+            
+            if (!mergeBtn) {
+                mergeBtn = document.createElement('button');
+                mergeBtn.className = 'btn btn-secondary merge-selected-btn';
+                mergeBtn.innerHTML = '<i class="fas fa-compress-arrows-alt"></i> 合并选中章节';
+                mergeBtn.onclick = () => {
+                    const selectedChapters = FileDisplay.getSelectedChapters();
+                    if (selectedChapters.length === 0) {
+                        Utils.showStatus('请选择要合并的章节', 'warning');
+                        return;
+                    }
+                    AudioMerger.mergeAudioFiles(selectedChapters);
+                };
+                
+                // 插入到音频控制区域
+                const actionsDiv = audioControls.querySelector('.audio-actions');
+                if (actionsDiv) {
+                    actionsDiv.appendChild(mergeBtn);
+                } else {
+                    audioControls.appendChild(mergeBtn);
+                }
+            }
         }
     }
 
@@ -157,6 +191,14 @@ class AudioDownloader {
 
     // 根据章节索引获取音频文件名
     static getChapterAudioFileName(chapterIndex) {
+        // 优先从版本管理器获取当前选中的版本
+        if (typeof AudioVersionManager !== 'undefined') {
+            const selectedFilename = AudioVersionManager.getSelectedAudioFilename(chapterIndex);
+            if (selectedFilename) {
+                return selectedFilename;
+            }
+        }
+        
         // 尝试从音频状态中获取实际的文件名
         if (window.currentAudioStatus && window.currentAudioStatus.audio_status) {
             const status = window.currentAudioStatus.audio_status.find(s => s.chapter_index === chapterIndex);

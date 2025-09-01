@@ -99,12 +99,19 @@ def check_audio_status(file_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@audio_bp.route('/merge-audio/<file_id>')
+@audio_bp.route('/merge-audio/<file_id>', methods=['GET', 'POST'])
 def merge_audio_files(file_id):
-    """合并指定文档的所有音频文件"""
+    """合并指定文档的音频文件"""
     try:
         service = get_audio_service()
-        result = service.merge_audio_files(file_id)
+        
+        # 支持POST请求传递选中章节参数
+        selected_chapters = None
+        if request.method == 'POST':
+            data = request.json or {}
+            selected_chapters = data.get('selected_chapters')
+        
+        result = service.merge_audio_files(file_id, selected_chapters)
         return jsonify(result)
         
     except Exception as e:
@@ -116,20 +123,17 @@ def download_complete_audio(file_id):
     try:
         service = get_audio_service()
         
-        # 检查是否存在合并文件
+        # 检查是否存在合并文件（不再自动合并）
         merged_path = service.get_merged_audio_path(file_id)
-        
-        if not merged_path:
-            # 如果不存在，先合并
-            service.merge_audio_files(file_id)
-            merged_path = service.get_merged_audio_path(file_id)
         
         if merged_path:
             audio_folder = service.get_audio_folder_for_file(file_id)
-            merged_filename = f"{file_id}_complete.wav"
+            # 使用实际存在的最新合并文件名返回
+            import os
+            merged_filename = os.path.basename(merged_path)
             return send_from_directory(audio_folder, merged_filename, as_attachment=True)
         else:
-            return jsonify({'error': '合并音频文件失败'}), 500
+            return jsonify({'error': '未找到合并文件，请先使用“合并选中章节”生成'}), 404
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500

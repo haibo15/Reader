@@ -72,13 +72,20 @@ class AudioPlayer {
                 return;
             }
 
-            // 创建章节音频列表HTML
-            const chaptersHTML = currentChapters.map((chapter, index) => {
-                const truncatedTitle = chapter.title.length > 20 
-                    ? chapter.title.substring(0, 20) + '...' 
-                    : chapter.title;
-                
-                return `
+            // 使用状态数据仅渲染已生成音频的章节
+            const status = (window.currentAudioStatus && window.currentAudioStatus.audio_status) ? window.currentAudioStatus.audio_status : [];
+            const playableIndices = new Set(status.filter(s => s.has_audio).map(s => s.chapter_index));
+
+            // 创建章节音频列表HTML（仅显示已生成）
+            const chaptersHTML = currentChapters
+                .map((chapter, index) => ({ chapter, index }))
+                .filter(({ index }) => playableIndices.has(index))
+                .map(({ chapter, index }) => {
+                    const truncatedTitle = chapter.title.length > 20 
+                        ? chapter.title.substring(0, 20) + '...' 
+                        : chapter.title;
+                    
+                    return `
                     <div class="chapter-audio-item" data-chapter-index="${index}">
                         <div class="chapter-info">
                             <span class="chapter-number">${index + 1}</span>
@@ -96,7 +103,13 @@ class AudioPlayer {
                                 </div>
                             </div>
                         </div>
+                        <div class="chapter-version-selector" id="chapterVersions_${index}">
+                            <!-- 版本选择器将在这里动态生成 -->
+                        </div>
                         <div class="chapter-actions">
+                            <label class="checkbox-inline" title="参与合并">
+                                <input type="checkbox" class="audio-chapter-checkbox" data-chapter="${index}" checked /> 选择
+                            </label>
                             <button class="btn btn-small btn-secondary chapter-play-btn" data-chapter="${index}" onclick="AudioPlayer.playChapterAudio(${index})">
                                 <i class="fas fa-play"></i> 播放
                             </button>
@@ -106,13 +119,26 @@ class AudioPlayer {
                         </div>
                     </div>
                 `;
-            }).join('');
+                }).join('');
 
-            chaptersAudioList.innerHTML = chaptersHTML;
+            chaptersAudioList.innerHTML = chaptersHTML || '<div class="empty-tip">暂无已生成的章节音频</div>';
+            
+            // 生成章节列表后，立即加载音频版本选择器
+            setTimeout(() => {
+                if (typeof AudioVersionManager !== 'undefined') {
+                    AudioVersionManager.loadAudioVersions();
+                }
+            }, 100);
             
         } catch (error) {
             console.error('生成章节音频列表失败:', error);
         }
+    }
+
+    // 从章节音频列表中获取被勾选用于合并的章节索引
+    static getSelectedAudioChapters() {
+        const boxes = document.querySelectorAll('.audio-chapter-checkbox:checked');
+        return Array.from(boxes).map(b => parseInt(b.getAttribute('data-chapter')));
     }
 
     // 播放章节音频

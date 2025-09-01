@@ -212,6 +212,48 @@
     cursor: pointer;
 }
 
+/* 章节版本控件样式 */
+.chapter-version-controls {
+    margin: 8px 0;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+}
+
+.version-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.version-label {
+    font-size: 0.85rem;
+    color: #495057;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.version-selector {
+    padding: 4px 8px;
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    background: white;
+    min-width: 200px;
+    flex: 1;
+}
+
+.version-selector:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.chapter-version-selector {
+    margin: 6px 0;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
     .chapters-table {

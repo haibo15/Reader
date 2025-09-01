@@ -64,12 +64,35 @@ class AudioStatusManager {
                 `;
             }
 
-            // 如果所有章节都已生成，自动合并音频并显示播放器
+            // 无论是否已合并，始终提供“合并选中章节”按钮和“下载各章节音频”按钮
+            try {
+                if (typeof AudioDownloader !== 'undefined') {
+                    AudioDownloader.addMergeSelectedButton();
+                    AudioDownloader.addChapterDownloadButtons();
+                }
+            } catch (_) {}
+
+            // 只要有任意章节已生成，就展示章节音频列表（无需等待合并）
+            if (generated_count > 0) {
+                const audioPlayer = document.getElementById('audioPlayer');
+                if (audioPlayer) {
+                    audioPlayer.style.display = 'block';
+                }
+                try {
+                    if (typeof AudioPlayer !== 'undefined') {
+                        AudioPlayer.generateChaptersAudioList();
+                    }
+                } catch (_) {}
+            }
+
+            // 如果所有章节都已生成，不再自动合并，仅提示可手动合并
             if (generated_count > 0 && generated_count === total_chapters) {
-                // 自动合并音频
-                AudioMerger.autoMergeAndShowPlayer();
+                Utils.showStatus('所有章节已生成，可使用“合并选中章节”手动合并', 'info');
             }
         }
+
+        // 加载音频版本选择器
+        AudioVersionManager.loadAudioVersions();
     }
 
     // 更新章节状态
@@ -83,6 +106,25 @@ class AudioStatusManager {
                 }
             }
         });
+        
+        // 章节生成后，确保按钮与列表可见
+        try {
+            if (typeof AudioDownloader !== 'undefined') {
+                AudioDownloader.addMergeSelectedButton();
+                AudioDownloader.addChapterDownloadButtons();
+            }
+            if (typeof AudioPlayer !== 'undefined') {
+                const audioPlayer = document.getElementById('audioPlayer');
+                if (audioPlayer) audioPlayer.style.display = 'block';
+                // 稍等DOM更新后再渲染列表
+                setTimeout(() => AudioPlayer.generateChaptersAudioList(), 0);
+            }
+        } catch (_) {}
+        
+        // 重新加载音频版本选择器
+        setTimeout(() => {
+            AudioVersionManager.loadAudioVersions();
+        }, 500);
     }
 
     // 更新单个章节的音频生成状态
