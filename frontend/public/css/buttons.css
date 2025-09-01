@@ -1,0 +1,307 @@
+/**
+ * 按钮组件样式
+ * 包含所有按钮相关的样式定义
+ */
+
+/* ==============================================
+   基础按钮样式
+   ============================================== */
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.btn:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ==============================================
+   按钮尺寸变体
+   ============================================== */
+
+.btn-large {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+}
+
+.btn-mini {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    min-width: 30px;
+}
+
+/* ==============================================
+   按钮颜色变体
+   ============================================== */
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #0056b3;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #545b62;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+    background: #218838;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: #c82333;
+}
+
+.btn-warning {
+    background: #ffc107;
+    color: #212529;
+}
+
+.btn-warning:hover:not(:disabled) {
+    background: #e0a800;
+}
+
+.btn-info {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-info:hover:not(:disabled) {
+    background: #138496;
+}
+
+.btn-light {
+    background: #f8f9fa;
+    color: #212529;
+    border: 1px solid #dee2e6;
+}
+
+.btn-light:hover:not(:disabled) {
+    background: #e2e6ea;
+}
+
+.btn-dark {
+    background: #343a40;
+    color: white;
+}
+
+.btn-dark:hover:not(:disabled) {
+    background: #23272b;
+}
+
+/* ==============================================
+   按钮样式变体
+   ============================================== */
+
+/* 轮廓按钮 */
+.btn-outline-primary {
+    background: transparent;
+    color: #007bff;
+    border: 1px solid #007bff;
+}
+
+.btn-outline-primary:hover:not(:disabled) {
+    background: #007bff;
+    color: white;
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    color: #6c757d;
+    border: 1px solid #6c757d;
+}
+
+.btn-outline-secondary:hover:not(:disabled) {
+    background: #6c757d;
+    color: white;
+}
+
+/* 链接样式按钮 */
+.btn-link {
+    background: transparent;
+    color: #007bff;
+    border: none;
+    text-decoration: underline;
+    padding: 0;
+}
+
+.btn-link:hover:not(:disabled) {
+    color: #0056b3;
+}
+
+/* ==============================================
+   特殊功能按钮
+   ============================================== */
+
+.btn-test {
+    background: #28a745;
+    color: white;
+}
+
+.btn-test:hover:not(:disabled) {
+    background: #218838;
+}
+
+.audio-play-btn {
+    padding: 4px 8px;
+    background: #48bb78;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.audio-play-btn:hover:not(:disabled) {
+    background: #38a169;
+    transform: scale(1.05);
+}
+
+.audio-play-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.audio-play-btn i {
+    font-size: 0.7rem;
+}
+
+/* ==============================================
+   按钮组
+   ============================================== */
+
+.btn-group {
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+.btn-group .btn {
+    border-radius: 0;
+    margin-left: -1px;
+}
+
+.btn-group .btn:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    margin-left: 0;
+}
+
+.btn-group .btn:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.btn-group .btn:hover {
+    z-index: 1;
+}
+
+/* ==============================================
+   响应式按钮样式
+   ============================================== */
+
+@media (max-width: 768px) {
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.95rem;
+    }
+    
+    .btn-large {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+    
+    .btn-small {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+    
+    .btn-mini {
+        padding: 4px 6px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .btn-small {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .btn-mini {
+        padding: 4px 6px;
+        font-size: 0.7rem;
+    }
+    
+    /* 移动端按钮组垂直排列 */
+    .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-group .btn {
+        border-radius: 0;
+        margin-left: 0;
+        margin-top: -1px;
+    }
+    
+    .btn-group .btn:first-child {
+        border-radius: 4px 4px 0 0;
+        margin-top: 0;
+    }
+    
+    .btn-group .btn:last-child {
+        border-radius: 0 0 4px 4px;
+    }
+}

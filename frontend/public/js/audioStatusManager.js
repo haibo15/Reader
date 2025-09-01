@@ -81,6 +81,8 @@ class AudioStatusManager {
                 try {
                     if (typeof AudioPlayer !== 'undefined') {
                         AudioPlayer.generateChaptersAudioList();
+                        // 检查是否有合并音频版本
+                        AudioPlayer.loadMergedAudioVersions();
                     }
                 } catch (_) {}
             }

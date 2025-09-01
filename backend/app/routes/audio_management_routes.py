@@ -42,6 +42,17 @@ def get_all_audio_versions(file_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@audio_management_bp.route('/merged-audio-versions/<file_id>')
+def get_merged_audio_versions(file_id):
+    """获取指定文件的所有合并音频版本"""
+    try:
+        service = get_audio_service()
+        merged_versions = service.get_merged_audio_versions(file_id)
+        return jsonify({'merged_versions': merged_versions})
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @audio_management_bp.route('/check-audio-status/<file_id>')
 def check_audio_status(file_id):
     """检查指定文件的音频生成状态"""

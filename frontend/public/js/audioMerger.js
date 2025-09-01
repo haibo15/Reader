@@ -56,12 +56,13 @@ class AudioMerger {
             if (result.success) {
                 Utils.showStatus(`音频合并成功！共合并 ${result.total_chapters} 个章节`, 'success');
                 
-                // 添加整体下载按钮
-                AudioDownloader.addCompleteDownloadButton();
-                
                 // 显示完整音频播放器，供用户播放手动合并结果
                 if (typeof AudioPlayer !== 'undefined') {
                     AudioPlayer.showCompleteAudioPlayer();
+                    // 刷新合并音频版本列表
+                    setTimeout(() => {
+                        AudioPlayer.loadMergedAudioVersions();
+                    }, 500);
                 }
             }
 

@@ -148,6 +148,73 @@ class AudioFileManager:
             print(f"获取所有音频版本失败: {str(e)}")
             return []
     
+    def get_merged_audio_versions(self, file_id: str) -> List[Dict]:
+        """获取指定文件所有版本的合并音频文件列表"""
+        try:
+            audio_folder = self.get_audio_folder_for_file(file_id)
+            merged_files = []
+            
+            if os.path.exists(audio_folder):
+                for filename in os.listdir(audio_folder):
+                    if filename.endswith('.wav') and filename.startswith(f"{file_id}_"):
+                        # 检查是否是合并文件（不是单章节文件）
+                        if '_chapter_' in filename and '__' in filename:
+                            continue  # 跳过单章节文件
+                        
+                        # 合并文件格式：file_id_complete__timestamp.wav 或 file_id_chapters_x-y__timestamp.wav
+                        if '_complete__' in filename or '_chapters_' in filename or '_chapter_' in filename:
+                            try:
+                                base = filename[:-4]
+                                parts = base.split('__')
+                                
+                                # 解析章节范围
+                                chapter_range = "完整"
+                                if '_chapters_' in filename:
+                                    range_part = parts[0].split('_chapters_')[1]
+                                    chapter_range = f"章节{range_part}"
+                                elif '_chapter_' in filename and '_chapters_' not in filename:
+                                    range_part = parts[0].split('_chapter_')[1]
+                                    chapter_range = f"章节{range_part}"
+                                
+                                # 解析时间戳
+                                timestamp_str = parts[-1] if len(parts) >= 2 else None
+                                
+                                # 格式化显示时间
+                                display_time = '未知时间'
+                                if timestamp_str:
+                                    try:
+                                        from datetime import datetime
+                                        dt = datetime.strptime(timestamp_str, '%Y%m%d_%H%M%S')
+                                        display_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+                                    except:
+                                        display_time = timestamp_str
+                                else:
+                                    # 使用文件修改时间
+                                    file_path = os.path.join(audio_folder, filename)
+                                    from datetime import datetime
+                                    mtime = os.path.getmtime(file_path)
+                                    dt = datetime.fromtimestamp(mtime)
+                                    display_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+
+                                merged_files.append({
+                                    'filename': filename,
+                                    'filepath': os.path.join(audio_folder, filename),
+                                    'chapter_range': chapter_range,
+                                    'timestamp': timestamp_str,
+                                    'display_time': display_time
+                                })
+                            except Exception:
+                                continue
+
+                # 按时间戳排序（最新的在前面）
+                merged_files.sort(key=lambda x: x['timestamp'] or '', reverse=True)
+            
+            return merged_files
+        
+        except Exception as e:
+            print(f"获取合并音频版本失败: {str(e)}")
+            return []
+    
     def get_file_path(self, file_id: str) -> Optional[str]:
         """获取文件路径"""
         upload_folder = self.app.config['UPLOAD_FOLDER']

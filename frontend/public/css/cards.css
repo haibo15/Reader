@@ -1,0 +1,620 @@
+/**
+ * 卡片组件样式
+ * 包含所有卡片相关的样式定义
+ */
+
+/* ==============================================
+   基础卡片样式
+   ============================================== */
+
+.card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.card.flat {
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
+}
+
+.card.elevated {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card.elevated:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* ==============================================
+   卡片结构组件
+   ============================================== */
+
+.card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.card-header.no-border {
+    border-bottom: none;
+}
+
+.card-header.primary {
+    background: #667eea;
+    color: white;
+    border-bottom-color: #5a67d8;
+}
+
+.card-header.secondary {
+    background: #6c757d;
+    color: white;
+    border-bottom-color: #5a6169;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-body.compact {
+    padding: 15px;
+}
+
+.card-body.spacious {
+    padding: 25px;
+}
+
+.card-footer {
+    padding: 16px 20px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.card-footer.no-border {
+    border-top: none;
+}
+
+/* ==============================================
+   卡片标题和内容
+   ============================================== */
+
+.card-title {
+    margin: 0 0 8px 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    line-height: 1.3;
+}
+
+.card-title.large {
+    font-size: 1.5rem;
+}
+
+.card-title.small {
+    font-size: 1.1rem;
+}
+
+.card-subtitle {
+    margin: 0 0 12px 0;
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.card-text {
+    margin: 0 0 15px 0;
+    color: #4a5568;
+    line-height: 1.6;
+}
+
+.card-text:last-child {
+    margin-bottom: 0;
+}
+
+/* ==============================================
+   信息卡片
+   ============================================== */
+
+.info-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    border-left: 4px solid #007bff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.info-card.success {
+    border-left-color: #28a745;
+}
+
+.info-card.warning {
+    border-left-color: #ffc107;
+}
+
+.info-card.danger {
+    border-left-color: #dc3545;
+}
+
+.info-card.info {
+    border-left-color: #17a2b8;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.info-item:hover {
+    background-color: #f8f9fa;
+    margin: 0 -10px 12px -10px;
+    padding: 8px 10px;
+    border-radius: 4px;
+}
+
+.info-item:last-child:hover {
+    margin-bottom: -10px;
+}
+
+.info-item .info-label {
+    font-weight: 600;
+    color: #333;
+    flex-shrink: 0;
+}
+
+.info-item .info-value {
+    color: #6c757d;
+    text-align: right;
+    margin-left: 15px;
+}
+
+/* ==============================================
+   统计卡片
+   ============================================== */
+
+.stat-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #f0f4ff;
+    color: #667eea;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.stat-card-icon.success {
+    background: #f0fff4;
+    color: #38a169;
+}
+
+.stat-card-icon.warning {
+    background: #fffbeb;
+    color: #d69e2e;
+}
+
+.stat-card-icon.danger {
+    background: #fff5f5;
+    color: #e53e3e;
+}
+
+.stat-card-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 5px;
+    line-height: 1;
+}
+
+.stat-card-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-card-change {
+    font-size: 0.8rem;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.stat-card-change.positive {
+    color: #38a169;
+}
+
+.stat-card-change.negative {
+    color: #e53e3e;
+}
+
+.stat-card-change i {
+    font-size: 0.7rem;
+}
+
+/* ==============================================
+   媒体卡片
+   ============================================== */
+
+.media-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.media-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.media-card-image {
+    width: 100%;
+    height: 200px;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a0aec0;
+    font-size: 2rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.media-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.media-card-content {
+    padding: 20px;
+}
+
+.media-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.media-card-description {
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.media-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #a0aec0;
+}
+
+/* ==============================================
+   操作卡片
+   ============================================== */
+
+.action-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    transform: translateY(-2px);
+}
+
+.action-card:hover::before {
+    transform: translateX(0);
+}
+
+.action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.action-card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #f0f4ff;
+    color: #667eea;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    transition: all 0.2s ease;
+}
+
+.action-card:hover .action-card-icon {
+    background: #667eea;
+    color: white;
+    transform: scale(1.1);
+}
+
+.action-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 8px;
+}
+
+.action-card-description {
+    font-size: 0.85rem;
+    color: #6c757d;
+    line-height: 1.4;
+}
+
+/* ==============================================
+   卡片网格布局
+   ============================================== */
+
+.card-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.card-grid.compact {
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.card-grid.spacious {
+    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+}
+
+/* 特定列数的网格 */
+.card-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.card-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.card-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* ==============================================
+   卡片状态
+   ============================================== */
+
+.card.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.card.loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.card.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.card.selected {
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+/* ==============================================
+   响应式卡片
+   ============================================== */
+
+@media (max-width: 768px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .card-grid-2,
+    .card-grid-3,
+    .card-grid-4 {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-header,
+    .card-body,
+    .card-footer {
+        padding: 15px;
+    }
+    
+    .card-body.compact {
+        padding: 12px;
+    }
+    
+    .card-body.spacious {
+        padding: 20px;
+    }
+    
+    .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .card-title.large {
+        font-size: 1.25rem;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-card-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+        margin-bottom: 12px;
+    }
+    
+    .stat-card-value {
+        font-size: 1.5rem;
+    }
+    
+    .media-card-image {
+        height: 150px;
+    }
+    
+    .media-card-content {
+        padding: 15px;
+    }
+    
+    .action-card {
+        padding: 15px;
+    }
+    
+    .action-card-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+        margin-bottom: 12px;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+    }
+    
+    .info-item .info-value {
+        text-align: left;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        border-radius: 6px;
+    }
+    
+    .card-header,
+    .card-body,
+    .card-footer {
+        padding: 12px;
+    }
+    
+    .card-title {
+        font-size: 1rem;
+    }
+    
+    .stat-card {
+        padding: 12px;
+    }
+    
+    .stat-card-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+    
+    .stat-card-value {
+        font-size: 1.25rem;
+    }
+    
+    .media-card-image {
+        height: 120px;
+        font-size: 1.5rem;
+    }
+    
+    .media-card-content {
+        padding: 12px;
+    }
+    
+    .action-card {
+        padding: 12px;
+    }
+    
+    .action-card-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+    
+    .card-grid {
+        gap: 12px;
+    }
+}

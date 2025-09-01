@@ -50,31 +50,9 @@ class AudioDownloader {
         }
     }
 
-    // 添加整体下载按钮
+    // 不再添加整体下载按钮（在合并音频播放器中已有下载功能）
     static addCompleteDownloadButton() {
-        const audioControls = document.getElementById('audioControls');
-        if (audioControls) {
-            // 检查是否已存在下载按钮
-            let downloadBtn = audioControls.querySelector('.complete-download-btn');
-            
-            if (!downloadBtn) {
-                downloadBtn = document.createElement('button');
-                downloadBtn.className = 'btn btn-primary complete-download-btn';
-                downloadBtn.innerHTML = '<i class="fas fa-download"></i> 下载完整音频';
-                downloadBtn.onclick = () => AudioDownloader.downloadCompleteAudio();
-                
-                // 插入到音频控制区域
-                const actionsDiv = audioControls.querySelector('.audio-actions');
-                if (actionsDiv) {
-                    actionsDiv.appendChild(downloadBtn);
-                } else {
-                    audioControls.appendChild(downloadBtn);
-                }
-            }
-            
-            // 添加合并选中章节按钮
-            this.addMergeSelectedButton();
-        }
+        // 功能已移除，合并音频下载在播放器中处理
     }
     
     // 添加合并选中章节按钮
@@ -135,31 +113,9 @@ class AudioDownloader {
         }
     }
 
-    // 添加章节音频下载按钮
+    // 不再添加章节音频下载按钮（在章节列表中已有下载功能）
     static addChapterDownloadButtons() {
-        const audioControls = document.getElementById('audioControls');
-        if (audioControls) {
-            // 检查是否已存在章节下载按钮
-            let chapterDownloadBtn = audioControls.querySelector('.chapter-download-btn');
-            
-            if (!chapterDownloadBtn) {
-                chapterDownloadBtn = document.createElement('button');
-                chapterDownloadBtn.className = 'btn btn-secondary chapter-download-btn';
-                chapterDownloadBtn.innerHTML = '<i class="fas fa-download"></i> 下载各章节音频';
-                chapterDownloadBtn.onclick = () => AudioDownloader.downloadAllChapterAudio();
-                
-                // 确保按钮容器在同一行
-                this.ensureButtonsInSameRow();
-                
-                // 插入到音频控制区域
-                const actionsDiv = audioControls.querySelector('.audio-actions');
-                if (actionsDiv) {
-                    actionsDiv.appendChild(chapterDownloadBtn);
-                } else {
-                    audioControls.appendChild(chapterDownloadBtn);
-                }
-            }
-        }
+        // 功能已移除，章节下载在章节音频列表中处理
     }
 
     // 下载所有章节音频

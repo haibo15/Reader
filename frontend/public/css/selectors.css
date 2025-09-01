@@ -1,0 +1,517 @@
+/**
+ * 选择器组件样式
+ * 包含所有选择器相关的样式定义
+ */
+
+/* ==============================================
+   语音选择器
+   ============================================== */
+
+.voice-selection {
+    grid-column: 1 / -1;
+    margin-bottom: 20px;
+}
+
+.voice-selection-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.voice-selection-title i {
+    color: #667eea;
+}
+
+.voice-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.voice-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.voice-option:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.voice-option.selected {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.voice-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #667eea;
+    cursor: pointer;
+    margin: 0;
+}
+
+.voice-option input[type="radio"]:checked + label {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.voice-option label {
+    flex: 1;
+    margin: 0;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #4a5568;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.voice-option label .voice-name {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.voice-option label .voice-desc {
+    font-size: 0.8rem;
+    color: #718096;
+}
+
+.voice-option .btn-test {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    min-width: 60px;
+    flex-shrink: 0;
+}
+
+/* 语音选择器加载状态 */
+.voice-options.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.voice-options.loading::after {
+    content: "加载中...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* ==============================================
+   下拉选择器容器
+   ============================================== */
+
+.voice-select-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.voice-select-container label {
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.voice-select-container select {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background-color: white;
+    cursor: pointer;
+    min-width: 150px;
+}
+
+.voice-select-container select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.voice-select-container .btn-test {
+    flex-shrink: 0;
+}
+
+/* ==============================================
+   合并音频版本选择器
+   ============================================== */
+
+.merged-audio-header {
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.merged-audio-header h4 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    color: #2d3748;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.merged-audio-header h4 i {
+    color: #667eea;
+}
+
+.merged-version-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.merged-version-selector label {
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.merged-version-selector select {
+    padding: 6px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    min-width: 200px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.merged-version-selector select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.merged-version-selector select:disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* 版本选择器状态指示器 */
+.version-status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.version-status-indicator.available {
+    color: #28a745;
+}
+
+.version-status-indicator.unavailable {
+    color: #dc3545;
+}
+
+.version-status-indicator i {
+    font-size: 0.7rem;
+}
+
+/* ==============================================
+   章节版本选择器
+   ============================================== */
+
+.chapter-version-inline {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.chapter-version-select {
+    padding: 2px 6px;
+    font-size: 0.8rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 3px;
+    background-color: white;
+    cursor: pointer;
+    min-width: 80px;
+}
+
+.chapter-version-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 1px rgba(102, 126, 234, 0.1);
+}
+
+.chapter-version-select.loading {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* ==============================================
+   多选择器组件
+   ============================================== */
+
+.multi-selector {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.multi-selector-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #f1f3f4;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.multi-selector-item:last-child {
+    border-bottom: none;
+}
+
+.multi-selector-item:hover {
+    background-color: #f8f9fa;
+}
+
+.multi-selector-item input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.multi-selector-item label {
+    flex: 1;
+    margin: 0;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.multi-selector-item.selected {
+    background-color: #e3f2fd;
+}
+
+/* ==============================================
+   标签选择器
+   ============================================== */
+
+.tag-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.tag-option {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.tag-option:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.tag-option.selected {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.tag-option input[type="checkbox"] {
+    display: none;
+}
+
+/* ==============================================
+   搜索选择器
+   ============================================== */
+
+.search-selector {
+    position: relative;
+}
+
+.search-selector-input {
+    width: 100%;
+    padding: 8px 12px;
+    padding-right: 30px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background-color: white;
+}
+
+.search-selector-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.search-selector-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    pointer-events: none;
+}
+
+.search-selector-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.search-selector-dropdown.show {
+    display: block;
+}
+
+.search-selector-option {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #495057;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.search-selector-option:last-child {
+    border-bottom: none;
+}
+
+.search-selector-option:hover {
+    background: #f8f9fa;
+}
+
+.search-selector-option.highlighted {
+    background: #e3f2fd;
+}
+
+.search-selector-option.no-results {
+    color: #6c757d;
+    font-style: italic;
+    cursor: default;
+}
+
+.search-selector-option.no-results:hover {
+    background: white;
+}
+
+/* ==============================================
+   响应式选择器样式
+   ============================================== */
+
+@media (max-width: 768px) {
+    .voice-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .voice-select-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .voice-select-container label {
+        margin-bottom: 4px;
+    }
+    
+    .merged-version-selector {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .merged-version-selector label {
+        margin-bottom: 4px;
+    }
+    
+    .merged-version-selector select {
+        min-width: auto;
+    }
+    
+    .tag-selector {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .voice-option {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .voice-option input[type="radio"] {
+        align-self: center;
+    }
+    
+    .voice-option .btn-test {
+        align-self: center;
+        min-width: auto;
+    }
+    
+    .multi-selector {
+        max-height: 150px;
+    }
+    
+    .search-selector-dropdown {
+        max-height: 150px;
+    }
+    
+    .chapter-version-inline {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+    }
+    
+    .chapter-version-select {
+        min-width: auto;
+    }
+}

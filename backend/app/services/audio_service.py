@@ -90,6 +90,10 @@ class AudioService:
         """获取指定文件所有版本的音频文件列表"""
         return self.file_manager.get_all_audio_versions(file_id)
     
+    def get_merged_audio_versions(self, file_id: str) -> List[Dict]:
+        """获取指定文件所有版本的合并音频文件列表"""
+        return self.file_manager.get_merged_audio_versions(file_id)
+    
     def get_audio_folder_for_file(self, file_id: str) -> str:
         """为指定文件ID获取音频文件夹路径"""
         return self.file_manager.get_audio_folder_for_file(file_id)
