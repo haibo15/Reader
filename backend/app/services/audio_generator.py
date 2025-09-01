@@ -29,7 +29,10 @@ class AudioGenerator:
         if chapter_index == -1:
             audio_files = []
             for i, chapter in enumerate(chapters):
-                audio_filename = f"chapter_{i+1}.wav"
+                # 生成不覆盖的文件名：包含语音角色与时间戳
+                voice = str(voice_settings.get('voice', 'Ethan')).strip().replace(' ', '_')
+                timestamp = __import__('datetime').datetime.now().strftime('%Y%m%d_%H%M%S')
+                audio_filename = f"chapter_{i+1}__{voice}__{timestamp}.wav"
                 audio_filepath = os.path.join(audio_folder, audio_filename)
                 
                 tts_service.generate_and_save_audio(
@@ -50,7 +53,9 @@ class AudioGenerator:
                 raise Exception('章节索引超出范围')
             
             chapter = chapters[chapter_index]
-            audio_filename = f"chapter_{chapter_index+1}.wav"
+            voice = str(voice_settings.get('voice', 'Ethan')).strip().replace(' ', '_')
+            timestamp = __import__('datetime').datetime.now().strftime('%Y%m%d_%H%M%S')
+            audio_filename = f"chapter_{chapter_index+1}__{voice}__{timestamp}.wav"
             audio_filepath = os.path.join(audio_folder, audio_filename)
             
             tts_service.generate_and_save_audio(
@@ -80,7 +85,9 @@ class AudioGenerator:
                     chapter_progress = (i / total_chapters) * 100
                     progress_callback(int(chapter_progress), f"正在生成第 {i+1}/{total_chapters} 章节...")
                     
-                    audio_filename = f"chapter_{i+1}.wav"
+                    voice = str(voice_settings.get('voice', 'Ethan')).strip().replace(' ', '_')
+                    timestamp = __import__('datetime').datetime.now().strftime('%Y%m%d_%H%M%S')
+                    audio_filename = f"chapter_{i+1}__{voice}__{timestamp}.wav"
                     audio_filepath = os.path.join(audio_folder, audio_filename)
                     
                     def chapter_progress_callback(sub_progress, sub_message):
@@ -107,7 +114,9 @@ class AudioGenerator:
                 raise Exception('章节索引超出范围')
             
             chapter = chapters[chapter_index]
-            audio_filename = f"chapter_{chapter_index+1}.wav"
+            voice = str(voice_settings.get('voice', 'Ethan')).strip().replace(' ', '_')
+            timestamp = __import__('datetime').datetime.now().strftime('%Y%m%d_%H%M%S')
+            audio_filename = f"chapter_{chapter_index+1}__{voice}__{timestamp}.wav"
             audio_filepath = os.path.join(audio_folder, audio_filename)
             
             try:

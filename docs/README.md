@@ -232,6 +232,37 @@ VoiceSettings.playTestAudio(audioUrl);
    - 原始文件名保存在.meta文件中
    - 删除文档时会同时删除文档文件和相关的音频文件
 
+## WAV 参数检查工具
+
+在合并或处理第三方生成的 WAV（例如 Qwen-TTS 输出）前，建议使用内置检查脚本快速确认文件是否为未压缩 PCM 且参数一致。
+
+- 位置：`backend/app/utils/inspect_wav.py`
+- 作用：输出每个 WAV 的 `channels`、`sampwidth`、`framerate`、`nframes`、`comptype`、`compname`、`duration_sec`
+- 适用：检查是否满足合并条件（`comptype` 必须为 `NONE`，并且通道/位宽/采样率一致）
+
+### 使用方法（Windows PowerShell）
+
+检查某个目录下所有 WAV：
+
+```powershell
+python backend/app/utils/inspect_wav.py "audio\7a59aaff-5bb4-4c43-98af-c3614baf4b5e"
+```
+
+检查单个文件：
+
+```powershell
+python backend/app/utils/inspect_wav.py "audio\7a59aaff-5bb4-4c43-98af-c3614baf4b5e\chapter_1.wav"
+```
+
+判断标准：
+- `comptype` 必须为 `NONE`（未压缩 PCM）
+- `channels`、`sampwidth`（常见为 2 即 16-bit）、`framerate` 在待合并的所有文件中应完全一致
+- 如不一致，可先使用 ffmpeg 转码到统一参数后再合并，例如：
+
+```bash
+ffmpeg -y -i "input.wav" -acodec pcm_s16le -ac 1 -ar 24000 "output.wav"
+```
+
 ## 技术参考
 
 - [阿里云百炼平台](https://bailian.console.aliyun.com/)

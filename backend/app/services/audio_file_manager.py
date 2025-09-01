@@ -34,17 +34,52 @@ class AudioFileManager:
             audio_files = []
             
             if os.path.exists(audio_folder):
+                # 收集每章的所有版本，并挑选最新的一个（按时间戳片段或文件修改时间）
+                chapter_to_latest = {}
                 for filename in os.listdir(audio_folder):
                     if filename.endswith('.wav') and filename.startswith('chapter_'):
                         try:
-                            chapter_index = int(filename.replace('.wav', '').replace('chapter_', '')) - 1
-                            audio_files.append({
-                                'filename': filename,
-                                'chapter_index': chapter_index,
-                                'filepath': os.path.join(audio_folder, filename)
-                            })
-                        except ValueError:
+                            # 支持两种命名：
+                            # 1) 旧格式：chapter_{n}.wav
+                            # 2) 新格式：chapter_{n}__{voice}__{YYYYMMDD_HHMMSS}.wav
+                            base = filename[:-4]
+                            parts = base.split('__')
+                            # parts[0] like 'chapter_1'
+                            chapter_str = parts[0].replace('chapter_', '')
+                            chapter_index = int(chapter_str) - 1
+
+                            # 解析时间戳（如果存在）
+                            timestamp_str = parts[2] if len(parts) >= 3 else None
+                            # 作为回退，使用文件修改时间
+                            file_path = os.path.join(audio_folder, filename)
+                            mtime = os.path.getmtime(file_path)
+
+                            # 根据时间戳字符串构造一个可比较权重
+                            rank = (timestamp_str or '')
+                            # 若没有时间戳，就用修改时间，前缀 'mtime:' 区分
+                            if not timestamp_str:
+                                rank = f"mtime:{mtime}"
+
+                            existing = chapter_to_latest.get(chapter_index)
+                            if existing is None or rank > existing['rank']:
+                                chapter_to_latest[chapter_index] = {
+                                    'filename': filename,
+                                    'chapter_index': chapter_index,
+                                    'filepath': file_path,
+                                    'rank': rank
+                                }
+                        except Exception:
                             continue
+
+                # 输出为列表并按章节索引排序
+                audio_files = [
+                    {
+                        'filename': v['filename'],
+                        'chapter_index': v['chapter_index'],
+                        'filepath': v['filepath']
+                    }
+                    for _, v in chapter_to_latest.items()
+                ]
             
             audio_files.sort(key=lambda x: x['chapter_index'])
             return audio_files

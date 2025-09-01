@@ -76,7 +76,9 @@ def download_complete_audio(file_id):
         
         if merged_path:
             audio_folder = service.get_audio_folder_for_file(file_id)
-            merged_filename = f"{file_id}_complete.wav"
+            # 使用实际存在的最新合并文件名返回
+            import os
+            merged_filename = os.path.basename(merged_path)
             return send_from_directory(audio_folder, merged_filename, as_attachment=True)
         else:
             return jsonify({'error': '合并音频文件失败'}), 500

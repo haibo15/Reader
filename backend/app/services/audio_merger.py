@@ -6,6 +6,7 @@
 
 import os
 import wave
+from datetime import datetime
 from typing import Dict, Optional
 
 class AudioMerger:
@@ -26,7 +27,8 @@ class AudioMerger:
             # 获取音频文件夹
             base_audio_folder = self.app.config['AUDIO_FOLDER']
             audio_folder = os.path.join(base_audio_folder, file_id)
-            merged_filename = f"{file_id}_complete.wav"
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            merged_filename = f"{file_id}_complete__{timestamp}.wav"
             merged_filepath = os.path.join(audio_folder, merged_filename)
             
             # 使用wave模块合并音频文件
@@ -98,13 +100,29 @@ class AudioMerger:
             raise Exception(f"wave模块合并失败: {str(e)}")
     
     def get_merged_audio_path(self, file_id: str) -> Optional[str]:
-        """获取合并音频文件路径"""
+        """获取最新的合并音频文件路径（按时间戳或修改时间选择最新）"""
         base_audio_folder = self.app.config['AUDIO_FOLDER']
         audio_folder = os.path.join(base_audio_folder, file_id)
-        merged_filename = f"{file_id}_complete.wav"
-        merged_filepath = os.path.join(audio_folder, merged_filename)
-        
-        if os.path.exists(merged_filepath):
-            return merged_filepath
-        
-        return None
+        if not os.path.exists(audio_folder):
+            return None
+
+        candidates = []
+        prefix = f"{file_id}_complete"
+        try:
+            for filename in os.listdir(audio_folder):
+                if filename.endswith('.wav') and filename.startswith(prefix):
+                    filepath = os.path.join(audio_folder, filename)
+                    base = filename[:-4]
+                    parts = base.split('__')
+                    timestamp_str = parts[1] if len(parts) >= 2 else None
+                    rank = timestamp_str or f"mtime:{os.path.getmtime(filepath)}"
+                    candidates.append((rank, filepath))
+        except Exception:
+            return None
+
+        if not candidates:
+            return None
+
+        # 选择 rank 最大者（时间戳或修改时间最新）
+        candidates.sort(key=lambda x: x[0])
+        return candidates[-1][1]
