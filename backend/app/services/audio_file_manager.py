@@ -91,9 +91,20 @@ class AudioFileManager:
     def get_file_path(self, file_id: str) -> Optional[str]:
         """获取文件路径"""
         upload_folder = self.app.config['UPLOAD_FOLDER']
-        
+
+        # 优先：新结构 uploads/{file_id}/{file_id}.ext
+        new_dir = os.path.join(upload_folder, file_id)
+        if os.path.isdir(new_dir):
+            try:
+                for filename in os.listdir(new_dir):
+                    if filename.startswith(file_id) and '.' in filename and not filename.endswith('.meta') and not filename.endswith('_chapters.json'):
+                        return os.path.join(new_dir, filename)
+            except Exception:
+                pass
+
+        # 兼容：旧结构 直接在 uploads 根目录
         for filename in os.listdir(upload_folder):
-            if filename.startswith(file_id):
+            if filename.startswith(file_id) and '.' in filename and not filename.endswith('.meta') and not filename.endswith('_chapters.json'):
                 return os.path.join(upload_folder, filename)
         
         return None
@@ -101,8 +112,11 @@ class AudioFileManager:
     def load_chapters(self, file_id: str, file_path: str) -> List[Dict]:
         """加载章节数据"""
         upload_folder = self.app.config['UPLOAD_FOLDER']
-        chapters_file = os.path.join(upload_folder, f"{file_id}_chapters.json")
-        
+        # 优先：新结构 uploads/{file_id}/{file_id}_chapters.json
+        chapters_file_new = os.path.join(upload_folder, file_id, f"{file_id}_chapters.json")
+        chapters_file_old = os.path.join(upload_folder, f"{file_id}_chapters.json")
+        chapters_file = chapters_file_new if os.path.exists(chapters_file_new) else chapters_file_old
+
         if os.path.exists(chapters_file):
             try:
                 with open(chapters_file, 'r', encoding='utf-8') as f:
@@ -127,7 +141,9 @@ class AudioFileManager:
         """检查指定文件的音频生成状态"""
         try:
             upload_folder = self.app.config['UPLOAD_FOLDER']
-            chapters_file = os.path.join(upload_folder, f"{file_id}_chapters.json")
+            # 优先新结构
+            chapters_file_new = os.path.join(upload_folder, file_id, f"{file_id}_chapters.json")
+            chapters_file = chapters_file_new if os.path.exists(chapters_file_new) else os.path.join(upload_folder, f"{file_id}_chapters.json")
             chapters = []
             
             if os.path.exists(chapters_file):

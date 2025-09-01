@@ -26,32 +26,83 @@ def get_document_history():
         audio_folder = app.config['AUDIO_FOLDER']
         
         if os.path.exists(upload_folder):
+            # 先扫描新结构：uploads/{file_id}/
+            for file_id in os.listdir(upload_folder):
+                folder_path = os.path.join(upload_folder, file_id)
+                if not os.path.isdir(folder_path):
+                    continue
+                meta_file = os.path.join(folder_path, f"{file_id}.meta")
+                if not os.path.exists(meta_file):
+                    continue
+                # 读取原始文件名
+                try:
+                    with open(meta_file, 'r', encoding='utf-8') as f:
+                        original_filename = f.read().strip()
+                except:
+                    original_filename = "未知文件"
+                # 原始文件与时间
+                original_file_path = None
+                for file in os.listdir(folder_path):
+                    if file.startswith(file_id) and '.' in file and not file.endswith('.meta') and not file.endswith('_chapters.json'):
+                        original_file_path = os.path.join(folder_path, file)
+                        break
+                file_size = 0
+                upload_time = 0
+                if original_file_path and os.path.exists(original_file_path):
+                    file_size = os.path.getsize(original_file_path)
+                    upload_time = os.path.getmtime(original_file_path)
+                # 章节统计
+                chapters_file = os.path.join(folder_path, f"{file_id}_chapters.json")
+                chapter_count = 0
+                if os.path.exists(chapters_file):
+                    try:
+                        with open(chapters_file, 'r', encoding='utf-8') as f:
+                            chapters_data = json.load(f)
+                            chapter_count = len(chapters_data['chapters'])
+                    except:
+                        pass
+                # 音频数量（新结构：audio/{file_id}/）
+                audio_count = 0
+                has_audio = False
+                audio_subdir = os.path.join(audio_folder, file_id)
+                if os.path.isdir(audio_subdir):
+                    for audio_file in os.listdir(audio_subdir):
+                        if audio_file.endswith('.wav'):
+                            audio_count += 1
+                            has_audio = True
+                documents.append({
+                    'file_id': file_id,
+                    'original_name': original_filename,
+                    'upload_time': upload_time,
+                    'file_size': file_size,
+                    'chapter_count': chapter_count,
+                    'audio_count': audio_count,
+                    'has_audio': has_audio
+                })
+
+            # 再扫描旧结构：.meta 在 uploads 根目录
             for filename in os.listdir(upload_folder):
                 if filename.endswith('.meta'):
                     file_id = filename.replace('.meta', '')
-                    
-                    # 读取原始文件名
+                    # 若已在新结构中处理，跳过
+                    if os.path.isdir(os.path.join(upload_folder, file_id)):
+                        continue
                     meta_file = os.path.join(upload_folder, filename)
                     try:
                         with open(meta_file, 'r', encoding='utf-8') as f:
                             original_filename = f.read().strip()
                     except:
                         original_filename = "未知文件"
-                    
-                    # 查找原始文件以获取文件大小和上传时间
                     original_file_path = None
                     for file in os.listdir(upload_folder):
                         if file.startswith(file_id) and '.' in file and not file.endswith('.meta') and not file.endswith('_chapters.json'):
                             original_file_path = os.path.join(upload_folder, file)
                             break
-                    
                     file_size = 0
                     upload_time = 0
                     if original_file_path and os.path.exists(original_file_path):
                         file_size = os.path.getsize(original_file_path)
                         upload_time = os.path.getmtime(original_file_path)
-                    
-                    # 检查是否有章节数据
                     chapters_file = os.path.join(upload_folder, f"{file_id}_chapters.json")
                     chapter_count = 0
                     if os.path.exists(chapters_file):
@@ -61,16 +112,19 @@ def get_document_history():
                                 chapter_count = len(chapters_data['chapters'])
                         except:
                             pass
-                    
-                    # 检查音频文件数量
                     audio_count = 0
                     has_audio = False
-                    if os.path.exists(audio_folder):
+                    audio_subdir = os.path.join(audio_folder, file_id)
+                    if os.path.isdir(audio_subdir):
+                        for audio_file in os.listdir(audio_subdir):
+                            if audio_file.endswith('.wav'):
+                                audio_count += 1
+                                has_audio = True
+                    else:
                         for audio_file in os.listdir(audio_folder):
                             if audio_file.startswith(file_id) and audio_file.endswith('.wav'):
                                 audio_count += 1
                                 has_audio = True
-                    
                     documents.append({
                         'file_id': file_id,
                         'original_name': original_filename,
@@ -91,7 +145,8 @@ def get_document_chapters(file_id):
     """获取文档的章节信息"""
     try:
         from app import app
-        chapters_file = os.path.join(app.config['UPLOAD_FOLDER'], f"{file_id}_chapters.json")
+        chapters_file_new = os.path.join(app.config['UPLOAD_FOLDER'], file_id, f"{file_id}_chapters.json")
+        chapters_file = chapters_file_new if os.path.exists(chapters_file_new) else os.path.join(app.config['UPLOAD_FOLDER'], f"{file_id}_chapters.json")
         
         if not os.path.exists(chapters_file):
             return jsonify({'error': '章节数据不存在'}), 404
@@ -116,11 +171,20 @@ def load_document(file_id):
         file_path = None
         original_filename = None
         
-        for filename in os.listdir(upload_folder):
-            if filename.startswith(file_id) and '.' in filename and not filename.endswith('.meta'):
-                file_path = os.path.join(upload_folder, filename)
-                original_filename = filename
-                break
+        # 新结构优先
+        new_dir = os.path.join(upload_folder, file_id)
+        if os.path.isdir(new_dir):
+            for filename in os.listdir(new_dir):
+                if filename.startswith(file_id) and '.' in filename and not filename.endswith('.meta') and not filename.endswith('_chapters.json'):
+                    file_path = os.path.join(new_dir, filename)
+                    original_filename = filename
+                    break
+        if not file_path:
+            for filename in os.listdir(upload_folder):
+                if filename.startswith(file_id) and '.' in filename and not filename.endswith('.meta'):
+                    file_path = os.path.join(upload_folder, filename)
+                    original_filename = filename
+                    break
         
         if not file_path:
             return jsonify({'error': '文档不存在'}), 404
@@ -151,7 +215,8 @@ def load_document(file_id):
         
         # 尝试读取原始文件名
         display_name = original_filename
-        metadata_file = os.path.join(upload_folder, f"{file_id}.meta")
+        metadata_file_new = os.path.join(new_dir, f"{file_id}.meta")
+        metadata_file = metadata_file_new if os.path.exists(metadata_file_new) else os.path.join(upload_folder, f"{file_id}.meta")
         if os.path.exists(metadata_file):
             try:
                 with open(metadata_file, 'r', encoding='utf-8') as f:

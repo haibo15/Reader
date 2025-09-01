@@ -68,12 +68,26 @@ def delete_file_and_related_audio(file_id: str, upload_folder: str, audio_folder
     
     # 删除上传的文件（包括元数据文件）
     try:
-        for filename in os.listdir(upload_folder):
-            if filename.startswith(file_id):
-                file_path = os.path.join(upload_folder, filename)
-                if os.path.exists(file_path):
+        # 新结构优先：uploads/{file_id}/
+        subdir = os.path.join(upload_folder, file_id)
+        if os.path.isdir(subdir):
+            for filename in os.listdir(subdir):
+                file_path = os.path.join(subdir, filename)
+                if os.path.isfile(file_path) and os.path.exists(file_path):
                     os.remove(file_path)
-                    deleted_files.append(f"上传文件: {filename}")
+                    deleted_files.append(f"上传文件: {file_id}/{filename}")
+            try:
+                os.rmdir(subdir)
+            except Exception as e:
+                errors.append(f"删除上传子目录失败: {str(e)}")
+        # 兼容旧结构：直接在 uploads 根目录
+        else:
+            for filename in os.listdir(upload_folder):
+                if filename.startswith(file_id):
+                    file_path = os.path.join(upload_folder, filename)
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                        deleted_files.append(f"上传文件: {filename}")
     except Exception as e:
         errors.append(f"删除上传文件失败: {str(e)}")
     

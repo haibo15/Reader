@@ -53,13 +53,18 @@ def upload_file():
             return jsonify({'error': '文件没有扩展名'}), 400
             
         new_filename = f"{file_id}.{file_extension}"
+
+        # 在 uploads 下为该文档创建单独子文件夹
+        file_upload_folder = os.path.join(upload_folder, file_id)
+        if not os.path.exists(file_upload_folder):
+            os.makedirs(file_upload_folder)
         
-        # 保存文件
-        file_path = os.path.join(upload_folder, new_filename)
+        # 保存文件到子文件夹
+        file_path = os.path.join(file_upload_folder, new_filename)
         file.save(file_path)
         
-        # 保存原始文件名到元数据文件
-        metadata_file = os.path.join(upload_folder, f"{file_id}.meta")
+        # 保存原始文件名到元数据文件（放在子文件夹内）
+        metadata_file = os.path.join(file_upload_folder, f"{file_id}.meta")
         try:
             with open(metadata_file, 'w', encoding='utf-8') as f:
                 f.write(original_filename)
@@ -71,7 +76,8 @@ def upload_file():
         chapters = file_processor.split_chapters(text_content)
         
         # 保存章节数据到JSON文件
-        chapters_file = os.path.join(upload_folder, f"{file_id}_chapters.json")
+        # 保存章节数据到子文件夹
+        chapters_file = os.path.join(file_upload_folder, f"{file_id}_chapters.json")
         try:
             with open(chapters_file, 'w', encoding='utf-8') as f:
                 json.dump({
