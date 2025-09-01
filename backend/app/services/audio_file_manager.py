@@ -123,7 +123,6 @@ class AudioFileManager:
                             else:
                                 # 使用文件修改时间
                                 file_path = os.path.join(audio_folder, filename)
-                                import os
                                 from datetime import datetime
                                 mtime = os.path.getmtime(file_path)
                                 dt = datetime.fromtimestamp(mtime)

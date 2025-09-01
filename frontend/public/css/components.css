@@ -47,6 +47,48 @@
     min-width: 30px;
 }
 
+/* 音频生成区域：按钮容器水平排列 */
+.audio-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 按钮行容器：水平排列所有按钮 */
+.audio-controls .buttons-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+
+.audio-controls .control-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+
+.audio-controls .audio-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    margin-top: 0 !important; /* 覆盖内联样式 */
+}
+
+/* 缩小该区域内的按钮尺寸，并避免文本换行 */
+.audio-controls .btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* 让状态信息独占一行，显示在按钮下方 */
+.audio-controls .audio-status-info {
+    width: 100%;
+}
+
 .btn-test {
     background: #28a745;
     color: white;

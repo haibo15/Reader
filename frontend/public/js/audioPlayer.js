@@ -103,13 +103,11 @@ class AudioPlayer {
                                 </div>
                             </div>
                         </div>
-                        <div class="chapter-version-selector" id="chapterVersions_${index}">
-                            <!-- 版本选择器将在这里动态生成 -->
-                        </div>
                         <div class="chapter-actions">
                             <label class="checkbox-inline" title="参与合并">
                                 <input type="checkbox" class="audio-chapter-checkbox" data-chapter="${index}" checked /> 选择
                             </label>
+                            <div class="chapter-version-inline" id="chapterVersions_${index}"></div>
                             <button class="btn btn-small btn-secondary chapter-play-btn" data-chapter="${index}" onclick="AudioPlayer.playChapterAudio(${index})">
                                 <i class="fas fa-play"></i> 播放
                             </button>

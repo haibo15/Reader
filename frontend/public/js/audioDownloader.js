@@ -97,6 +97,9 @@ class AudioDownloader {
                     AudioMerger.mergeAudioFiles(selectedChapters);
                 };
                 
+                // 确保按钮容器在同一行
+                this.ensureButtonsInSameRow();
+                
                 // 插入到音频控制区域
                 const actionsDiv = audioControls.querySelector('.audio-actions');
                 if (actionsDiv) {
@@ -104,6 +107,30 @@ class AudioDownloader {
                 } else {
                     audioControls.appendChild(mergeBtn);
                 }
+            }
+        }
+    }
+    
+    // 确保所有按钮在同一行
+    static ensureButtonsInSameRow() {
+        const audioControls = document.getElementById('audioControls');
+        if (!audioControls) return;
+        
+        const controlButtons = audioControls.querySelector('.control-buttons');
+        const audioActions = audioControls.querySelector('.audio-actions');
+        
+        if (controlButtons && audioActions) {
+            // 创建一个包装容器
+            let buttonsRow = audioControls.querySelector('.buttons-row');
+            if (!buttonsRow) {
+                buttonsRow = document.createElement('div');
+                buttonsRow.className = 'buttons-row';
+                
+                // 将现有的按钮容器移动到同一行
+                const parent = controlButtons.parentNode;
+                parent.insertBefore(buttonsRow, controlButtons);
+                buttonsRow.appendChild(controlButtons);
+                buttonsRow.appendChild(audioActions);
             }
         }
     }
@@ -120,6 +147,9 @@ class AudioDownloader {
                 chapterDownloadBtn.className = 'btn btn-secondary chapter-download-btn';
                 chapterDownloadBtn.innerHTML = '<i class="fas fa-download"></i> 下载各章节音频';
                 chapterDownloadBtn.onclick = () => AudioDownloader.downloadAllChapterAudio();
+                
+                // 确保按钮容器在同一行
+                this.ensureButtonsInSameRow();
                 
                 // 插入到音频控制区域
                 const actionsDiv = audioControls.querySelector('.audio-actions');

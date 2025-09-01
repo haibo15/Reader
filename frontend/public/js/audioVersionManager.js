@@ -56,13 +56,11 @@ class AudioVersionManager {
         }).join('');
 
         return `
-            <div class="chapter-version-controls">
-                <div class="version-info">
-                    <label class="version-label">音频版本:</label>
-                    <select class="version-selector" id="versionSelect_${chapterIndex}" onchange="AudioVersionManager.onVersionChange(${chapterIndex})">
-                        ${options}
-                    </select>
-                </div>
+            <div class="version-inline-wrap">
+                <label class="version-label">版本</label>
+                <select class="version-selector" id="versionSelect_${chapterIndex}" onchange="AudioVersionManager.onVersionChange(${chapterIndex})">
+                    ${options}
+                </select>
             </div>
         `;
     }
