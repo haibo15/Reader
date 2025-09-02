@@ -145,7 +145,7 @@ def main():
     """主函数"""
     if len(sys.argv) < 2:
         print("用法: python merge_segmented_audio.py <音频文件夹路径>")
-        print("示例: python merge_segmented_audio.py ./audio/7a59aaff-5bb4-4c43-98af-c3614baf4b5e")
+        print("示例: python merge_segmented_files.py ../../audio/7a59aaff-5bb4-4c43-98af-c3614baf4b5e")
         return
     
     audio_folder = sys.argv[1]

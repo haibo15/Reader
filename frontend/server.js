@@ -13,6 +13,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 添加对项目根目录audio文件夹的访问支持
+app.use('/audio', express.static(path.join(__dirname, '..', 'audio')));
+
 // 路由
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));

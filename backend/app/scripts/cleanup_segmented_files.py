@@ -105,7 +105,7 @@ def main():
     """主函数"""
     if len(sys.argv) < 2:
         print("用法: python cleanup_segmented_files.py <音频文件夹路径> [--delete]")
-        print("示例: python cleanup_segmented_files.py ./audio/b9bd7a2e-4b72-422f-850a-e9aacc73baaa")
+        print("示例: python cleanup_segmented_files.py ../../audio/b9bd7a2e-4b72-422f-850a-e9aacc73baaa")
         print("添加 --delete 参数来实际删除文件")
         return
     

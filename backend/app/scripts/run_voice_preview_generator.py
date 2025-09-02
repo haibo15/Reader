@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 # 添加backend目录到Python路径，以便导入dashscope
-backend_path = Path(__file__).parent / "backend"
+backend_path = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(backend_path))
 
 # 加载环境变量

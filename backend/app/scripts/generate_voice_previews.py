@@ -28,7 +28,7 @@ def generate_voice_previews():
     preview_text = "你好，我是语音助手，很高兴为您服务。"
     
     # 创建音频目录
-    audio_dir = Path("audio/previews")
+    audio_dir = Path(__file__).parent.parent.parent.parent / "audio/previews"
     audio_dir.mkdir(parents=True, exist_ok=True)
     
     # 检查API Key
@@ -109,7 +109,7 @@ def generate_voice_previews():
 
 def check_existing_files():
     """检查已存在的预览文件"""
-    audio_dir = Path("audio/previews")
+    audio_dir = Path(__file__).parent.parent.parent.parent / "audio/previews"
     if audio_dir.exists():
         existing_files = list(audio_dir.glob("*_preview.wav"))
         if existing_files:
