@@ -15,15 +15,41 @@ class AudioMerger:
     def __init__(self, app):
         self.app = app
     
-    def merge_audio_files(self, file_id: str, existing_audio_files: list, selected_chapters: list = None) -> Dict:
+    def merge_audio_files(self, file_id: str, existing_audio_files: list, selected_chapters: list = None, selected_audio_versions: list = None) -> Dict:
         """合并指定文档的音频文件
         
         Args:
             file_id: 文档ID
             existing_audio_files: 现有音频文件列表
             selected_chapters: 选中的章节索引列表，用于生成文件名
+            selected_audio_versions: 选中的音频版本列表，包含具体的文件名
         """
         try:
+            # 如果提供了选中的音频版本，使用它们；否则使用现有的音频文件
+            if selected_audio_versions and len(selected_audio_versions) > 0:
+                # 使用选中的音频版本
+                audio_files_to_merge = []
+                base_audio_folder = self.app.config['AUDIO_FOLDER']
+                audio_folder = os.path.join(base_audio_folder, file_id)
+                
+                for version_info in selected_audio_versions:
+                    chapter_index = version_info['chapter_index']
+                    filename = version_info['filename']
+                    filepath = os.path.join(audio_folder, filename)
+                    
+                    if os.path.exists(filepath):
+                        audio_files_to_merge.append({
+                            'chapter_index': chapter_index,
+                            'filepath': filepath,
+                            'filename': filename
+                        })
+                    else:
+                        raise Exception(f'音频文件不存在: {filename}')
+                
+                # 按章节索引排序
+                audio_files_to_merge.sort(key=lambda x: x['chapter_index'])
+                existing_audio_files = audio_files_to_merge
+            
             if not existing_audio_files:
                 raise Exception('没有找到音频文件')
             

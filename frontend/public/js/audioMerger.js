@@ -26,17 +26,25 @@ class AudioMerger {
             }
             Utils.showStatus(statusMessage, 'info');
 
+            // 获取选中的音频版本信息
+            const selectedAudioVersions = AudioMerger.getSelectedAudioVersions(selectedChapters);
+            if (!selectedAudioVersions || selectedAudioVersions.length === 0) {
+                Utils.showStatus('没有找到可合并的音频文件', 'error');
+                return;
+            }
+
             // 根据是否有选中章节决定请求方式
             let response;
             if (selectedChapters && selectedChapters.length > 0) {
-                // POST请求，传递选中章节
+                // POST请求，传递选中章节和对应的音频版本
                 response = await fetch(`${CONFIG.API_BASE_URL}/merge-audio/${currentFileId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        selected_chapters: selectedChapters
+                        selected_chapters: selectedChapters,
+                        selected_audio_versions: selectedAudioVersions
                     })
                 });
             } else {
@@ -128,5 +136,35 @@ class AudioMerger {
             console.error('自动合并音频失败:', error);
             Utils.showStatus(`自动合并失败: ${error.message}`, 'error');
         }
+    }
+    
+    // 获取选中的音频版本信息
+    static getSelectedAudioVersions(selectedChapters) {
+        if (!selectedChapters || selectedChapters.length === 0) return [];
+        
+        const selectedVersions = [];
+        
+        selectedChapters.forEach(chapterIndex => {
+            // 从版本选择器获取选中的文件名
+            const versionSelector = document.getElementById(`versionSelect_${chapterIndex}`);
+            if (versionSelector && versionSelector.value) {
+                selectedVersions.push({
+                    chapter_index: chapterIndex,
+                    filename: versionSelector.value
+                });
+            } else {
+                // 如果没有版本选择器，使用默认的音频文件名
+                const audioStatus = window.currentAudioStatus?.audio_status || [];
+                const status = audioStatus.find(s => s.chapter_index === chapterIndex);
+                if (status && status.has_audio) {
+                    selectedVersions.push({
+                        chapter_index: chapterIndex,
+                        filename: status.audio_file
+                    });
+                }
+            }
+        });
+        
+        return selectedVersions;
     }
 }

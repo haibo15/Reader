@@ -53,6 +53,17 @@ def get_merged_audio_versions(file_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@audio_management_bp.route('/delete-audio/<file_id>/<filename>', methods=['DELETE'])
+def delete_audio_file(file_id, filename):
+    """删除指定的音频文件"""
+    try:
+        service = get_audio_service()
+        result = service.delete_audio_file(file_id, filename)
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @audio_management_bp.route('/check-audio-status/<file_id>')
 def check_audio_status(file_id):
     """检查指定文件的音频生成状态"""
@@ -79,11 +90,13 @@ def merge_audio_files(file_id):
         
         # 支持POST请求传递选中章节参数
         selected_chapters = None
+        selected_audio_versions = None
         if request.method == 'POST':
             data = request.json or {}
             selected_chapters = data.get('selected_chapters')
+            selected_audio_versions = data.get('selected_audio_versions')
         
-        result = service.merge_audio_files(file_id, selected_chapters)
+        result = service.merge_audio_files(file_id, selected_chapters, selected_audio_versions)
         return jsonify(result)
         
     except Exception as e:

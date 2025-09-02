@@ -47,45 +47,22 @@ class ChapterAudioListRenderer {
                     <span class="chapter-number">${index + 1}</span>
                     <span class="chapter-title" title="${chapter.title}">${truncatedTitle}</span>
                 </div>
-                <div class="chapter-audio-controls">
-                    ${ChapterAudioListRenderer._generateProgressHTML(index)}
-                </div>
                 <div class="chapter-actions">
-                    ${ChapterAudioListRenderer._generateActionsHTML(index)}
+                    <label class="checkbox-inline" title="参与合并">
+                        <input type="checkbox" class="audio-chapter-checkbox" data-chapter="${index}" checked /> 选择
+                    </label>
+                    <div class="chapter-version-inline" id="chapterVersions_${index}"></div>
+                    <button class="btn btn-small btn-secondary chapter-play-btn" data-chapter="${index}" onclick="AudioPlayer.playChapterAudio(${index})">
+                        <i class="fas fa-play"></i> 播放
+                    </button>
+                    <button class="btn btn-small btn-primary" onclick="AudioPlayer.downloadChapterAudio(${index})">
+                        <i class="fas fa-download"></i> 下载
+                    </button>
+                    <button class="btn btn-small btn-danger" onclick="AudioPlayer.deleteChapterAudio(${index})" title="删除此版本">
+                        <i class="fas fa-trash"></i> 删除
+                    </button>
                 </div>
             </div>
-        `;
-    }
-
-    // 生成进度条HTML
-    static _generateProgressHTML(index) {
-        return `
-            <div class="chapter-progress-container">
-                <div class="chapter-progress-bar">
-                    <div class="chapter-progress-fill" data-chapter="${index}"></div>
-                </div>
-                <div class="chapter-time-display">
-                    <span class="chapter-current-time" data-chapter="${index}">0:00</span>
-                    <span>/</span>
-                    <span class="chapter-total-time" data-chapter="${index}">0:00</span>
-                </div>
-            </div>
-        `;
-    }
-
-    // 生成操作按钮HTML
-    static _generateActionsHTML(index) {
-        return `
-            <label class="checkbox-inline" title="参与合并">
-                <input type="checkbox" class="audio-chapter-checkbox" data-chapter="${index}" checked /> 选择
-            </label>
-            <div class="chapter-version-inline" id="chapterVersions_${index}"></div>
-            <button class="btn btn-small btn-secondary chapter-play-btn" data-chapter="${index}" onclick="AudioPlayer.playChapterAudio(${index})">
-                <i class="fas fa-play"></i> 播放
-            </button>
-            <button class="btn btn-small btn-primary" onclick="AudioPlayer.downloadChapterAudio(${index})">
-                <i class="fas fa-download"></i> 下载
-            </button>
         `;
     }
 

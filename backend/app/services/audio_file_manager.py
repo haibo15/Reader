@@ -215,6 +215,33 @@ class AudioFileManager:
             print(f"获取合并音频版本失败: {str(e)}")
             return []
     
+    def delete_audio_file(self, file_id: str, filename: str) -> Dict:
+        """删除指定的音频文件"""
+        try:
+            audio_folder = self.get_audio_folder_for_file(file_id)
+            file_path = os.path.join(audio_folder, filename)
+            
+            if not os.path.exists(file_path):
+                return {
+                    'success': False,
+                    'error': f'文件不存在: {filename}'
+                }
+            
+            # 删除文件
+            os.remove(file_path)
+            
+            return {
+                'success': True,
+                'message': f'文件删除成功: {filename}',
+                'deleted_file': filename
+            }
+            
+        except Exception as e:
+            return {
+                'success': False,
+                'error': f'删除文件失败: {str(e)}'
+            }
+    
     def get_file_path(self, file_id: str) -> Optional[str]:
         """获取文件路径"""
         upload_folder = self.app.config['UPLOAD_FOLDER']

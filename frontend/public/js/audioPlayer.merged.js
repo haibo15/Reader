@@ -24,11 +24,13 @@ class MergedAudioManager {
         const elements = {
             audioElement: document.querySelector(AudioPlayer.SELECTORS.AUDIO_ELEMENT),
             downloadBtn: document.querySelector(AudioPlayer.SELECTORS.DOWNLOAD_MERGED_BTN),
+            deleteBtn: document.querySelector('#deleteMergedBtn'),
             versionContainer: document.querySelector(AudioPlayer.SELECTORS.MERGED_VERSION_SELECTOR)
         };
         
         if (elements.audioElement) elements.audioElement.disabled = disabled;
         if (elements.downloadBtn) elements.downloadBtn.disabled = disabled;
+        if (elements.deleteBtn) elements.deleteBtn.disabled = disabled;
         if (elements.versionContainer) {
             elements.versionContainer.style.display = disabled ? 'none' : 'block';
         }

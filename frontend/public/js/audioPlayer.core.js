@@ -141,6 +141,74 @@ class AudioPlayer {
             AudioPlayer._handleError('下载章节音频失败', error);
         }
     }
+    
+    // 删除章节音频
+    static async deleteChapterAudio(chapterIndex) {
+        try {
+            const fileName = AudioDownloader.getChapterAudioFileName(chapterIndex);
+            if (!fileName) {
+                Utils.showStatus('无法获取音频文件名', 'error');
+                return;
+            }
+            
+            // 确认删除
+            if (!confirm(`确定要删除第 ${chapterIndex + 1} 章的音频文件 "${fileName}" 吗？`)) {
+                return;
+            }
+            
+            const response = await fetch(`${CONFIG.API_BASE_URL}/delete-audio/${currentFileId}/${fileName}`, {
+                method: 'DELETE'
+            });
+            
+            if (response.ok) {
+                Utils.showStatus(`第 ${chapterIndex + 1} 章音频删除成功`, 'success');
+                // 刷新音频状态
+                if (typeof AudioStatusManager !== 'undefined') {
+                    AudioStatusManager.checkAudioStatus();
+                }
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.error || '删除失败');
+            }
+            
+        } catch (error) {
+            AudioPlayer._handleError('删除章节音频失败', error);
+        }
+    }
+    
+    // 删除合并音频
+    static async deleteMergedAudio() {
+        try {
+            const selector = document.querySelector(AudioPlayer.SELECTORS.MERGED_VERSION_SELECT);
+            if (!selector?.value) {
+                Utils.showStatus('请先选择要删除的合并音频版本', 'warning');
+                return;
+            }
+            
+            const filename = selector.value;
+            
+            // 确认删除
+            if (!confirm(`确定要删除合并音频文件 "${filename}" 吗？`)) {
+                return;
+            }
+            
+            const response = await fetch(`${CONFIG.API_BASE_URL}/delete-audio/${currentFileId}/${filename}`, {
+                method: 'DELETE'
+            });
+            
+            if (response.ok) {
+                Utils.showStatus('合并音频删除成功', 'success');
+                // 刷新合并音频版本列表
+                AudioPlayer.loadMergedAudioVersions();
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.error || '删除失败');
+            }
+            
+        } catch (error) {
+            AudioPlayer._handleError('删除合并音频失败', error);
+        }
+    }
 
     // 辅助方法
     static _buildAudioUrl(fileId, filename) { return `${CONFIG.API_BASE_URL}/download/${fileId}/${filename}`; }
