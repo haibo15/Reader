@@ -1,56 +1,17 @@
-/* 页面核心样式 - 重构后的精简版本 */
+/* 页面样式模块 - 重构后的导入入口 */
 
-/* 导入其他模块的样式 */
+/* 导入页面通用样式 */
+@import url('./page-common.css');
+
+/* 导入历史文档样式 */
 @import url('./document-history.css');
+
+/* 导入音频管理样式 */
+@import url('./audio-management.css');
+
+/* 导入其他页面样式 */
 @import url('./chapters.css');
 @import url('./upload.css');
 @import url('./modal.css');
 @import url('./audio-player.css');
 @import url('./status.css');
-
-/* 页面通用样式 */
-.page-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.page-header {
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-.page-title {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.page-subtitle {
-    color: #666;
-    font-size: 1rem;
-}
-
-/* 页面内容区域 */
-.page-content {
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    padding: 25px;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-    .page-container {
-        padding: 15px;
-    }
-    
-    .page-content {
-        padding: 20px;
-    }
-    
-    .page-title {
-        font-size: 1.5rem;
-    }
-}

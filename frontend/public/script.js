@@ -113,7 +113,11 @@ class App {
                 DocumentHistory.showDocumentHistory();
                 break;
             case 'audio':
-                // 音频管理板块，如果有当前文件则显示相关信息
+                // 音频管理板块，显示音频文件列表
+                if (window.AudioFilesManager) {
+                    AudioFilesManager.refresh();
+                }
+                // 如果有当前文件则显示相关信息
                 if (currentFileId) {
                     App.showAudioManagement();
                 }
@@ -123,6 +127,12 @@ class App {
 
     // 显示音频管理界面
     static showAudioManagement() {
+        // 隐藏音频文件列表
+        const audioFilesSection = document.getElementById('audioFilesSection');
+        if (audioFilesSection) {
+            audioFilesSection.style.display = 'none';
+        }
+
         // 显示文件信息
         const fileInfo = document.getElementById('fileInfo');
         if (fileInfo) {

@@ -4,6 +4,8 @@
 处理音频文件的管理、状态查询等功能
 """
 
+import os
+import json
 from flask import Blueprint, request, jsonify, send_from_directory
 from app.services.audio_service import AudioService
 
@@ -19,6 +21,95 @@ def get_audio_service():
         from app import app
         audio_service = AudioService(app)
     return audio_service
+
+@audio_management_bp.route('/audio-files')
+def get_all_audio_files():
+    """获取所有音频文件列表"""
+    try:
+        from app import app
+        upload_folder = app.config['UPLOAD_FOLDER']
+        audio_folder = app.config['AUDIO_FOLDER']
+        
+        audio_files = []
+        
+        if os.path.exists(upload_folder):
+            # 扫描所有文档文件夹
+            for file_id in os.listdir(upload_folder):
+                folder_path = os.path.join(upload_folder, file_id)
+                if not os.path.isdir(folder_path):
+                    continue
+                    
+                meta_file = os.path.join(folder_path, f"{file_id}.meta")
+                if not os.path.exists(meta_file):
+                    continue
+                    
+                # 读取原始文件名
+                try:
+                    with open(meta_file, 'r', encoding='utf-8') as f:
+                        original_filename = f.read().strip()
+                except:
+                    original_filename = "未知文件"
+                
+                # 获取文件大小和上传时间
+                original_file_path = None
+                file_size = 0
+                upload_time = 0
+                for file in os.listdir(folder_path):
+                    if file.startswith(file_id) and '.' in file and not file.endswith('.meta') and not file.endswith('_chapters.json'):
+                        original_file_path = os.path.join(folder_path, file)
+                        break
+                
+                if original_file_path and os.path.exists(original_file_path):
+                    file_size = os.path.getsize(original_file_path)
+                    upload_time = os.path.getmtime(original_file_path)
+                
+                # 获取章节信息
+                chapters_file = os.path.join(folder_path, f"{file_id}_chapters.json")
+                chapter_count = 0
+                if os.path.exists(chapters_file):
+                    try:
+                        with open(chapters_file, 'r', encoding='utf-8') as f:
+                            chapters_data = json.load(f)
+                            chapter_count = len(chapters_data['chapters'])
+                    except:
+                        pass
+                
+                # 获取音频文件信息
+                audio_count = 0
+                total_size = 0
+                status = 'pending'
+                audio_subdir = os.path.join(audio_folder, file_id)
+                
+                if os.path.isdir(audio_subdir):
+                    for audio_file in os.listdir(audio_subdir):
+                        if audio_file.endswith('.wav'):
+                            audio_count += 1
+                            audio_file_path = os.path.join(audio_subdir, audio_file)
+                            if os.path.exists(audio_file_path):
+                                total_size += os.path.getsize(audio_file_path)
+                    
+                    if audio_count > 0:
+                        status = 'completed'
+                
+                # 只返回有音频文件的文档
+                if audio_count > 0:
+                    audio_files.append({
+                        'file_id': file_id,
+                        'original_name': original_filename,
+                        'status': status,
+                        'chapter_count': chapter_count,
+                        'audio_count': audio_count,
+                        'total_size': total_size,
+                        'created_at': upload_time
+                    })
+        
+        # 按创建时间倒序排列
+        audio_files.sort(key=lambda x: x['created_at'], reverse=True)
+        
+        return jsonify(audio_files)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @audio_management_bp.route('/audio-files/<file_id>')
 def get_audio_files(file_id):

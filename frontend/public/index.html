@@ -75,9 +75,49 @@
                     <p>生成、管理和播放音频内容</p>
                 </div>
                 
+                <!-- 音频文件列表 -->
+                <div class="audio-files-section" id="audioFilesSection">
+                    <div class="audio-files-header">
+                        <h3>📁 音频文件列表</h3>
+                        <div class="audio-files-controls">
+                            <button class="btn btn-secondary btn-small" onclick="AudioFilesManager.refresh()">
+                                🔄 刷新列表
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="audio-files-table-container">
+                        <table class="audio-files-table" id="audioFilesTable">
+                            <thead>
+                                <tr>
+                                    <th>文件名</th>
+                                    <th>状态</th>
+                                    <th>章节数</th>
+                                    <th>音频文件数</th>
+                                    <th>文件大小</th>
+                                    <th>生成时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="audioFilesTableBody">
+                                <!-- 音频文件表格行将在这里显示 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="audio-files-list" id="audioFilesList" style="display: none;">
+                        <!-- 保留原有的卡片式列表作为备用 -->
+                    </div>
+                </div>
+                
                 <!-- 文件信息显示 -->
                 <div class="file-info" id="fileInfo" style="display: none;">
-                    <h3>📋 文件信息</h3>
+                    <div class="audio-detail-header">
+                        <h3>📋 文件信息</h3>
+                        <button class="back-button" onclick="AudioFilesManager.showAudioFilesList()">
+                            ← 返回音频列表
+                        </button>
+                    </div>
                     <div class="info-card">
                         <div class="info-item">
                             <span class="label">文件名:</span>
@@ -274,6 +314,7 @@
     <script src="js/audioDownloader.js"></script>
     <script src="js/audioMerger.js"></script>
     <script src="js/documentHistory.js"></script>
+    <script src="js/audioFilesManager.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
