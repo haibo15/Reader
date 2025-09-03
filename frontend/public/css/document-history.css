@@ -262,3 +262,173 @@
         display: none;
     }
 }
+
+/* ==============================================
+   音频详情视图样式
+   ============================================== */
+
+.audio-detail-view {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 20px;
+}
+
+.audio-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.audio-detail-header h3 {
+    margin: 0;
+    color: #2d3748;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.back-button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-button:hover {
+    background: #5a67d8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* 音频播放器样式 */
+.audio-player {
+    margin-top: 20px;
+}
+
+.audio-player h3 {
+    color: #2d3748;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.complete-audio-section {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border: 1px solid #e2e8f0;
+}
+
+.merged-audio-header {
+    margin-bottom: 20px;
+}
+
+.merged-version-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.merged-version-selector label {
+    font-weight: 500;
+    color: #4a5568;
+}
+
+.merged-version-selector select {
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    color: #2d3748;
+    font-size: 0.9rem;
+}
+
+.player-container {
+    margin-bottom: 20px;
+}
+
+.player-container audio {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.complete-audio-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.complete-audio-actions .btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.complete-audio-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 章节音频列表样式 */
+.chapters-audio-section {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 25px;
+    border: 1px solid #e2e8f0;
+}
+
+.chapters-audio-section h4 {
+    color: #2d3748;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.chapters-audio-list {
+    display: grid;
+    gap: 15px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .audio-detail-view {
+        padding: 20px;
+        margin-top: 15px;
+    }
+    
+    .audio-detail-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .audio-detail-header h3 {
+        font-size: 1.5rem;
+    }
+    
+    .complete-audio-actions {
+        flex-direction: column;
+    }
+    
+    .complete-audio-actions .btn {
+        min-width: auto;
+    }
+}

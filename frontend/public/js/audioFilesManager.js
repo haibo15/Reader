@@ -63,21 +63,11 @@ class AudioFilesManager {
         }
         
         const tableRows = audioFiles.map((audioFile, index) => {
-            const statusClass = audioFile.status === 'completed' ? 'completed' : 'processing';
-            const statusText = audioFile.status === 'completed' ? '已完成' : '处理中';
-            const statusIcon = audioFile.status === 'completed' ? '🎵' : '⏳';
-            
             return `
-                <tr onclick="AudioFilesManager.showAudioDetails('${audioFile.file_id}')" style="cursor: pointer;">
-                    <td>${index + 1}</td>
+                <tr>
                     <td>
                         <div class="audio-file-name" title="${audioFile.original_name}">
                             ${audioFile.original_name}
-                        </div>
-                    </td>
-                    <td>
-                        <div class="audio-file-status ${statusClass}">
-                            ${statusIcon} ${statusText}
                         </div>
                     </td>
                     <td class="audio-file-number">${audioFile.chapter_count}</td>
@@ -85,10 +75,10 @@ class AudioFilesManager {
                     <td class="audio-file-size">${this.formatFileSize(audioFile.total_size)}</td>
                     <td class="audio-file-time">${this.formatDate(audioFile.created_at)}</td>
                     <td class="audio-file-actions">
-                        <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); AudioFilesManager.showAudioDetails('${audioFile.file_id}')">
-                            打开
+                        <button class="btn btn-primary btn-small" onclick="AudioFilesManager.showAudioDetails('${audioFile.file_id}')">
+                            查看
                         </button>
-                        <button class="btn btn-danger btn-small" onclick="event.stopPropagation(); AudioFilesManager.deleteAudioFile('${audioFile.file_id}', '${audioFile.original_name}')">
+                        <button class="btn btn-danger btn-small" onclick="AudioFilesManager.deleteAudioFile('${audioFile.file_id}', '${audioFile.original_name}')">
                             删除
                         </button>
                     </td>
@@ -165,7 +155,7 @@ class AudioFilesManager {
         if (tableBody) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="7">
+                    <td colspan="6">
                         <div class="audio-files-empty">
                             <div class="audio-files-empty-icon">🎵</div>
                             <h4>暂无音频文件</h4>
@@ -218,44 +208,32 @@ class AudioFilesManager {
                 const docData = await response.json();
                 console.log('获取到的文档数据:', docData);
                 
-                // 切换到音频管理页面并显示详情
-                console.log('正在切换到音频管理页面...');
-                App.switchSection('audio');
-                
-                // 显示文件信息
-                console.log('正在显示文件信息...');
-                if (window.FileDisplay && window.FileDisplay.displayFileInfo) {
-                    console.log('调用FileDisplay.displayFileInfo...');
-                    window.FileDisplay.displayFileInfo(docData);
-                } else {
-                    console.error('FileDisplay.displayFileInfo 不可用');
+                // 隐藏音频文件列表表格
+                const audioFilesSection = document.getElementById('audioFilesSection');
+                if (audioFilesSection) {
+                    audioFilesSection.style.display = 'none';
                 }
                 
-                // 显示章节列表
-                console.log('正在显示章节列表...');
-                if (window.FileDisplay && window.FileDisplay.displayChapters) {
-                    console.log('调用FileDisplay.displayChapters...');
-                    window.FileDisplay.displayChapters(docData.chapters);
-                } else {
-                    console.error('FileDisplay.displayChapters 不可用');
+                // 显示音频详情视图
+                const audioDetailView = document.getElementById('audioDetailView');
+                if (audioDetailView) {
+                    audioDetailView.style.display = 'block';
                 }
                 
-                // 显示语音设置
-                console.log('正在显示语音设置...');
-                if (document.getElementById('voiceSettings')) {
-                    document.getElementById('voiceSettings').style.display = 'block';
-                    console.log('语音设置已显示');
-                } else {
-                    console.error('找不到voiceSettings元素');
+                // 显示合并音频播放器
+                const audioPlayer = document.getElementById('audioPlayer');
+                if (audioPlayer) {
+                    audioPlayer.style.display = 'block';
                 }
                 
-                // 显示音频控制
-                console.log('正在显示音频控制...');
-                if (document.getElementById('audioControls')) {
-                    document.getElementById('audioControls').style.display = 'block';
-                    console.log('音频控制已显示');
-                } else {
-                    console.error('找不到audioControls元素');
+                // 加载合并音频版本
+                if (window.AudioPlayer && window.AudioPlayer.loadMergedAudioVersions) {
+                    window.AudioPlayer.loadMergedAudioVersions();
+                }
+                
+                // 渲染章节音频列表
+                if (window.ChapterAudioListRenderer && window.ChapterAudioListRenderer.render) {
+                    window.ChapterAudioListRenderer.render();
                 }
                 
                 console.log('音频详情显示完成');
@@ -280,7 +258,8 @@ class AudioFilesManager {
             'chaptersSection', 
             'voiceSettings',
             'audioControls',
-            'audioPlayer'
+            'audioPlayer',
+            'audioDetailView'
         ];
         
         elementsToHide.forEach(id => {
@@ -314,7 +293,7 @@ class AudioFilesManager {
         if (tableBody) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="7">
+                    <td colspan="6">
                         <div class="audio-files-loading">
                             <div class="audio-files-loading-spinner"></div>
                             <p>正在加载音频文件列表...</p>
