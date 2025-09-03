@@ -62,13 +62,14 @@ class AudioFilesManager {
             return;
         }
         
-        const tableRows = audioFiles.map(audioFile => {
+        const tableRows = audioFiles.map((audioFile, index) => {
             const statusClass = audioFile.status === 'completed' ? 'completed' : 'processing';
             const statusText = audioFile.status === 'completed' ? '已完成' : '处理中';
             const statusIcon = audioFile.status === 'completed' ? '🎵' : '⏳';
             
             return `
                 <tr onclick="AudioFilesManager.showAudioDetails('${audioFile.file_id}')" style="cursor: pointer;">
+                    <td>${index + 1}</td>
                     <td>
                         <div class="audio-file-name" title="${audioFile.original_name}">
                             ${audioFile.original_name}
@@ -85,10 +86,10 @@ class AudioFilesManager {
                     <td class="audio-file-time">${this.formatDate(audioFile.created_at)}</td>
                     <td class="audio-file-actions">
                         <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); AudioFilesManager.showAudioDetails('${audioFile.file_id}')">
-                            📖 查看详情
+                            打开
                         </button>
                         <button class="btn btn-danger btn-small" onclick="event.stopPropagation(); AudioFilesManager.deleteAudioFile('${audioFile.file_id}', '${audioFile.original_name}')">
-                            🗑️ 删除
+                            删除
                         </button>
                     </td>
                 </tr>
@@ -142,10 +143,10 @@ class AudioFilesManager {
                     </div>
                     <div class="audio-file-actions">
                         <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); AudioFilesManager.showAudioDetails('${audioFile.file_id}')">
-                            📖 查看详情
+                            打开
                         </button>
                         <button class="btn btn-danger btn-small" onclick="event.stopPropagation(); AudioFilesManager.deleteAudioFile('${audioFile.file_id}', '${audioFile.original_name}')">
-                            🗑️ 删除
+                            删除
                         </button>
                     </div>
                 </div>
@@ -200,36 +201,69 @@ class AudioFilesManager {
      */
     static async showAudioDetails(fileId) {
         try {
+            console.log('开始显示音频详情，文件ID:', fileId);
+            
+            // 设置当前文件ID
+            if (window.currentFileId !== undefined) {
+                window.currentFileId = fileId;
+                console.log('已设置currentFileId:', window.currentFileId);
+            }
+            
             // 加载文档信息
+            console.log('正在加载文档信息...');
             const response = await fetch(`${CONFIG.API_BASE_URL}/load-document/${fileId}`);
+            console.log('文档加载响应状态:', response.status);
+            
             if (response.ok) {
-                const document = await response.json();
+                const docData = await response.json();
+                console.log('获取到的文档数据:', docData);
                 
                 // 切换到音频管理页面并显示详情
+                console.log('正在切换到音频管理页面...');
                 App.switchSection('audio');
                 
                 // 显示文件信息
+                console.log('正在显示文件信息...');
                 if (window.FileDisplay && window.FileDisplay.displayFileInfo) {
-                    window.FileDisplay.displayFileInfo(document);
+                    console.log('调用FileDisplay.displayFileInfo...');
+                    window.FileDisplay.displayFileInfo(docData);
+                } else {
+                    console.error('FileDisplay.displayFileInfo 不可用');
                 }
                 
                 // 显示章节列表
+                console.log('正在显示章节列表...');
                 if (window.FileDisplay && window.FileDisplay.displayChapters) {
-                    window.FileDisplay.displayChapters(document.chapters);
+                    console.log('调用FileDisplay.displayChapters...');
+                    window.FileDisplay.displayChapters(docData.chapters);
+                } else {
+                    console.error('FileDisplay.displayChapters 不可用');
                 }
                 
                 // 显示语音设置
+                console.log('正在显示语音设置...');
                 if (document.getElementById('voiceSettings')) {
                     document.getElementById('voiceSettings').style.display = 'block';
+                    console.log('语音设置已显示');
+                } else {
+                    console.error('找不到voiceSettings元素');
                 }
                 
                 // 显示音频控制
+                console.log('正在显示音频控制...');
                 if (document.getElementById('audioControls')) {
                     document.getElementById('audioControls').style.display = 'block';
+                    console.log('音频控制已显示');
+                } else {
+                    console.error('找不到audioControls元素');
                 }
                 
+                console.log('音频详情显示完成');
+                
             } else {
-                console.error('加载文档详情失败:', response.statusText);
+                console.error('加载文档详情失败:', response.status, response.statusText);
+                const errorText = await response.text();
+                console.error('错误详情:', errorText);
             }
         } catch (error) {
             console.error('加载文档详情出错:', error);

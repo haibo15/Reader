@@ -1,76 +1,99 @@
 /* 音频文件管理样式模块 */
 
 /* ==============================================
-   表格式音频文件列表样式
+   音频文件列表样式
    ============================================== */
 
-.audio-files-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 15px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.audio-files-header h3 {
-    margin: 0;
-    color: #333;
-    font-size: 1.3rem;
-    font-weight: 600;
-}
-
-.audio-files-controls {
-    display: flex;
-    gap: 10px;
+.audio-files-section {
+    margin-bottom: 25px;
 }
 
 .audio-files-table-container {
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 15px;
 }
 
 .audio-files-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9rem;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .audio-files-table thead {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
 }
 
 .audio-files-table th {
-    padding: 15px 12px;
+    padding: 8px 6px;
     text-align: left;
     font-weight: 600;
-    font-size: 0.9rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #495057;
+    font-size: 0.75rem;
+    border-bottom: 1px solid #dee2e6;
+    white-space: nowrap;
 }
 
+/* 列宽设置 - 与历史文档表格保持一致 */
 .audio-files-table th:first-child {
+    width: 50px;
+    text-align: center;
+    padding: 8px 6px;
+}
+
+.audio-files-table th:nth-child(2) {
+    width: 180px;
     padding-left: 20px;
 }
 
+.audio-files-table th:nth-child(3) {
+    width: 70px;
+    text-align: center;
+}
+
+.audio-files-table th:nth-child(4),
+.audio-files-table th:nth-child(5) {
+    width: 70px;
+    text-align: center;
+}
+
+.audio-files-table th:nth-child(6) {
+    width: 110px;
+}
+
 .audio-files-table th:last-child {
+    width: 100px;
+    text-align: center;
     padding-right: 20px;
 }
 
+/* 表格按钮样式 - 与历史文档表格保持一致 */
+.audio-files-table .btn-tiny {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+    margin: 0 2px;
+    border-radius: 3px;
+    min-width: 40px;
+}
+
+.audio-files-table .btn-tiny:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
 .audio-files-table tbody tr {
-    border-bottom: 1px solid #f1f5f9;
-    transition: all 0.2s ease;
+    border-bottom: 1px solid #f1f3f4;
+    transition: background-color 0.2s ease;
 }
 
 .audio-files-table tbody tr:hover {
-    background-color: #f8fafc;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
 }
 
 .audio-files-table tbody tr:last-child {
@@ -78,12 +101,22 @@
 }
 
 .audio-files-table td {
-    padding: 15px 12px;
+    padding: 6px 6px;
+    font-size: 0.75rem;
+    color: #495057;
     vertical-align: middle;
-    color: #4a5568;
 }
 
+/* 序号列单元格样式 */
 .audio-files-table td:first-child {
+    text-align: center;
+    font-weight: 600;
+    color: #6c757d;
+    background: #f8f9fa;
+    padding: 6px 6px;
+}
+
+.audio-files-table td:nth-child(2) {
     padding-left: 20px;
 }
 
@@ -93,8 +126,8 @@
 
 /* 文件名列 */
 .audio-file-name {
-    font-weight: 600;
-    color: #2d3748;
+    font-weight: 500;
+    color: #212529;
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -110,12 +143,12 @@
 .audio-file-status {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    gap: 4px;
+    padding: 3px 6px;
+    border-radius: 10px;
+    font-size: 0.7rem;
     font-weight: 500;
-    min-width: 80px;
+    min-width: 60px;
     justify-content: center;
 }
 
@@ -153,8 +186,8 @@
 
 /* 时间列 */
 .audio-file-time {
-    font-size: 0.85rem;
-    color: #718096;
+    color: #6c757d;
+    font-size: 0.7rem;
     white-space: nowrap;
 }
 
@@ -166,9 +199,11 @@
 }
 
 .audio-file-actions .btn {
-    padding: 6px 12px;
-    font-size: 0.8rem;
-    min-width: 70px;
+    padding: 4px 8px;
+    font-size: 0.65rem;
+    min-width: 40px;
+    margin: 0 2px;
+    border-radius: 3px;
 }
 
 /* 空状态样式 */
@@ -355,34 +390,14 @@
 }
 
 /* 响应式设计 */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
     .audio-files-table {
         font-size: 0.8rem;
     }
     
     .audio-files-table th,
     .audio-files-table td {
-        padding: 12px 8px;
-    }
-}
-
-@media (max-width: 768px) {
-    .audio-files-header {
-        flex-direction: column;
-        gap: 15px;
-        align-items: stretch;
-    }
-    
-    .audio-files-controls {
-        justify-content: center;
-    }
-    
-    .audio-files-table-container {
-        overflow-x: auto;
-    }
-    
-    .audio-files-table {
-        min-width: 700px;
+        padding: 8px 4px;
     }
     
     .audio-file-actions {
@@ -390,11 +405,9 @@
         gap: 5px;
     }
     
-    .audio-files-list {
-        grid-template-columns: 1fr;
-    }
-    
-    .audio-file-info {
-        grid-template-columns: 1fr;
+    .audio-file-actions .btn {
+        min-width: 60px;
+        font-size: 0.75rem;
+        padding: 5px 8px;
     }
 }

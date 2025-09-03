@@ -70,26 +70,13 @@
 
             <!-- 音频管理板块 -->
             <section class="content-section" id="audio-section">
-                <div class="section-header">
-                    <h1>🎵 音频管理</h1>
-                    <p>生成、管理和播放音频内容</p>
-                </div>
-                
                 <!-- 音频文件列表 -->
                 <div class="audio-files-section" id="audioFilesSection">
-                    <div class="audio-files-header">
-                        <h3>📁 音频文件列表</h3>
-                        <div class="audio-files-controls">
-                            <button class="btn btn-secondary btn-small" onclick="AudioFilesManager.refresh()">
-                                🔄 刷新列表
-                            </button>
-                        </div>
-                    </div>
-                    
                     <div class="audio-files-table-container">
-                        <table class="audio-files-table" id="audioFilesTable">
+                        <table class="audio-files-table history-table" id="audioFilesTable">
                             <thead>
                                 <tr>
+                                    <th>序号</th>
                                     <th>文件名</th>
                                     <th>状态</th>
                                     <th>章节数</th>
