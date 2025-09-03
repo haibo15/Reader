@@ -163,6 +163,84 @@ class App {
             audioPlayer.style.display = 'block';
         }
     }
+
+    // 显示文档查看模式（只显示文件信息和章节列表）
+    static showDocumentViewOnly() {
+        // 隐藏音频文件列表
+        const audioFilesSection = document.getElementById('audioFilesSection');
+        if (audioFilesSection) {
+            audioFilesSection.style.display = 'none';
+        }
+
+        // 显示文件信息
+        const fileInfo = document.getElementById('fileInfo');
+        if (fileInfo) {
+            fileInfo.style.display = 'block';
+        }
+
+        // 显示章节列表
+        const chaptersSection = document.getElementById('chaptersSection');
+        if (chaptersSection) {
+            chaptersSection.style.display = 'block';
+        }
+
+        // 隐藏语音设置
+        const voiceSettings = document.getElementById('voiceSettings');
+        if (voiceSettings) {
+            voiceSettings.style.display = 'none';
+        }
+
+        // 隐藏音频控制
+        const audioControls = document.getElementById('audioControls');
+        if (audioControls) {
+            audioControls.style.display = 'none';
+        }
+
+        // 隐藏音频播放器
+        const audioPlayer = document.getElementById('audioPlayer');
+        if (audioPlayer) {
+            audioPlayer.style.display = 'none';
+        }
+    }
+
+    // 显示音频生成模式（只显示语音设置和音频生成）
+    static showAudioGenerationOnly() {
+        // 隐藏音频文件列表
+        const audioFilesSection = document.getElementById('audioFilesSection');
+        if (audioFilesSection) {
+            audioFilesSection.style.display = 'none';
+        }
+
+        // 隐藏文件信息
+        const fileInfo = document.getElementById('fileInfo');
+        if (fileInfo) {
+            fileInfo.style.display = 'none';
+        }
+
+        // 隐藏章节列表
+        const chaptersSection = document.getElementById('chaptersSection');
+        if (chaptersSection) {
+            chaptersSection.style.display = 'none';
+        }
+
+        // 显示语音设置
+        const voiceSettings = document.getElementById('voiceSettings');
+        if (voiceSettings) {
+            voiceSettings.style.display = 'block';
+        }
+
+        // 显示音频控制
+        const audioControls = document.getElementById('audioControls');
+        if (audioControls) {
+            audioControls.style.display = 'block';
+        }
+
+        // 隐藏音频播放器
+        const audioPlayer = document.getElementById('audioPlayer');
+        if (audioPlayer) {
+            audioPlayer.style.display = 'none';
+        }
+    }
 }
 
 // 全局函数 - 供HTML中的onclick调用

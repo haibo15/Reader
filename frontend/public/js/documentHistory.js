@@ -61,13 +61,10 @@ class DocumentHistory {
             <table class="history-table">
                 <thead>
                     <tr>
-                        <th>序号</th>
                         <th>文档名称</th>
                         <th>上传时间</th>
                         <th>文件大小</th>
                         <th>章节数</th>
-                        <th>音频文件</th>
-                        <th>状态</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -76,25 +73,19 @@ class DocumentHistory {
                         const uploadTime = new Date(doc.upload_time * 1000);
                         const timeString = uploadTime.toLocaleString('zh-CN');
                         const fileSize = Utils.formatFileSize(doc.file_size);
-                        const statusClass = doc.has_audio ? 'status-completed' : 'status-pending';
-                        const statusText = doc.has_audio ? '已完成' : '待处理';
-                        const statusIcon = doc.has_audio ? '🎵' : '📄';
                         
                         return `
                             <tr>
-                                <td>${index + 1}</td>
                                 <td>${doc.original_name}</td>
                                 <td>${timeString}</td>
                                 <td>${fileSize}</td>
                                 <td>${doc.chapter_count}</td>
-                                <td>${doc.audio_count} 个</td>
                                 <td>
-                                    <span class="status-icon">${statusIcon}</span>
-                                    <span class="status-text ${statusClass}">${statusText}</span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary btn-tiny" onclick="DocumentHistory.loadDocument('${doc.file_id}')">
-                                        打开
+                                    <button class="btn btn-primary btn-tiny" onclick="DocumentHistory.viewDocument('${doc.file_id}')">
+                                        查看
+                                    </button>
+                                    <button class="btn btn-success btn-tiny" onclick="DocumentHistory.generateAudio('${doc.file_id}')">
+                                        生成
                                     </button>
                                     <button class="btn btn-danger btn-tiny" onclick="DocumentHistory.deleteDocument('${doc.file_id}', '${doc.original_name}')">
                                         删除
@@ -157,6 +148,90 @@ class DocumentHistory {
             setTimeout(() => {
                 App.switchSection('audio');
                 Utils.showStatus('文档加载成功！已切换到音频管理板块', 'success');
+            }, 500);
+            
+        } catch (error) {
+            Utils.showStatus(`加载文档失败: ${error.message}`, 'error');
+        }
+    }
+
+    // 查看文档（只显示文件信息和章节列表）
+    static async viewDocument(fileId) {
+        try {
+            Utils.showStatus('正在加载文档...', 'info');
+            
+            const response = await fetch(`${CONFIG.API_BASE_URL}/load-document/${fileId}`);
+            
+            if (!response.ok) {
+                throw new Error(`加载文档失败: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.error) {
+                throw new Error(result.error);
+            }
+            
+            // 设置当前文档信息
+            currentFileId = result.file_id;
+            currentChapters = result.chapters;
+            
+            // 显示文档信息
+            FileDisplay.displayFileInfo({
+                file_id: result.file_id,
+                filename: result.display_name,
+                chapters: result.chapters,
+                total_chapters: result.total_chapters
+            });
+            
+            FileDisplay.displayChapters(result.chapters);
+            
+            // 切换到音频管理板块，但只显示文件信息和章节列表
+            setTimeout(() => {
+                App.switchSection('audio');
+                App.showDocumentViewOnly();
+                Utils.showStatus('文档加载成功！已切换到查看模式', 'success');
+            }, 500);
+            
+        } catch (error) {
+            Utils.showStatus(`加载文档失败: ${error.message}`, 'error');
+        }
+    }
+
+    // 生成音频（只显示语音设置和音频生成）
+    static async generateAudio(fileId) {
+        try {
+            Utils.showStatus('正在加载文档...', 'info');
+            
+            const response = await fetch(`${CONFIG.API_BASE_URL}/load-document/${fileId}`);
+            
+            if (!response.ok) {
+                throw new Error(`加载文档失败: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.error) {
+                throw new Error(result.error);
+            }
+            
+            // 设置当前文档信息
+            currentFileId = result.file_id;
+            currentChapters = result.chapters;
+            
+            // 显示文档信息
+            FileDisplay.displayFileInfo({
+                file_id: result.file_id,
+                filename: result.display_name,
+                chapters: result.chapters,
+                total_chapters: result.total_chapters
+            });
+            
+            // 切换到音频管理板块，但只显示语音设置和音频生成
+            setTimeout(() => {
+                App.switchSection('audio');
+                App.showAudioGenerationOnly();
+                Utils.showStatus('文档加载成功！已切换到生成模式', 'success');
             }, 500);
             
         } catch (error) {
