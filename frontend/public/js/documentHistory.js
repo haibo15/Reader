@@ -29,14 +29,14 @@ class DocumentHistory {
 
     // 显示历史记录区域
     static showHistorySection() {
-        document.getElementById('uploadSection').style.display = 'none';
-        document.getElementById('documentHistory').style.display = 'block';
+        // 这个方法在新设计中不再需要，因为使用板块切换
+        // 保留空方法以避免调用错误
     }
 
     // 显示上传区域
     static showUploadSection() {
-        document.getElementById('documentHistory').style.display = 'none';
-        document.getElementById('uploadSection').style.display = 'block';
+        // 这个方法在新设计中不再需要，因为使用板块切换
+        // 保留空方法以避免调用错误
     }
 
     // 显示历史记录列表
@@ -46,58 +46,68 @@ class DocumentHistory {
         if (documents.length === 0) {
             historyList.innerHTML = `
                 <div class="empty-history">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">📚</div>
                     <p>暂无上传的文档</p>
-                    <button class="btn btn-primary" onclick="showUploadSection()">
-                        上传第一个文档
+                    <p>开始上传您的第一个文档，体验智能阅读功能</p>
+                    <button class="btn btn-primary" onclick="App.switchSection('upload')">
+                        📄 上传第一个文档
                     </button>
                 </div>
             `;
             return;
         }
         
-        const historyHTML = documents.map(doc => {
-            const uploadTime = new Date(doc.upload_time * 1000);
-            const timeString = uploadTime.toLocaleString('zh-CN');
-            const fileSize = Utils.formatFileSize(doc.file_size);
-            
-            return `
-                <div class="history-item" onclick="DocumentHistory.loadDocument('${doc.file_id}')">
-                    <div class="history-item-header">
-                        <div>
-                            <div class="history-item-title">${doc.original_name}</div>
-                            <div class="history-item-time">${timeString}</div>
-                        </div>
-                        <div class="history-item-status">
-                            ${doc.has_audio ? '🎵' : '📄'}
-                        </div>
-                    </div>
-                    <div class="history-item-info">
-                        <div class="history-info-row">
-                            <span class="history-info-label">文件大小:</span>
-                            <span class="history-info-value">${fileSize}</span>
-                        </div>
-                        <div class="history-info-row">
-                            <span class="history-info-label">章节数:</span>
-                            <span class="history-info-value">${doc.chapter_count}</span>
-                        </div>
-                        <div class="history-info-row">
-                            <span class="history-info-label">音频文件:</span>
-                            <span class="history-info-value">${doc.audio_count} 个</span>
-                        </div>
-                    </div>
-                    <div class="history-item-actions">
-                        <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); DocumentHistory.loadDocument('${doc.file_id}')">
-                            📖 打开
-                        </button>
-                        <button class="btn btn-danger btn-small" onclick="event.stopPropagation(); DocumentHistory.deleteDocument('${doc.file_id}', '${doc.original_name}')">
-                            🗑️ 删除
-                        </button>
-                    </div>
-                </div>
-            `;
-        }).join('');
+        const tableHTML = `
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>文档名称</th>
+                        <th>上传时间</th>
+                        <th>文件大小</th>
+                        <th>章节数</th>
+                        <th>音频文件</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${documents.map((doc, index) => {
+                        const uploadTime = new Date(doc.upload_time * 1000);
+                        const timeString = uploadTime.toLocaleString('zh-CN');
+                        const fileSize = Utils.formatFileSize(doc.file_size);
+                        const statusClass = doc.has_audio ? 'status-completed' : 'status-pending';
+                        const statusText = doc.has_audio ? '已完成' : '待处理';
+                        const statusIcon = doc.has_audio ? '🎵' : '📄';
+                        
+                        return `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${doc.original_name}</td>
+                                <td>${timeString}</td>
+                                <td>${fileSize}</td>
+                                <td>${doc.chapter_count}</td>
+                                <td>${doc.audio_count} 个</td>
+                                <td>
+                                    <span class="status-icon">${statusIcon}</span>
+                                    <span class="status-text ${statusClass}">${statusText}</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary btn-small" onclick="DocumentHistory.loadDocument('${doc.file_id}')">
+                                        打开
+                                    </button>
+                                    <button class="btn btn-danger btn-small" onclick="DocumentHistory.deleteDocument('${doc.file_id}', '${doc.original_name}')">
+                                        删除
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        `;
         
-        historyList.innerHTML = historyHTML;
+        historyList.innerHTML = tableHTML;
     }
 
     // 加载指定文档
@@ -134,18 +144,20 @@ class DocumentHistory {
             // 如果有音频文件，添加到播放列表
             if (result.audio_files && result.audio_files.length > 0) {
                 audioFiles = result.audio_files;
-                AudioPlayer.updatePlaylist();
-                document.getElementById('audioPlayer').style.display = 'block';
+                // 注意：AudioPlayer.updatePlaylist() 可能不存在，需要检查
+                if (typeof AudioPlayer !== 'undefined' && AudioPlayer.updatePlaylist) {
+                    AudioPlayer.updatePlaylist();
+                }
             }
             
-            // 显示后续选项
-            document.getElementById('voiceSettings').style.display = 'block';
-            document.getElementById('audioControls').style.display = 'block';
+            // 显示后续选项 - 这些会在切换到音频管理板块时自动显示
+            // 不需要手动设置display属性
             
-            // 切换到上传区域（显示文档信息）
-            DocumentHistory.showUploadSection();
-            
-            Utils.showStatus('文档加载成功！', 'success');
+            // 自动切换到音频管理板块
+            setTimeout(() => {
+                App.switchSection('audio');
+                Utils.showStatus('文档加载成功！已切换到音频管理板块', 'success');
+            }, 500);
             
         } catch (error) {
             Utils.showStatus(`加载文档失败: ${error.message}`, 'error');
@@ -199,15 +211,8 @@ class DocumentHistory {
                 audioFiles = [];
                 currentPlaylistIndex = 0;
                 
-                // 隐藏相关区域
-                document.getElementById('fileInfo').style.display = 'none';
-                document.getElementById('chaptersSection').style.display = 'none';
-                document.getElementById('voiceSettings').style.display = 'none';
-                document.getElementById('audioControls').style.display = 'none';
-                document.getElementById('audioPlayer').style.display = 'none';
-                
-                // 清空播放列表
-                document.getElementById('playlist').innerHTML = '';
+                // 注意：在新设计中，这些元素会在板块切换时自动管理
+                // 不需要手动设置display属性
             }
             
             // 刷新文档历史

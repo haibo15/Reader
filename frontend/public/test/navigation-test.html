@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>导航功能测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>🧪 导航功能测试</h1>
+    
+    <div class="test-section">
+        <h2>测试项目</h2>
+        <p>这个页面用于测试新设计的导航功能是否正常工作。</p>
+        
+        <button class="test-button" onclick="testNavigation()">测试导航切换</button>
+        <button class="test-button" onclick="testDocumentHistory()">测试文档历史</button>
+        <button class="test-button" onclick="testFileDisplay()">测试文件显示</button>
+        
+        <div id="testResults"></div>
+    </div>
+
+    <script>
+        // 模拟配置
+        const CONFIG = {
+            API_BASE_URL: 'http://localhost:5000/api'
+        };
+
+        // 模拟全局变量
+        let currentFileId = null;
+        let currentChapters = [];
+        let audioFiles = [];
+
+        // 模拟App类
+        class App {
+            static switchSection(sectionName) {
+                showStatus(`切换到板块: ${sectionName}`, 'success');
+                return true;
+            }
+        }
+
+        // 模拟Utils类
+        class Utils {
+            static showStatus(message, type = 'info') {
+                showStatus(message, type);
+            }
+        }
+
+        // 模拟DocumentHistory类
+        class DocumentHistory {
+            static async showDocumentHistory() {
+                try {
+                    showStatus('正在加载文档历史...', 'info');
+                    
+                    // 模拟API调用
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // 模拟成功响应
+                    const mockDocuments = [
+                        {
+                            file_id: 'test-123',
+                            original_name: '测试文档.pdf',
+                            upload_time: Date.now() / 1000,
+                            file_size: 1024 * 1024,
+                            chapter_count: 5,
+                            audio_count: 3,
+                            has_audio: true
+                        }
+                    ];
+                    
+                    DocumentHistory.displayHistory(mockDocuments);
+                    showStatus('文档历史加载成功', 'success');
+                    
+                } catch (error) {
+                    showStatus(`加载文档历史失败: ${error.message}`, 'error');
+                }
+            }
+
+            static displayHistory(documents) {
+                const resultsDiv = document.getElementById('testResults');
+                resultsDiv.innerHTML = '<h3>📚 模拟文档历史</h3>';
+                
+                documents.forEach(doc => {
+                    const docDiv = document.createElement('div');
+                    docDiv.style.cssText = 'border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px;';
+                    docDiv.innerHTML = `
+                        <h4>${doc.original_name}</h4>
+                        <p>文件ID: ${doc.file_id}</p>
+                        <p>章节数: ${doc.chapter_count}</p>
+                        <p>音频文件: ${doc.audio_count} 个</p>
+                        <button class="test-button" onclick="DocumentHistory.loadDocument('${doc.file_id}')">
+                            加载文档
+                        </button>
+                    `;
+                    resultsDiv.appendChild(docDiv);
+                });
+            }
+
+            static async loadDocument(fileId) {
+                try {
+                    showStatus('正在加载文档...', 'info');
+                    
+                    // 模拟API调用
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // 模拟成功响应
+                    const mockResult = {
+                        file_id: fileId,
+                        display_name: '测试文档.pdf',
+                        chapters: [
+                            { title: '第一章 引言', content: '这是第一章的内容...' },
+                            { title: '第二章 正文', content: '这是第二章的内容...' }
+                        ],
+                        total_chapters: 2,
+                        audio_files: []
+                    };
+                    
+                    // 设置当前文档信息
+                    currentFileId = mockResult.file_id;
+                    currentChapters = mockResult.chapters;
+                    
+                    // 显示文档信息
+                    FileDisplay.displayFileInfo(mockResult);
+                    FileDisplay.displayChapters(mockResult.chapters);
+                    
+                    // 自动切换到音频管理板块
+                    setTimeout(() => {
+                        App.switchSection('audio');
+                        showStatus('文档加载成功！已切换到音频管理板块', 'success');
+                    }, 500);
+                    
+                } catch (error) {
+                    showStatus(`加载文档失败: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        // 模拟FileDisplay类
+        class FileDisplay {
+            static displayFileInfo(result) {
+                showStatus(`显示文件信息: ${result.display_name}`, 'success');
+            }
+
+            static displayChapters(chapters) {
+                showStatus(`显示章节列表: ${chapters.length} 个章节`, 'success');
+            }
+        }
+
+        // 测试函数
+        function testNavigation() {
+            showStatus('开始测试导航功能...', 'info');
+            
+            // 测试板块切换
+            const sections = ['upload', 'history', 'audio'];
+            sections.forEach((section, index) => {
+                setTimeout(() => {
+                    App.switchSection(section);
+                }, index * 500);
+            });
+            
+            showStatus('导航测试完成', 'success');
+        }
+
+        function testDocumentHistory() {
+            showStatus('开始测试文档历史功能...', 'info');
+            DocumentHistory.showDocumentHistory();
+        }
+
+        function testFileDisplay() {
+            showStatus('开始测试文件显示功能...', 'info');
+            
+            const mockResult = {
+                file_id: 'test-display',
+                filename: '测试显示.pdf',
+                total_chapters: 3
+            };
+            
+            FileDisplay.displayFileInfo(mockResult);
+            
+            const mockChapters = [
+                { title: '测试章节1', content: '内容1' },
+                { title: '测试章节2', content: '内容2' }
+            ];
+            
+            FileDisplay.displayChapters(mockChapters);
+        }
+
+        // 显示状态信息
+        function showStatus(message, type = 'info') {
+            const resultsDiv = document.getElementById('testResults');
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            resultsDiv.appendChild(statusDiv);
+            
+            // 自动滚动到底部
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        // 页面加载完成后显示欢迎信息
+        document.addEventListener('DOMContentLoaded', function() {
+            showStatus('🚀 测试页面加载完成！点击上方按钮开始测试。', 'info');
+        });
+    </script>
+</body>
+</html>

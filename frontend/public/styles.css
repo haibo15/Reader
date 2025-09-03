@@ -17,3 +17,463 @@
 
 /* 导入工具类样式 */
 @import url('./css/utilities.css');
+
+/* 新的布局样式 */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+/* 左侧导航栏 */
+.sidebar {
+    width: 200px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.sidebar-header {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.nav-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-item {
+    margin: 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left-color: rgba(255, 255, 255, 0.5);
+    transform: translateX(5px);
+}
+
+.nav-item.active .nav-link {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-left-color: white;
+    font-weight: 600;
+}
+
+.nav-icon {
+    font-size: 1rem;
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.nav-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* 主内容区域 */
+.main-content {
+    flex: 1;
+    margin-left: 200px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+/* 内容板块 */
+.content-section {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.content-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 板块头部 */
+.section-header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section-header h1 {
+    margin: 0 0 8px 0;
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.section-header p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* 状态信息区域 */
+.status-section {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    z-index: 1001;
+}
+
+
+
+/* 历史文档表格样式 */
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 15px;
+}
+
+.history-table thead {
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.history-table th {
+    padding: 12px 8px;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #dee2e6;
+    white-space: nowrap;
+}
+
+.history-table th:first-child {
+    width: 60px;
+    text-align: center;
+}
+
+.history-table th:nth-child(2) {
+    width: 200px;
+}
+
+.history-table th:nth-child(3) {
+    width: 120px;
+}
+
+.history-table th:nth-child(4) {
+    width: 80px;
+}
+
+.history-table th:nth-child(5) {
+    width: 80px;
+}
+
+.history-table th:nth-child(6) {
+    width: 80px;
+}
+
+.history-table th:nth-child(7) {
+    width: 80px;
+}
+
+.history-table th:last-child {
+    width: 120px;
+    text-align: center;
+}
+
+.history-table tbody tr {
+    border-bottom: 1px solid #f1f3f4;
+    transition: background-color 0.2s ease;
+}
+
+.history-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.history-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.history-table td {
+    padding: 12px 8px;
+    font-size: 0.85rem;
+    color: #495057;
+    vertical-align: middle;
+}
+
+.history-table td:first-child {
+    text-align: center;
+    font-weight: 600;
+    color: #6c757d;
+    background: #f8f9fa;
+}
+
+.history-table td:nth-child(2) {
+    font-weight: 500;
+    color: #212529;
+}
+
+.history-table td:nth-child(3) {
+    color: #6c757d;
+    font-size: 0.8rem;
+}
+
+.history-table td:nth-child(4),
+.history-table td:nth-child(5),
+.history-table td:nth-child(6) {
+    text-align: center;
+    font-weight: 500;
+}
+
+.history-table td:last-child {
+    text-align: center;
+}
+
+.history-table .status-icon {
+    font-size: 1.1rem;
+}
+
+.history-table .status-text {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.history-table .status-completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.history-table .status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.history-table .btn-small {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    margin: 0 2px;
+    border-radius: 4px;
+}
+
+.history-table .btn-small:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* 空状态样式 */
+.empty-history {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    background: white;
+    border-radius: 8px;
+    border: 2px dashed #e0e0e0;
+    margin-top: 15px;
+}
+
+.empty-history p {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    color: #888;
+}
+
+.empty-history .btn {
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    border-radius: 25px;
+}
+
+/* 历史文档控制按钮 */
+.history-controls {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.history-controls .btn {
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: #6c757d;
+    border: none;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.history-controls .btn:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .history-table {
+        font-size: 0.8rem;
+    }
+    
+    .history-table th,
+    .history-table td {
+        padding: 8px 4px;
+    }
+    
+    .history-table th:nth-child(3),
+    .history-table td:nth-child(3) {
+        display: none;
+    }
+    
+    .history-table th:nth-child(4),
+    .history-table td:nth-child(4) {
+        display: none;
+    }
+}
+
+/* 调整其他元素的字体大小 */
+.btn {
+    font-size: 0.85rem;
+}
+
+.btn-small {
+    font-size: 0.8rem;
+}
+
+.btn-test {
+    font-size: 0.75rem;
+}
+
+label {
+    font-size: 0.85rem;
+}
+
+input[type="range"] {
+    height: 4px;
+}
+
+.range-container span {
+    font-size: 0.8rem;
+}
+
+.voice-option label {
+    font-size: 0.85rem;
+}
+
+.chapters-table th,
+.chapters-table td {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+}
+
+.chapters-table th {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.modal-header h3 {
+    font-size: 1.1rem;
+}
+
+.modal-body {
+    font-size: 0.85rem;
+}
+
+.content-stats .stat-item {
+    font-size: 0.8rem;
+}
+
+.progress-text {
+    font-size: 0.85rem;
+}
+
+.audio-actions .btn {
+    font-size: 0.8rem;
+}
+
+.merged-version-selector label {
+    font-size: 0.85rem;
+}
+
+.merged-version-selector select {
+    font-size: 0.8rem;
+}
+
+.chapters-audio-section h4 {
+    font-size: 1rem;
+}
+
+.file-info h3,
+.chapters-section h3,
+.voice-settings h3,
+.audio-controls h3,
+.audio-player h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+}
+
+.info-card .info-item {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+
+.info-card .label {
+    font-weight: 600;
+    color: #555;
+}
+
+.voice-options {
+    gap: 12px;
+}
+
+.voice-option {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+.control-buttons {
+    gap: 10px;
+}
+
+.control-buttons .btn {
+    padding: 8px 16px;
+}
+
+.complete-audio-actions .btn {
+    font-size: 0.8rem;
+    padding: 8px 12px;
+}

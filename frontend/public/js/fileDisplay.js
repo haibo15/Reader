@@ -2,10 +2,16 @@
 class FileDisplay {
     // 显示文件信息
     static displayFileInfo(result) {
-        document.getElementById('fileName').textContent = result.filename;
-        document.getElementById('chapterCount').textContent = result.total_chapters;
-        document.getElementById('fileId').textContent = result.file_id;
-        document.getElementById('fileInfo').style.display = 'block';
+        const fileNameElement = document.getElementById('fileName');
+        const chapterCountElement = document.getElementById('chapterCount');
+        const fileIdElement = document.getElementById('fileId');
+        
+        if (fileNameElement) fileNameElement.textContent = result.filename;
+        if (chapterCountElement) chapterCountElement.textContent = result.total_chapters;
+        if (fileIdElement) fileIdElement.textContent = result.file_id;
+        
+        // 注意：在新设计中，这些元素会在板块切换时自动显示
+        // 不需要手动设置display属性
     }
 
     // 显示章节列表 - 改为表格式显示
@@ -63,11 +69,15 @@ class FileDisplay {
         `;
         
         container.innerHTML = tableHTML;
-        document.getElementById('chaptersSection').style.display = 'block';
+        
+        // 注意：在新设计中，这些元素会在板块切换时自动显示
+        // 不需要手动设置display属性
         
         // 显示章节后，检查音频状态
         setTimeout(() => {
-            AudioStatusManager.checkAudioStatus();
+            if (typeof AudioStatusManager !== 'undefined' && AudioStatusManager.checkAudioStatus) {
+                AudioStatusManager.checkAudioStatus();
+            }
         }, 500);
     }
 

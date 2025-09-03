@@ -1,14 +1,73 @@
 // 文件上传模块
 class FileUpload {
+    // 添加一个标志变量来防止重复触发
+    static isProcessing = false;
+    // 添加防抖时间戳
+    static lastTriggerTime = 0;
+    // 防抖间隔（毫秒）
+    static DEBOUNCE_DELAY = 300;
+    // 全局防重复标志
+    static globalTriggerLock = false;
+
     // 文件选择处理
     static handleFileSelect(event) {
+        // 如果正在处理中，忽略新的选择
+        if (FileUpload.isProcessing) {
+            return;
+        }
+
         const file = event.target.files[0];
         if (file) {
+            // 设置处理标志
+            FileUpload.isProcessing = true;
+            // 设置全局锁
+            FileUpload.globalTriggerLock = true;
+            
             // 立即创建文件对象的副本，避免引用问题
             const fileBlob = new Blob([file], { type: file.type });
             const fileCopy = new File([fileBlob], file.name, { type: file.type });
             // 立即上传
             FileUpload.uploadFile(fileCopy);
+        } else {
+            // 用户取消了文件选择，重置处理标志
+            FileUpload.isProcessing = false;
+            // 延迟重置全局锁，防止快速重复触发
+            setTimeout(() => {
+                FileUpload.globalTriggerLock = false;
+            }, 100);
+            return;
+        }
+    }
+
+    // 安全地触发文件选择
+    static triggerFileSelect() {
+        const now = Date.now();
+        
+        // 全局锁检查
+        if (FileUpload.globalTriggerLock) {
+            return;
+        }
+        
+        // 防抖检查
+        if (now - FileUpload.lastTriggerTime < FileUpload.DEBOUNCE_DELAY) {
+            return;
+        }
+        
+        // 如果正在处理中，不允许新的选择
+        if (FileUpload.isProcessing) {
+            return;
+        }
+        
+        // 检查文件输入框是否已经存在文件
+        const fileInput = document.getElementById('fileInput');
+        if (fileInput && fileInput.files.length > 0) {
+            return;
+        }
+        
+        FileUpload.lastTriggerTime = now;
+        
+        if (fileInput) {
+            fileInput.click();
         }
     }
 
@@ -27,8 +86,16 @@ class FileUpload {
         event.preventDefault();
         event.currentTarget.classList.remove('dragover');
         
+        // 如果正在处理中，忽略新的拖拽
+        if (FileUpload.isProcessing) {
+            return;
+        }
+        
         const files = event.dataTransfer.files;
         if (files.length > 0) {
+            // 设置处理标志
+            FileUpload.isProcessing = true;
+            
             const file = files[0];
             // 创建文件对象的副本，保持一致性
             const fileBlob = new Blob([file], { type: file.type });
@@ -105,23 +172,48 @@ class FileUpload {
                 Utils.showStatus('文件上传成功，但文本转换可能有问题', 'warning');
             }
             
-            // 显示后续选项
-            document.getElementById('voiceSettings').style.display = 'block';
-            document.getElementById('audioControls').style.display = 'block';
+            // 显示后续选项 - 这些会在切换到音频管理板块时自动显示
+            // 不需要手动设置display属性
             
             Utils.hideUploadProgress();
             
-            // 上传成功后再重置文件输入框
+            // 上传成功后自动切换到音频管理板块
             setTimeout(() => {
-                Utils.resetFileInput();
+                App.switchSection('audio');
+                Utils.showStatus('文件上传成功！已切换到音频管理板块', 'success');
+            }, 1000);
+            
+            // 上传成功后再重置文件输入框，但不触发change事件
+            setTimeout(() => {
+                const fileInput = document.getElementById('fileInput');
+                if (fileInput) {
+                    fileInput.value = '';
+                }
+                
+                // 重置处理标志
+                FileUpload.isProcessing = false;
+                // 延迟重置全局锁
+                setTimeout(() => {
+                    FileUpload.globalTriggerLock = false;
+                }, 100);
             }, 500);
             
         } catch (error) {
             Utils.hideUploadProgress();
             
-            // 上传失败时也延迟重置文件输入框
+            // 上传失败时也延迟重置文件输入框，但不触发change事件
             setTimeout(() => {
-                Utils.resetFileInput();
+                const fileInput = document.getElementById('fileInput');
+                if (fileInput) {
+                    fileInput.value = '';
+                }
+                
+                // 重置处理标志
+                FileUpload.isProcessing = false;
+                // 延迟重置全局锁
+                setTimeout(() => {
+                    FileUpload.globalTriggerLock = false;
+                }, 100);
             }, 500);
             
             if (error.name === 'AbortError') {
@@ -189,15 +281,14 @@ class FileUpload {
             audioFiles = [];
             currentPlaylistIndex = 0;
             
-            // 隐藏相关区域
-            document.getElementById('fileInfo').style.display = 'none';
-            document.getElementById('chaptersSection').style.display = 'none';
-            document.getElementById('voiceSettings').style.display = 'none';
-            document.getElementById('audioControls').style.display = 'none';
-            document.getElementById('audioPlayer').style.display = 'none';
+            // 注意：在新设计中，这些元素会在板块切换时自动管理
+            // 不需要手动设置display属性
             
-            // 清空播放列表
-            document.getElementById('playlist').innerHTML = '';
+            // 清空播放列表 - 检查元素是否存在
+            const playlistElement = document.getElementById('playlist');
+            if (playlistElement) {
+                playlistElement.innerHTML = '';
+            }
             
             // 显示详细的成功信息
             const deletedFiles = result.deleted_files || [];

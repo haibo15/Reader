@@ -8,39 +8,50 @@
     <link rel="stylesheet" href="css/audio-player.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📚 智能文本阅读器</h1>
-            <p>基于阿里巴巴Qwen大模型的文本转语音系统</p>
-        </header>
+    <div class="app-container">
+        <!-- 左侧导航栏 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>📚 智能阅读器</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" data-section="upload">
+                    <a href="#upload" class="nav-link">
+                        <span class="nav-icon">📄</span>
+                        <span class="nav-text">文档上传</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-section="history">
+                    <a href="#history" class="nav-link">
+                        <span class="nav-icon">📚</span>
+                        <span class="nav-text">历史文档</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-section="audio">
+                    <a href="#audio" class="nav-link">
+                        <span class="nav-icon">🎵</span>
+                        <span class="nav-text">音频管理</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
-        <main>
-            <!-- 文档历史记录 -->
-            <section class="document-history" id="documentHistory" style="display: none;">
-                <h2>📚 文档历史</h2>
-                <div class="history-controls">
-                    <button class="btn btn-secondary" onclick="refreshDocumentHistory()">
-                        🔄 刷新列表
-                    </button>
-                    <button class="btn btn-primary" onclick="showUploadSection()">
-                        📄 上传新文档
-                    </button>
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <!-- 文档上传板块 -->
+            <section class="content-section active" id="upload-section">
+                <div class="section-header">
+                    <h1>📄 文档上传</h1>
+                    <p>上传您的文档，开始智能阅读之旅</p>
                 </div>
-                <div class="history-list" id="historyList">
-                    <!-- 文档历史列表将在这里显示 -->
-                </div>
-            </section>
-
-            <!-- 文件上传区域 -->
-            <section class="upload-section" id="uploadSection">
-                <h2>📄 文件上传</h2>
+                
                 <div class="upload-area" id="uploadArea">
                     <div class="upload-content">
                         <div class="upload-icon">📁</div>
                         <p>拖拽文件到此处或点击选择文件</p>
                         <p class="file-types">支持格式: PDF, TXT, EPUB, DOCX</p>
                         <input type="file" id="fileInput" accept=".pdf,.txt,.epub,.docx" style="display: none;">
-                        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                        <button class="upload-btn" onclick="FileUpload.triggerFileSelect()">
                             选择文件
                         </button>
                     </div>
@@ -48,190 +59,210 @@
                 <div id="uploadProgress" class="progress-bar" style="display: none;">
                     <div class="progress-fill"></div>
                 </div>
-                <div class="upload-actions">
-                    <button class="btn btn-secondary" onclick="showDocumentHistory()">
-                        📚 查看历史文档
+            </section>
+
+            <!-- 历史文档板块 -->
+            <section class="content-section" id="history-section">
+                <div class="section-header">
+                    <h1>📚 历史文档</h1>
+                    <p>查看和管理您上传的文档</p>
+                </div>
+                
+                <div class="history-controls">
+                    <button class="btn btn-secondary" onclick="refreshDocumentHistory()">
+                        🔄 刷新列表
                     </button>
                 </div>
+                <div class="history-list" id="historyList">
+                    <!-- 文档历史列表将在这里显示 -->
+                </div>
             </section>
 
-            <!-- 文件信息显示 -->
-            <section class="file-info" id="fileInfo" style="display: none;">
-                <h2>📋 文件信息</h2>
-                <div class="info-card">
-                    <div class="info-item">
-                        <span class="label">文件名:</span>
-                        <span id="fileName"></span>
+            <!-- 音频管理板块 -->
+            <section class="content-section" id="audio-section">
+                <div class="section-header">
+                    <h1>🎵 音频管理</h1>
+                    <p>生成、管理和播放音频内容</p>
+                </div>
+                
+                <!-- 文件信息显示 -->
+                <div class="file-info" id="fileInfo" style="display: none;">
+                    <h3>📋 文件信息</h3>
+                    <div class="info-card">
+                        <div class="info-item">
+                            <span class="label">文件名:</span>
+                            <span id="fileName"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">章节数:</span>
+                            <span id="chapterCount"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">文件ID:</span>
+                            <span id="fileId"></span>
+                        </div>
+                        <div class="info-actions">
+                            <button class="btn btn-danger" onclick="deleteCurrentFile()">
+                                🗑️ 删除文件
+                            </button>
+                        </div>
                     </div>
-                    <div class="info-item">
-                        <span class="label">章节数:</span>
-                        <span id="chapterCount"></span>
+                </div>
+
+                <!-- 章节列表 -->
+                <div class="chapters-section" id="chaptersSection" style="display: none;">
+                    <h3>📖 章节列表</h3>
+                    <div class="chapters-container" id="chaptersContainer">
+                        <!-- 章节列表将在这里动态生成 -->
                     </div>
-                    <div class="info-item">
-                        <span class="label">文件ID:</span>
-                        <span id="fileId"></span>
+                </div>
+
+                <!-- 语音设置 -->
+                <div class="voice-settings" id="voiceSettings" style="display: none;">
+                    <h3>🎵 语音设置</h3>
+                    <div class="settings-grid">
+                        <div class="setting-item voice-selection">
+                            <label>选择语音角色:</label>
+                            <div class="voice-options">
+                                <div class="voice-option">
+                                    <input type="radio" id="voice-ethan" name="voiceSelect" value="Ethan" checked>
+                                    <label for="voice-ethan">Ethan（男声）</label>
+                                    <button class="btn btn-small btn-test" onclick="testVoice('Ethan')">
+                                        🔊 试听
+                                    </button>
+                                </div>
+                                <div class="voice-option">
+                                    <input type="radio" id="voice-chelsie" name="voiceSelect" value="Chelsie">
+                                    <label for="voice-chelsie">Chelsie（女声）</label>
+                                    <button class="btn btn-small btn-test" onclick="testVoice('Chelsie')">
+                                        🔊 试听
+                                    </button>
+                                </div>
+                                <div class="voice-option">
+                                    <input type="radio" id="voice-cherry" name="voiceSelect" value="Cherry">
+                                    <label for="voice-cherry">Cherry（女声）</label>
+                                    <button class="btn btn-small btn-test" onclick="testVoice('Cherry')">
+                                        🔊 试听
+                                    </button>
+                                </div>
+                                <div class="voice-option">
+                                    <input type="radio" id="voice-serena" name="voiceSelect" value="Serena">
+                                    <label for="voice-serena">Serena（女声）</label>
+                                    <button class="btn btn-small btn-test" onclick="testVoice('Serena')">
+                                        🔊 试听
+                                    </button>
+                                </div>
+                                <div class="voice-option">
+                                    <input type="radio" id="voice-dylan" name="voiceSelect" value="Dylan">
+                                    <label for="voice-dylan">Dylan（北京话-男声）</label>
+                                    <button class="btn btn-small btn-test" onclick="testVoice('Dylan')">
+                                        🔊 试听
+                                    </button>
+                                </div>
+                                <div class="voice-option">
+                                    <input type="radio" id="voice-jada" name="voiceSelect" value="Jada">
+                                    <label for="voice-jada">Jada（吴语-女声）</label>
+                                    <button class="btn btn-small btn-test" onclick="testVoice('Jada')">
+                                        🔊 试听
+                                    </button>
+                                </div>
+                                <div class="voice-option">
+                                    <input type="radio" id="voice-sunny" name="voiceSelect" value="Sunny">
+                                    <label for="voice-sunny">Sunny（四川话-女声）</label>
+                                    <button class="btn btn-small btn-test" onclick="testVoice('Sunny')">
+                                        🔊 试听
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <label for="speedRange">语速:</label>
+                            <div class="range-container">
+                                <input type="range" id="speedRange" min="0.5" max="2.0" step="0.1" value="1.0">
+                                <span id="speedValue">1.0x</span>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <label for="volumeRange">音量:</label>
+                            <div class="range-container">
+                                <input type="range" id="volumeRange" min="-20" max="20" step="1" value="0">
+                                <span id="volumeValue">0</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="info-actions">
-                        <button class="btn btn-danger" onclick="deleteCurrentFile()">
-                            🗑️ 删除文件
+                </div>
+
+                <!-- 音频生成控制 -->
+                <div class="audio-controls" id="audioControls" style="display: none;">
+                    <h3>🎧 音频生成</h3>
+                    <div class="control-buttons">
+                        <button class="btn btn-primary" onclick="generateAllAudio()">
+                            生成全部音频
+                        </button>
+                        <button class="btn btn-secondary" onclick="generateSelectedAudio()">
+                            生成选中章节
                         </button>
                     </div>
+                    
+                    <!-- 音频操作按钮容器 -->
+                    <div class="audio-actions" style="margin-top: 15px;">
+                        <!-- 合并和下载按钮将在这里动态添加 -->
+                    </div>
+                    
+                    <!-- 音频生成进度条 -->
+                    <div class="progress-container" id="audioProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <div class="progress-text">正在生成音频...</div>
+                    </div>
                 </div>
-            </section>
 
-            <!-- 章节列表 -->
-            <section class="chapters-section" id="chaptersSection" style="display: none;">
-                <h2>📖 章节列表</h2>
-                <div class="chapters-container" id="chaptersContainer">
-                    <!-- 章节列表将在这里动态生成 -->
-                </div>
-            </section>
-
-            <!-- 语音设置 -->
-            <section class="voice-settings" id="voiceSettings" style="display: none;">
-                <h2>🎵 语音设置</h2>
-                <div class="settings-grid">
-                    <div class="setting-item voice-selection">
-                        <label>选择语音角色:</label>
-                        <div class="voice-options">
-                            <div class="voice-option">
-                                <input type="radio" id="voice-ethan" name="voiceSelect" value="Ethan" checked>
-                                <label for="voice-ethan">Ethan（男声）</label>
-                                <button class="btn btn-small btn-test" onclick="testVoice('Ethan')">
-                                    🔊 试听
-                                </button>
-                            </div>
-                            <div class="voice-option">
-                                <input type="radio" id="voice-chelsie" name="voiceSelect" value="Chelsie">
-                                <label for="voice-chelsie">Chelsie（女声）</label>
-                                <button class="btn btn-small btn-test" onclick="testVoice('Chelsie')">
-                                    🔊 试听
-                                </button>
-                            </div>
-                            <div class="voice-option">
-                                <input type="radio" id="voice-cherry" name="voiceSelect" value="Cherry">
-                                <label for="voice-cherry">Cherry（女声）</label>
-                                <button class="btn btn-small btn-test" onclick="testVoice('Cherry')">
-                                    🔊 试听
-                                </button>
-                            </div>
-                            <div class="voice-option">
-                                <input type="radio" id="voice-serena" name="voiceSelect" value="Serena">
-                                <label for="voice-serena">Serena（女声）</label>
-                                <button class="btn btn-small btn-test" onclick="testVoice('Serena')">
-                                    🔊 试听
-                                </button>
-                            </div>
-                            <div class="voice-option">
-                                <input type="radio" id="voice-dylan" name="voiceSelect" value="Dylan">
-                                <label for="voice-dylan">Dylan（北京话-男声）</label>
-                                <button class="btn btn-small btn-test" onclick="testVoice('Dylan')">
-                                    🔊 试听
-                                </button>
-                            </div>
-                            <div class="voice-option">
-                                <input type="radio" id="voice-jada" name="voiceSelect" value="Jada">
-                                <label for="voice-jada">Jada（吴语-女声）</label>
-                                <button class="btn btn-small btn-test" onclick="testVoice('Jada')">
-                                    🔊 试听
-                                </button>
-                            </div>
-                            <div class="voice-option">
-                                <input type="radio" id="voice-sunny" name="voiceSelect" value="Sunny">
-                                <label for="voice-sunny">Sunny（四川话-女声）</label>
-                                <button class="btn btn-small btn-test" onclick="testVoice('Sunny')">
-                                    🔊 试听
-                                </button>
+                <!-- 音频播放器 -->
+                <div class="audio-player" id="audioPlayer" style="display: none;">
+                    <h3>🎵 合并音频播放</h3>
+                    
+                    <!-- 第一行：合并音频播放器和版本选择 -->
+                    <div class="complete-audio-section">
+                        <div class="merged-audio-header">
+                            <div class="merged-version-selector" id="mergedVersionSelector" style="display: none;">
+                                <label>版本选择：</label>
+                                <select id="mergedVersionSelect" onchange="AudioPlayer.onMergedVersionChange()">
+                                    <option value="">请先合并音频</option>
+                                </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="setting-item">
-                        <label for="speedRange">语速:</label>
-                        <div class="range-container">
-                            <input type="range" id="speedRange" min="0.5" max="2.0" step="0.1" value="1.0">
-                            <span id="speedValue">1.0x</span>
+                        <div class="player-container">
+                            <audio id="audioElement" controls disabled>
+                                <source id="audioSource" src="" type="audio/wav">
+                                您的浏览器不支持音频播放
+                            </audio>
+                        </div>
+                        <div class="complete-audio-actions">
+                            <button class="btn btn-primary" id="downloadMergedBtn" onclick="AudioPlayer.downloadMergedAudio()" disabled>
+                                <i class="fas fa-download"></i> 下载合并音频
+                            </button>
+                            <button class="btn btn-danger" id="deleteMergedBtn" onclick="AudioPlayer.deleteMergedAudio()" disabled>
+                                <i class="fas fa-trash"></i> 删除合并音频
+                            </button>
                         </div>
                     </div>
-                    <div class="setting-item">
-                        <label for="volumeRange">音量:</label>
-                        <div class="range-container">
-                            <input type="range" id="volumeRange" min="-20" max="20" step="1" value="0">
-                            <span id="volumeValue">0</span>
+                    
+                    <!-- 第二行：章节列表 -->
+                    <div class="chapters-audio-section">
+                        <h4>📖 章节音频列表</h4>
+                        <div class="chapters-audio-list" id="chaptersAudioList">
+                            <!-- 章节音频列表将在这里动态生成 -->
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- 音频生成控制 -->
-            <section class="audio-controls" id="audioControls" style="display: none;">
-                <h2>🎧 音频生成</h2>
-                <div class="control-buttons">
-                    <button class="btn btn-primary" onclick="generateAllAudio()">
-                        生成全部音频
-                    </button>
-                    <button class="btn btn-secondary" onclick="generateSelectedAudio()">
-                        生成选中章节
-                    </button>
-                </div>
-                
-                <!-- 音频操作按钮容器 -->
-                <div class="audio-actions" style="margin-top: 15px;">
-                    <!-- 合并和下载按钮将在这里动态添加 -->
-                </div>
-                
-                <!-- 音频生成进度条 -->
-                <div class="progress-container" id="audioProgress" style="display: none;">
-                    <div class="progress-bar">
-                        <div class="progress-fill"></div>
-                    </div>
-                    <div class="progress-text">正在生成音频...</div>
-                </div>
-            </section>
-
-            <!-- 音频播放器 -->
-            <section class="audio-player" id="audioPlayer" style="display: none;">
-                <h2>🎵 合并音频播放</h2>
-                
-                <!-- 第一行：合并音频播放器和版本选择 -->
-                <div class="complete-audio-section">
-                    <div class="merged-audio-header">
-                        <div class="merged-version-selector" id="mergedVersionSelector" style="display: none;">
-                            <label>版本选择：</label>
-                            <select id="mergedVersionSelect" onchange="AudioPlayer.onMergedVersionChange()">
-                                <option value="">请先合并音频</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="player-container">
-                        <audio id="audioElement" controls disabled>
-                            <source id="audioSource" src="" type="audio/wav">
-                            您的浏览器不支持音频播放
-                        </audio>
-                    </div>
-                    <div class="complete-audio-actions">
-                        <button class="btn btn-primary" id="downloadMergedBtn" onclick="AudioPlayer.downloadMergedAudio()" disabled>
-                            <i class="fas fa-download"></i> 下载合并音频
-                        </button>
-                        <button class="btn btn-danger" id="deleteMergedBtn" onclick="AudioPlayer.deleteMergedAudio()" disabled>
-                            <i class="fas fa-trash"></i> 删除合并音频
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- 第二行：章节列表 -->
-                <div class="chapters-audio-section">
-                    <h3>📖 章节音频列表</h3>
-                    <div class="chapters-audio-list" id="chaptersAudioList">
-                        <!-- 章节音频列表将在这里动态生成 -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- 状态信息 -->
-            <section class="status-section">
-                <div id="statusMessage" class="status-message"></div>
             </section>
         </main>
+    </div>
+
+    <!-- 状态信息 -->
+    <div class="status-section">
+        <div id="statusMessage" class="status-message"></div>
     </div>
 
     <!-- 模块化脚本 -->
