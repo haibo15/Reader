@@ -93,10 +93,10 @@ class DocumentHistory {
                                     <span class="status-text ${statusClass}">${statusText}</span>
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary btn-small" onclick="DocumentHistory.loadDocument('${doc.file_id}')">
+                                    <button class="btn btn-primary btn-tiny" onclick="DocumentHistory.loadDocument('${doc.file_id}')">
                                         打开
                                     </button>
-                                    <button class="btn btn-danger btn-small" onclick="DocumentHistory.deleteDocument('${doc.file_id}', '${doc.original_name}')">
+                                    <button class="btn btn-danger btn-tiny" onclick="DocumentHistory.deleteDocument('${doc.file_id}', '${doc.original_name}')">
                                         删除
                                     </button>
                                 </td>

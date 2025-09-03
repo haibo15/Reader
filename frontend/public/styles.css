@@ -173,46 +173,46 @@
 }
 
 .history-table th {
-    padding: 12px 8px;
+    padding: 8px 6px;
     text-align: left;
     font-weight: 600;
     color: #495057;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     border-bottom: 1px solid #dee2e6;
     white-space: nowrap;
 }
 
 .history-table th:first-child {
-    width: 60px;
+    width: 50px;
     text-align: center;
 }
 
 .history-table th:nth-child(2) {
-    width: 200px;
+    width: 180px;
 }
 
 .history-table th:nth-child(3) {
-    width: 120px;
+    width: 110px;
 }
 
 .history-table th:nth-child(4) {
-    width: 80px;
+    width: 70px;
 }
 
 .history-table th:nth-child(5) {
-    width: 80px;
+    width: 70px;
 }
 
 .history-table th:nth-child(6) {
-    width: 80px;
+    width: 70px;
 }
 
 .history-table th:nth-child(7) {
-    width: 80px;
+    width: 70px;
 }
 
 .history-table th:last-child {
-    width: 120px;
+    width: 100px;
     text-align: center;
 }
 
@@ -230,8 +230,8 @@
 }
 
 .history-table td {
-    padding: 12px 8px;
-    font-size: 0.85rem;
+    padding: 6px 6px;
+    font-size: 0.75rem;
     color: #495057;
     vertical-align: middle;
 }
@@ -250,7 +250,7 @@
 
 .history-table td:nth-child(3) {
     color: #6c757d;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 
 .history-table td:nth-child(4),
@@ -265,13 +265,13 @@
 }
 
 .history-table .status-icon {
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .history-table .status-text {
-    font-size: 0.8rem;
-    padding: 4px 8px;
-    border-radius: 12px;
+    font-size: 0.7rem;
+    padding: 3px 6px;
+    border-radius: 10px;
     font-weight: 500;
 }
 
@@ -285,14 +285,15 @@
     color: #856404;
 }
 
-.history-table .btn-small {
-    font-size: 0.75rem;
-    padding: 6px 12px;
+.history-table .btn-tiny {
+    font-size: 0.65rem;
+    padding: 4px 8px;
     margin: 0 2px;
-    border-radius: 4px;
+    border-radius: 3px;
+    min-width: 40px;
 }
 
-.history-table .btn-small:hover {
+.history-table .btn-tiny:hover {
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
@@ -320,27 +321,7 @@
     border-radius: 25px;
 }
 
-/* 历史文档控制按钮 */
-.history-controls {
-    margin-bottom: 20px;
-    text-align: right;
-}
 
-.history-controls .btn {
-    font-size: 0.85rem;
-    padding: 8px 16px;
-    border-radius: 6px;
-    background: #6c757d;
-    border: none;
-    color: white;
-    transition: all 0.2s ease;
-}
-
-.history-controls .btn:hover {
-    background: #5a6268;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
 
 /* 响应式调整 */
 @media (max-width: 768px) {
