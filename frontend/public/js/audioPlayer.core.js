@@ -83,7 +83,8 @@ class AudioPlayer {
         try {
             const playerElements = AudioPlayer._getPlayerElements();
             if (!playerElements.audioSource || !playerElements.audioElement) throw new Error('找不到音频播放器元素');
-            playerElements.audioPlayer.style.display = 'block';
+            // 显示合并音频播放模块
+            App.showModule('mergedAudioModule');
             AudioPlayer.loadMergedAudioVersions();
             ChapterAudioListRenderer.render();
             Utils.showStatus('合并音频播放器已准备就绪', 'success');

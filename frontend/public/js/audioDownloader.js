@@ -55,51 +55,54 @@ class AudioDownloader {
         // 功能已移除，合并音频下载在播放器中处理
     }
     
-    // 添加合并选中章节按钮
-    static addMergeSelectedButton() {
-        const audioControls = document.getElementById('audioControls');
-        if (audioControls) {
-            // 检查是否已存在合并按钮
-            let mergeBtn = audioControls.querySelector('.merge-selected-btn');
-            
-            if (!mergeBtn) {
-                mergeBtn = document.createElement('button');
-                mergeBtn.className = 'btn btn-secondary merge-selected-btn';
-                mergeBtn.innerHTML = '<i class="fas fa-compress-arrows-alt"></i> 合并选中章节';
-                mergeBtn.onclick = () => {
-                    const selectedChapters = FileDisplay.getSelectedChapters();
-                    if (selectedChapters.length === 0) {
-                        Utils.showStatus('请选择要合并的章节', 'warning');
-                        return;
-                    }
-                    AudioMerger.mergeAudioFiles(selectedChapters);
-                };
-                
-                // 确保按钮容器在同一行
-                this.ensureButtonsInSameRow();
-                
-                // 插入到音频控制区域
-                const actionsDiv = audioControls.querySelector('.audio-actions');
-                if (actionsDiv) {
-                    actionsDiv.appendChild(mergeBtn);
-                } else {
-                    audioControls.appendChild(mergeBtn);
-                }
-            }
+    // 添加合并按钮到音频控制区域
+    static addMergeButton() {
+        const audioGenerationModule = document.getElementById('audioGenerationModule');
+        if (!audioGenerationModule) return;
+
+        // 检查是否已经有合并按钮
+        let mergeBtn = audioGenerationModule.querySelector('.merge-selected-btn');
+        if (mergeBtn) return;
+
+        // 创建合并按钮
+        mergeBtn = document.createElement('button');
+        mergeBtn.className = 'btn btn-primary merge-selected-btn';
+        mergeBtn.textContent = '🔄 合并选中音频';
+        mergeBtn.onclick = () => AudioMerger.mergeSelectedAudio();
+
+        // 添加到音频操作区域
+        const actionsDiv = audioGenerationModule.querySelector('.audio-actions');
+        if (actionsDiv) {
+            actionsDiv.appendChild(mergeBtn);
+        } else {
+            // 如果没有找到audio-actions区域，直接添加到模块末尾
+            audioGenerationModule.appendChild(mergeBtn);
         }
+    }
+
+    // 添加下载按钮到音频控制区域
+    static addDownloadButton() {
+        const audioGenerationModule = document.getElementById('audioGenerationModule');
+        if (!audioGenerationModule) return;
+
+        const controlButtons = audioGenerationModule.querySelector('.control-buttons');
+        const audioActions = audioGenerationModule.querySelector('.audio-actions');
+
+        // 创建按钮行容器
+        let buttonsRow = audioGenerationModule.querySelector('.buttons-row');
     }
     
     // 确保所有按钮在同一行
     static ensureButtonsInSameRow() {
-        const audioControls = document.getElementById('audioControls');
-        if (!audioControls) return;
+        const audioGenerationModule = document.getElementById('audioGenerationModule');
+        if (!audioGenerationModule) return;
         
-        const controlButtons = audioControls.querySelector('.control-buttons');
-        const audioActions = audioControls.querySelector('.audio-actions');
+        const controlButtons = audioGenerationModule.querySelector('.control-buttons');
+        const audioActions = audioGenerationModule.querySelector('.audio-actions');
         
         if (controlButtons && audioActions) {
             // 创建一个包装容器
-            let buttonsRow = audioControls.querySelector('.buttons-row');
+            let buttonsRow = audioGenerationModule.querySelector('.buttons-row');
             if (!buttonsRow) {
                 buttonsRow = document.createElement('div');
                 buttonsRow.className = 'buttons-row';

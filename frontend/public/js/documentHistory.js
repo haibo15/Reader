@@ -177,19 +177,23 @@ class DocumentHistory {
             currentChapters = result.chapters;
             
             // 显示文档信息
-            FileDisplay.displayFileInfo({
-                file_id: result.file_id,
-                filename: result.display_name,
-                chapters: result.chapters,
-                total_chapters: result.total_chapters
-            });
+            if (typeof FileInfoModule !== 'undefined') {
+                FileInfoModule.displayFileInfo({
+                    file_id: result.file_id,
+                    filename: result.display_name,
+                    chapters: result.chapters,
+                    total_chapters: result.total_chapters
+                });
+            }
             
-            FileDisplay.displayChapters(result.chapters);
+            if (typeof ChaptersModule !== 'undefined') {
+                ChaptersModule.displayChapters(result.chapters);
+            }
             
             // 切换到音频管理板块，但只显示文件信息和章节列表
             setTimeout(() => {
                 App.switchSection('audio');
-                App.showDocumentViewOnly();
+                ModuleManager.showDocumentViewMode();
                 Utils.showStatus('文档加载成功！已切换到查看模式', 'success');
             }, 500);
             
@@ -219,18 +223,20 @@ class DocumentHistory {
             currentFileId = result.file_id;
             currentChapters = result.chapters;
             
-            // 显示文档信息
-            FileDisplay.displayFileInfo({
-                file_id: result.file_id,
-                filename: result.display_name,
-                chapters: result.chapters,
-                total_chapters: result.total_chapters
-            });
+            // 显示文档信息（虽然不显示，但需要设置数据）
+            if (typeof FileInfoModule !== 'undefined') {
+                FileInfoModule.displayFileInfo({
+                    file_id: result.file_id,
+                    filename: result.display_name,
+                    chapters: result.chapters,
+                    total_chapters: result.total_chapters
+                });
+            }
             
             // 切换到音频管理板块，但只显示语音设置和音频生成
             setTimeout(() => {
                 App.switchSection('audio');
-                App.showAudioGenerationOnly();
+                ModuleManager.showAudioGenerationMode();
                 Utils.showStatus('文档加载成功！已切换到生成模式', 'success');
             }, 500);
             

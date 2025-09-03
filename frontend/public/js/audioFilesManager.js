@@ -214,18 +214,12 @@ class AudioFilesManager {
                     audioFilesSection.style.display = 'none';
                 }
                 
-                // 显示音频详情视图
-                const audioDetailView = document.getElementById('audioDetailView');
-                if (audioDetailView) {
-                    audioDetailView.style.display = 'block';
-                }
-                
-                // 显示合并音频播放器
-                const audioPlayer = document.getElementById('audioPlayer');
-                if (audioPlayer) {
-                    audioPlayer.style.display = 'block';
-                }
-                
+                        // 显示音频详情视图（现在使用模块化结构）
+        // 不需要单独显示，因为模块会自动显示
+
+                        // 显示音频播放器模块
+        App.showModule('mergedAudioModule');
+
                 // 加载合并音频版本
                 if (window.AudioPlayer && window.AudioPlayer.loadMergedAudioVersions) {
                     window.AudioPlayer.loadMergedAudioVersions();
@@ -253,21 +247,8 @@ class AudioFilesManager {
      */
     static showAudioFilesList() {
         // 隐藏所有详情页面元素
-        const elementsToHide = [
-            'fileInfo',
-            'chaptersSection', 
-            'voiceSettings',
-            'audioControls',
-            'audioPlayer',
-            'audioDetailView'
-        ];
-        
-        elementsToHide.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.style.display = 'none';
-            }
-        });
+        // 隐藏所有模块（使用新的模块化结构）
+        App.hideAllModules();
         
         // 显示音频文件列表
         const audioFilesSection = document.getElementById('audioFilesSection');

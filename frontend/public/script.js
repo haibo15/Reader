@@ -133,35 +133,8 @@ class App {
             audioFilesSection.style.display = 'none';
         }
 
-        // 显示文件信息
-        const fileInfo = document.getElementById('fileInfo');
-        if (fileInfo) {
-            fileInfo.style.display = 'block';
-        }
-
-        // 显示章节列表
-        const chaptersSection = document.getElementById('chaptersSection');
-        if (chaptersSection) {
-            chaptersSection.style.display = 'block';
-        }
-
-        // 显示语音设置
-        const voiceSettings = document.getElementById('voiceSettings');
-        if (voiceSettings) {
-            voiceSettings.style.display = 'block';
-        }
-
-        // 显示音频控制
-        const audioControls = document.getElementById('audioControls');
-        if (audioControls) {
-            audioControls.style.display = 'block';
-        }
-
-        // 显示音频播放器
-        const audioPlayer = document.getElementById('audioPlayer');
-        if (audioPlayer) {
-            audioPlayer.style.display = 'block';
-        }
+        // 显示所有模块（使用新的模块管理器）
+        ModuleManager.showAudioManagementMode();
     }
 
     // 显示文档查看模式（只显示文件信息和章节列表）
@@ -172,35 +145,8 @@ class App {
             audioFilesSection.style.display = 'none';
         }
 
-        // 显示文件信息
-        const fileInfo = document.getElementById('fileInfo');
-        if (fileInfo) {
-            fileInfo.style.display = 'block';
-        }
-
-        // 显示章节列表
-        const chaptersSection = document.getElementById('chaptersSection');
-        if (chaptersSection) {
-            chaptersSection.style.display = 'block';
-        }
-
-        // 隐藏语音设置
-        const voiceSettings = document.getElementById('voiceSettings');
-        if (voiceSettings) {
-            voiceSettings.style.display = 'none';
-        }
-
-        // 隐藏音频控制
-        const audioControls = document.getElementById('audioControls');
-        if (audioControls) {
-            audioControls.style.display = 'none';
-        }
-
-        // 隐藏音频播放器
-        const audioPlayer = document.getElementById('audioPlayer');
-        if (audioPlayer) {
-            audioPlayer.style.display = 'none';
-        }
+        // 使用模块管理器显示查看模式
+        ModuleManager.showDocumentViewMode();
     }
 
     // 显示音频生成模式（只显示语音设置和音频生成）
@@ -211,35 +157,35 @@ class App {
             audioFilesSection.style.display = 'none';
         }
 
-        // 隐藏文件信息
-        const fileInfo = document.getElementById('fileInfo');
-        if (fileInfo) {
-            fileInfo.style.display = 'none';
+        // 使用模块管理器显示生成模式
+        ModuleManager.showAudioGenerationMode();
+    }
+
+    // 显示音频文件列表
+    static showAudioFilesList() {
+        // 显示音频文件列表
+        const audioFilesSection = document.getElementById('audioFilesSection');
+        if (audioFilesSection) {
+            audioFilesSection.style.display = 'block';
         }
 
-        // 隐藏章节列表
-        const chaptersSection = document.getElementById('chaptersSection');
-        if (chaptersSection) {
-            chaptersSection.style.display = 'none';
-        }
+        // 隐藏所有模块（使用新的模块管理器）
+        ModuleManager.hideAllModules();
+    }
 
-        // 显示语音设置
-        const voiceSettings = document.getElementById('voiceSettings');
-        if (voiceSettings) {
-            voiceSettings.style.display = 'block';
-        }
+    // 显示指定模块
+    static showModule(moduleId) {
+        ModuleManager.showModule(moduleId);
+    }
 
-        // 显示音频控制
-        const audioControls = document.getElementById('audioControls');
-        if (audioControls) {
-            audioControls.style.display = 'block';
-        }
+    // 隐藏指定模块
+    static hideModule(moduleId) {
+        ModuleManager.hideModule(moduleId);
+    }
 
-        // 隐藏音频播放器
-        const audioPlayer = document.getElementById('audioPlayer');
-        if (audioPlayer) {
-            audioPlayer.style.display = 'none';
-        }
+    // 隐藏所有模块
+    static hideAllModules() {
+        ModuleManager.hideAllModules();
     }
 }
 

@@ -77,7 +77,9 @@
                         <table class="audio-files-table history-table" id="audioFilesTable">
                             <thead>
                                 <tr>
+                                    <th>序号</th>
                                     <th>文件名</th>
+                                    <th>状态</th>
                                     <th>章节数</th>
                                     <th>音频文件数</th>
                                     <th>文件大小</th>
@@ -86,7 +88,7 @@
                                 </tr>
                             </thead>
                             <tbody id="audioFilesTableBody">
-                                <!-- 音频文件表格行将在这里显示 -->
+                                <!-- 音频文件表格行将在这里动态生成 -->
                             </tbody>
                         </table>
                     </div>
@@ -96,230 +98,34 @@
                     </div>
                 </div>
                 
-                <!-- 音频详情视图 -->
-                <div class="audio-detail-view" id="audioDetailView" style="display: none;">
-                    <div class="audio-detail-header">
-                        <h3>🎵 音频详情</h3>
-                        <button class="back-button" onclick="AudioFilesManager.showAudioFilesList()">
-                            ← 返回音频列表
-                        </button>
-                    </div>
-                    
-                    <!-- 合并音频播放器 -->
-                    <div class="audio-player" id="audioPlayer">
-                        <h3>🎵 合并音频播放</h3>
-                        
-                        <!-- 第一行：合并音频播放器和版本选择 -->
-                        <div class="complete-audio-section">
-                            <div class="merged-audio-header">
-                                <div class="merged-version-selector" id="mergedVersionSelector" style="display: none;">
-                                    <label>版本选择：</label>
-                                    <select id="mergedVersionSelect" onchange="AudioPlayer.onMergedVersionChange()">
-                                        <option value="">请先合并音频</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="player-container">
-                                <audio id="audioElement" controls disabled>
-                                    <source id="audioSource" src="" type="audio/wav">
-                                    您的浏览器不支持音频播放
-                                </audio>
-                            </div>
-                            <div class="complete-audio-actions">
-                                <button class="btn btn-primary" id="downloadMergedBtn" onclick="AudioPlayer.downloadMergedAudio()" disabled>
-                                    <i class="fas fa-download"></i> 下载合并音频
-                                </button>
-                                <button class="btn btn-danger" id="deleteMergedBtn" onclick="AudioPlayer.deleteMergedAudio()" disabled>
-                                    <i class="fas fa-trash"></i> 删除合并音频
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- 第二行：章节列表 -->
-                        <div class="chapters-audio-section">
-                            <h4>📖 章节音频列表</h4>
-                            <div class="chapters-audio-list" id="chaptersAudioList">
-                                <!-- 章节音频列表将在这里动态生成 -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 文件信息显示 -->
-                <div class="file-info" id="fileInfo" style="display: none;">
-                    <div class="audio-detail-header">
-                        <h3>📋 文件信息</h3>
-                        <button class="back-button" onclick="AudioFilesManager.showAudioFilesList()">
-                            ← 返回音频列表
-                        </button>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-item">
-                            <span class="label">文件名:</span>
-                            <span id="fileName"></span>
-                        </div>
-                        <div class="info-item">
-                            <span class="label">章节数:</span>
-                            <span id="chapterCount"></span>
-                        </div>
-                        <div class="info-item">
-                            <span class="label">文件ID:</span>
-                            <span id="fileId"></span>
-                        </div>
-                        <div class="info-actions">
-                            <button class="btn btn-danger" onclick="deleteCurrentFile()">
-                                🗑️ 删除文件
-                            </button>
-                        </div>
-                    </div>
+                <!-- 模块1：文件信息 -->
+                <div class="module file-info-module" id="fileInfoModule" style="display: none;">
+                    <!-- 模块内容将由JavaScript动态生成 -->
                 </div>
 
-                <!-- 章节列表 -->
-                <div class="chapters-section" id="chaptersSection" style="display: none;">
-                    <h3>📖 章节列表</h3>
-                    <div class="chapters-container" id="chaptersContainer">
-                        <!-- 章节列表将在这里动态生成 -->
-                    </div>
+                <!-- 模块2：章节列表 -->
+                <div class="module chapters-module" id="chaptersModule" style="display: none;">
+                    <!-- 模块内容将由JavaScript动态生成 -->
                 </div>
 
-                <!-- 语音设置 -->
-                <div class="voice-settings" id="voiceSettings" style="display: none;">
-                    <h3>🎵 语音设置</h3>
-                    <div class="settings-grid">
-                        <div class="setting-item voice-selection">
-                            <label>选择语音角色:</label>
-                            <div class="voice-options">
-                                <div class="voice-option">
-                                    <input type="radio" id="voice-ethan" name="voiceSelect" value="Ethan" checked>
-                                    <label for="voice-ethan">Ethan（男声）</label>
-                                    <button class="btn btn-small btn-test" onclick="testVoice('Ethan')">
-                                        🔊 试听
-                                    </button>
-                                </div>
-                                <div class="voice-option">
-                                    <input type="radio" id="voice-chelsie" name="voiceSelect" value="Chelsie">
-                                    <label for="voice-chelsie">Chelsie（女声）</label>
-                                    <button class="btn btn-small btn-test" onclick="testVoice('Chelsie')">
-                                        🔊 试听
-                                    </button>
-                                </div>
-                                <div class="voice-option">
-                                    <input type="radio" id="voice-cherry" name="voiceSelect" value="Cherry">
-                                    <label for="voice-cherry">Cherry（女声）</label>
-                                    <button class="btn btn-small btn-test" onclick="testVoice('Cherry')">
-                                        🔊 试听
-                                    </button>
-                                </div>
-                                <div class="voice-option">
-                                    <input type="radio" id="voice-serena" name="voiceSelect" value="Serena">
-                                    <label for="voice-serena">Serena（女声）</label>
-                                    <button class="btn btn-small btn-test" onclick="testVoice('Serena')">
-                                        🔊 试听
-                                    </button>
-                                </div>
-                                <div class="voice-option">
-                                    <input type="radio" id="voice-dylan" name="voiceSelect" value="Dylan">
-                                    <label for="voice-dylan">Dylan（北京话-男声）</label>
-                                    <button class="btn btn-small btn-test" onclick="testVoice('Dylan')">
-                                        🔊 试听
-                                    </button>
-                                </div>
-                                <div class="voice-option">
-                                    <input type="radio" id="voice-jada" name="voiceSelect" value="Jada">
-                                    <label for="voice-jada">Jada（吴语-女声）</label>
-                                    <button class="btn btn-small btn-test" onclick="testVoice('Jada')">
-                                        🔊 试听
-                                    </button>
-                                </div>
-                                <div class="voice-option">
-                                    <input type="radio" id="voice-sunny" name="voiceSelect" value="Sunny">
-                                    <label for="voice-sunny">Sunny（四川话-女声）</label>
-                                    <button class="btn btn-small btn-test" onclick="testVoice('Sunny')">
-                                        🔊 试听
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setting-item">
-                            <label for="speedRange">语速:</label>
-                            <div class="range-container">
-                                <input type="range" id="speedRange" min="0.5" max="2.0" step="0.1" value="1.0">
-                                <span id="speedValue">1.0x</span>
-                            </div>
-                        </div>
-                        <div class="setting-item">
-                            <label for="volumeRange">音量:</label>
-                            <div class="range-container">
-                                <input type="range" id="volumeRange" min="-20" max="20" step="1" value="0">
-                                <span id="volumeValue">0</span>
-                            </div>
-                        </div>
-                    </div>
+                <!-- 模块3：语音设置 -->
+                <div class="module voice-settings-module" id="voiceSettingsModule" style="display: none;">
+                    <!-- 模块内容将由JavaScript动态生成 -->
                 </div>
 
-                <!-- 音频生成控制 -->
-                <div class="audio-controls" id="audioControls" style="display: none;">
-                    <h3>🎧 音频生成</h3>
-                    <div class="control-buttons">
-                        <button class="btn btn-primary" onclick="generateAllAudio()">
-                            生成全部音频
-                        </button>
-                        <button class="btn btn-secondary" onclick="generateSelectedAudio()">
-                            生成选中章节
-                        </button>
-                    </div>
-                    
-                    <!-- 音频操作按钮容器 -->
-                    <div class="audio-actions" style="margin-top: 15px;">
-                        <!-- 合并和下载按钮将在这里动态添加 -->
-                    </div>
-                    
-                    <!-- 音频生成进度条 -->
-                    <div class="progress-container" id="audioProgress" style="display: none;">
-                        <div class="progress-bar">
-                            <div class="progress-fill"></div>
-                        </div>
-                        <div class="progress-text">正在生成音频...</div>
-                    </div>
+                <!-- 模块4：音频生成 -->
+                <div class="module audio-generation-module" id="audioGenerationModule" style="display: none;">
+                    <!-- 模块内容将由JavaScript动态生成 -->
                 </div>
 
-                <!-- 音频播放器 -->
-                <div class="audio-player" id="audioPlayer" style="display: none;">
-                    <h3>🎵 合并音频播放</h3>
-                    
-                    <!-- 第一行：合并音频播放器和版本选择 -->
-                    <div class="complete-audio-section">
-                        <div class="merged-audio-header">
-                            <div class="merged-version-selector" id="mergedVersionSelector" style="display: none;">
-                                <label>版本选择：</label>
-                                <select id="mergedVersionSelect" onchange="AudioPlayer.onMergedVersionChange()">
-                                    <option value="">请先合并音频</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="player-container">
-                            <audio id="audioElement" controls disabled>
-                                <source id="audioSource" src="" type="audio/wav">
-                                您的浏览器不支持音频播放
-                            </audio>
-                        </div>
-                        <div class="complete-audio-actions">
-                            <button class="btn btn-primary" id="downloadMergedBtn" onclick="AudioPlayer.downloadMergedAudio()" disabled>
-                                <i class="fas fa-download"></i> 下载合并音频
-                            </button>
-                            <button class="btn btn-danger" id="deleteMergedBtn" onclick="AudioPlayer.deleteMergedAudio()" disabled>
-                                <i class="fas fa-trash"></i> 删除合并音频
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- 第二行：章节列表 -->
-                    <div class="chapters-audio-section">
-                        <h4>📖 章节音频列表</h4>
-                        <div class="chapters-audio-list" id="chaptersAudioList">
-                            <!-- 章节音频列表将在这里动态生成 -->
-                        </div>
-                    </div>
+                <!-- 模块5：合并音频播放 -->
+                <div class="module merged-audio-module" id="mergedAudioModule" style="display: none;">
+                    <!-- 模块内容将由JavaScript动态生成 -->
+                </div>
+
+                <!-- 模块6：章节音频列表 -->
+                <div class="module chapters-audio-module" id="chaptersAudioModule" style="display: none;">
+                    <!-- 模块内容将由JavaScript动态生成 -->
                 </div>
             </section>
         </main>
@@ -350,6 +156,16 @@
     <script src="js/audioMerger.js"></script>
     <script src="js/documentHistory.js"></script>
     <script src="js/audioFilesManager.js"></script>
+    
+    <!-- 新的模块化脚本 -->
+    <script src="js/modules/fileInfo.js"></script>
+    <script src="js/modules/chapters.js"></script>
+    <script src="js/modules/voiceSettings.js"></script>
+    <script src="js/modules/audioGeneration.js"></script>
+    <script src="js/modules/mergedAudio.js"></script>
+    <script src="js/modules/chaptersAudio.js"></script>
+    <script src="js/modules/moduleManager.js"></script>
+    
     <script src="script.js"></script>
 </body>
 </html>
