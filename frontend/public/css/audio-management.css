@@ -42,14 +42,13 @@
 
 /* 列宽设置 - 与历史文档表格保持一致 */
 .audio-files-table th:first-child {
-    width: 50px;
-    text-align: center;
-    padding: 8px 6px;
+    width: 180px;
+    padding-left: 20px;
 }
 
 .audio-files-table th:nth-child(2) {
-    width: 180px;
-    padding-left: 20px;
+    width: 70px;
+    text-align: center;
 }
 
 .audio-files-table th:nth-child(3) {
@@ -57,13 +56,11 @@
     text-align: center;
 }
 
-.audio-files-table th:nth-child(4),
-.audio-files-table th:nth-child(5) {
-    width: 70px;
-    text-align: center;
+.audio-files-table th:nth-child(4) {
+    width: 110px;
 }
 
-.audio-files-table th:nth-child(6) {
+.audio-files-table th:nth-child(5) {
     width: 110px;
 }
 
@@ -107,17 +104,19 @@
     vertical-align: middle;
 }
 
-/* 序号列单元格样式 */
+/* 表格单元格样式 */
 .audio-files-table td:first-child {
-    text-align: center;
-    font-weight: 600;
-    color: #6c757d;
-    background: #f8f9fa;
-    padding: 6px 6px;
+    padding-left: 20px;
 }
 
-.audio-files-table td:nth-child(2) {
-    padding-left: 20px;
+.audio-files-table td:nth-child(2),
+.audio-files-table td:nth-child(3) {
+    text-align: center;
+}
+
+.audio-files-table td:nth-child(4),
+.audio-files-table td:nth-child(5) {
+    text-align: center;
 }
 
 .audio-files-table td:last-child {
